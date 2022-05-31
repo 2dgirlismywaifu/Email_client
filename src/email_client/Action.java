@@ -19,14 +19,14 @@ import javax.swing.JFileChooser;
  */
 public final class Action {
 
-    private final Screen gui;
+    private final SendEmail gui;
 
     public Action() {
-        this.gui = new Screen();
+        this.gui = new SendEmail();
         prepareGui();
     }
 
-    public Screen getGui() {
+    public SendEmail getGui() {
         return gui;
     }
 
