@@ -11,3 +11,14 @@
 3. Kiểm tra định dạnh email hợp lệ
 4. Có thể đính kèm tập tin để gửi
 5. Có tính năng đề xuất gì mới thì thêm vào
+# Look and Feed (Hay gọi là giao diện cũng được)
+- Giao diện: Flatlaf Light
+- Class dùng chung: lookandfeel.java (folder global)
+- Cách goi: lookandfeel.setTheme();
+- Thêm vào sau: public static void main(String args[]) { .... }
+- Trước khi thêm vui lòng xóa: Look and feel settings code (optional) trong public static void main(String args[]) { .... }
+# Các thư viện hỗ trợ
+1. activation.jar
+2. javax.mail-1.6.2.jar
+3. sqlite-jdbc-3.36.0.3.jar
+4. flatlaf-2.3.jar (chính là giao diện đó)
