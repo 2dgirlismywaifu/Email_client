@@ -5,6 +5,7 @@
 
 package email_client;
 
+import email_client.callFrame.frameManageAccount;
 import email_client.global.TwoFANotify;
 import email_client.global.IconImageUtilities;
 import email_client.global.lookandfeel;
@@ -12,7 +13,6 @@ import email_client.sqlitehelper.sqlitehelper;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -83,7 +83,7 @@ public class addAccount extends javax.swing.JFrame {
         jLabel3.setText("Dịch vụ");
 
         Services.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
-        Services.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "gmail", "outlook", "yahoo", " " }));
+        Services.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "gmail", "outlook", "yahoo" }));
 
         jLabel4.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -126,7 +126,7 @@ public class addAccount extends javax.swing.JFrame {
         jLabel9.setText("SMTP Server");
 
         smtpServer.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
-        smtpServer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "smtp.gmail.com", "smtp.office365.com", "smtp.mail.yahoo.com", " ", " " }));
+        smtpServer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "smtp.gmail.com", "smtp.office365.com", "smtp.mail.yahoo.com", " " }));
 
         ConfirmBtn.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         ConfirmBtn.setText("OK");
@@ -265,20 +265,39 @@ public class addAccount extends javax.swing.JFrame {
             ps.executeUpdate();
             JOptionPane.showMessageDialog(this,"Thêm tài khoản thành công","Thêm tài khoản",JOptionPane.INFORMATION_MESSAGE);
             
+            connection.close();
+            
         } catch (SQLException ex) {
             Logger.getLogger(addAccount.class.getName()).log(Level.SEVERE, null, ex);
         }
                             
     }
     
+    private void checkService(String service, String smtp) { //kiểm tra xem mật khẩu nhập có phải mật khẩu ứng dụng (2FA ON) hay không
+        if (service.equals("gmail") && smtp.equals("smtp.gmail.com")) { //dịch vụ Gmail
+           portTLS = "587";
+           portSSL = "995";
+       }
+       else if (service.equals("outlook") && smtp.equals("smtp.office365.com")) { //dịch vụ Outlook
+           portTLS = "587";
+           portSSL = "995";
+       }
+       else { //dịch vụ còn lại yahoo mail
+           portTLS = "465";
+           portSSL = "995";
+       }      
+    }
+    
     private void ConfirmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmBtnActionPerformed
         // TODO add your handling code here:
+        //passworldfield luôn ở dạng array
+        char[] getpassword = passwordEmail.getPassword();
         //thêm dữ liệu tài khoản vào CSDL
         type = Type.getSelectedItem().toString();
         service = Services.getSelectedItem().toString();
         smtp = smtpServer.getSelectedItem().toString();
         email = emailAccount.getText(); //có thể bỏ qua, không cần nhập
-        pass = Arrays.toString(passwordEmail.getPassword());
+        pass = new String (getpassword);
         name = username.getText();
         //kiểm tra thông tin có nhập thiếu không
         if (email.equals("") || pass.equals("")) {
@@ -291,9 +310,16 @@ public class addAccount extends javax.swing.JFrame {
                JOptionPane.QUESTION_MESSAGE);
             if (result == JOptionPane.YES_OPTION) {
                 TwoFANotify.NotifyMesseage();
+                //kiểm tra xem là dịch vụ gmail, outlook hay yahoo
+               checkService(service, smtp);
+               inputData(type, service, smtp, email, pass, name, portTLS, portSSL);
             } else if (result == JOptionPane.NO_OPTION){
                //kiểm tra xem là dịch vụ gmail, outlook hay yahoo
+               checkService(service, smtp);
+               inputData(type, service, smtp, email, pass, name, portTLS, portSSL);
             }
+            this.dispose();
+            frameManageAccount.callframe();
         }
         
     }//GEN-LAST:event_ConfirmBtnActionPerformed
@@ -307,6 +333,7 @@ public class addAccount extends javax.swing.JFrame {
     private void CancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelBtnActionPerformed
         // TODO add your handling code here:
         this.dispose();
+        frameManageAccount.callframe();
     }//GEN-LAST:event_CancelBtnActionPerformed
 
     private void showPasswordCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPasswordCheckActionPerformed

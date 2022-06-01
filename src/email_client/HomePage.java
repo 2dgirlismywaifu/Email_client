@@ -4,6 +4,7 @@
  */
 package email_client;
 
+import email_client.callFrame.frameAddAccount;
 import email_client.callFrame.frameManageAccount;
 import email_client.global.lookandfeel;
 import email_client.global.IconImageUtilities;
@@ -12,6 +13,8 @@ import email_client.sqlitehelper.sqlitehelper;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +25,8 @@ import java.util.logging.Logger;
 public class HomePage extends javax.swing.JFrame {
     
     Connection connection = sqlitehelper.getConnection();
+    PreparedStatement ps;
+    ResultSet rs;
     
     
     /**
@@ -33,15 +38,16 @@ public class HomePage extends javax.swing.JFrame {
         //kiểm tra kết nối internet ngay khi mở phần mềm
         NetworkNotify.NotifyMesseage();
         //icon mặc định của phần mềm
-        IconImageUtilities.setIconImage(this);      
+        IconImageUtilities.setIconImage(this);
+        //load danh sách email
+        loadEmailList();
     }
     
     public final void loaddatabase() {
         try {
             Statement statement = connection.createStatement();
-            statement.setQueryTimeout(30);  // set timeout to 30 sec
-            statement.executeUpdate("drop table if exists email");
-            statement.executeUpdate("create table email (id INTEGER primary key autoincrement, "
+            statement.setQueryTimeout(30);  // set timeout to 30 sec          
+            statement.executeUpdate("create table email (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                     + "name TEXT NULL, "    //tên cho tài khoản email (Không bắt buộc)
                     + "email TEXT NOT NULL, " //địa chỉ tài khoản email
                     + "password TEXT NOT NULL, " //mật khẩu
@@ -50,6 +56,20 @@ public class HomePage extends javax.swing.JFrame {
                     + "smtp TEXT NOT NULL,"   //smtp server của email outgoing messeage
                     + "portTLS TEXT NOT NULL," //port của stmp server
                     + "portSSL TEXT NOT NULL )");   //port của pop3 server (pop3 phổ biến hơn)
+        } catch (SQLException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+            //bỏ qua cái exception này nếu bảng tồn tại thôi          
+        }
+    }
+    
+    private void loadEmailList() {
+        try {
+            ps = connection.prepareStatement("SELECT email FROM email");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+               String email = rs.getString("email");
+               emailList.addItem(email);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -75,7 +95,7 @@ public class HomePage extends javax.swing.JFrame {
         inboxMail = new javax.swing.JButton();
         trash = new javax.swing.JButton();
         refreshAccount = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
+        username = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         mailList = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -107,6 +127,7 @@ public class HomePage extends javax.swing.JFrame {
         aboutTeam = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Email Client Manage");
         setIconImage(getIconImage());
 
         emailList.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
@@ -160,9 +181,9 @@ public class HomePage extends javax.swing.JFrame {
         refreshAccount.setText(" Làm mới");
         refreshAccount.setToolTipText("");
 
-        jLabel7.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("Email Manger");
+        username.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        username.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        username.setText("Email Manger");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -180,7 +201,7 @@ public class HomePage extends javax.swing.JFrame {
                     .addComponent(sentMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(spamMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
                     .addComponent(trash, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(username, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(refreshAccount, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -190,7 +211,7 @@ public class HomePage extends javax.swing.JFrame {
                 .addGap(25, 25, 25)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(emailList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
@@ -434,7 +455,29 @@ public class HomePage extends javax.swing.JFrame {
     }//GEN-LAST:event_MailSearchInputKeyTyped
 
     private void emailListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailListActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:      
+        Object selected = emailList.getSelectedItem();
+
+        if (selected.equals("Thêm tài khoản")) { //Thêm tài khoản
+            username.setText("Email Client");
+            frameAddAccount.callframe();
+        }
+        else {
+            try {
+                //trước tiên chúng ta sẽ đổi Email Client thành tên của tk email
+                ps = connection.prepareStatement("SELECT name FROM email WHERE email = ?");
+                ps.setString(1, emailList.getSelectedItem().toString());
+                rs = ps.executeQuery();
+                
+                while (rs.next()) {
+                    username.setText(rs.getString("name"));
+                }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //mặc định sẽ feed "Hộp thư đến của tài khoản
+        }
     }//GEN-LAST:event_emailListActionPerformed
 
     private void closeMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeMenuActionPerformed
@@ -486,7 +529,6 @@ public class HomePage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
@@ -507,5 +549,6 @@ public class HomePage extends javax.swing.JFrame {
     private javax.swing.JButton sentMail;
     private javax.swing.JButton spamMail;
     private javax.swing.JButton trash;
+    private javax.swing.JLabel username;
     // End of variables declaration//GEN-END:variables
 }
