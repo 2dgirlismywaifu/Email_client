@@ -11,7 +11,7 @@
 3. Kiểm tra định dạnh email hợp lệ
 4. Có thể đính kèm tập tin để gửi
 5. Có tính năng đề xuất gì mới thì thêm vào
-# Look and Feed (Hay gọi là giao diện cũng được)
+# Look and Feel (Hay gọi là giao diện cũng được)
 - Giao diện: Flatlaf Light
 - Class dùng chung: lookandfeel.java (folder global)
 - Cách goi: lookandfeel.setTheme();
