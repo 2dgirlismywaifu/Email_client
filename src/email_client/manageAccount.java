@@ -8,20 +8,127 @@ package email_client;
 import email_client.callFrame.frameAddAccount;
 import email_client.global.IconImageUtilities;
 import email_client.global.lookandfeel;
+import email_client.sqlitehelper.sqlitehelper;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.Vector;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author notmiyouji
  */
 public class manageAccount extends javax.swing.JFrame {
+    Connection connection = sqlitehelper.getConnection();
+    DefaultTableModel tableModel;
+    PreparedStatement ps; 
+    ResultSet rs;
+    String id, type, service, smtp, email, name, portTLS, portSSL;
+    //portTLS: outgoing messeage = STMP Server
+    //portSSL: incoming messeage = pop3
 
     /** Creates new form addAccount */
     public manageAccount() {
         initComponents();
         //icon mặc định của phần mềm
         IconImageUtilities.setIconImage(this);
+        loadTable();
+    }
+    
+    private void loadTable() {
+        int countColumn;
+            
+        try {
+            ps = connection.prepareStatement("SELECT * FROM email");
+            rs = ps.executeQuery();
+            
+            ResultSetMetaData rad = rs.getMetaData();
+            countColumn = rad.getColumnCount();
+            
+            tableModel = (DefaultTableModel)tableAccount.getModel();
+            tableModel.setRowCount(0);
+            
+            while (rs.next()) {
+                Vector v2 = new Vector();
+                for (int i = 1; i <= countColumn; i++) {
+                    v2.add(rs.getString("email"));
+                    v2.add(rs.getString("name"));                                                    
+                }
+                tableModel.addRow(v2);
+            }
+             tableModel.fireTableDataChanged();
+        } catch (SQLException ex) {
+            Logger.getLogger(manageAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
+    private void reEnableInput() {
+        emailAccount.setEnabled(true);
+        username.setEnabled(true);
+        Server.setEnabled(true);
+        Type.setEnabled(true);
+        smtpServer.setEnabled(true);
+        ConfirmBtn.setEnabled(true);
+    }
+    
+    private void disableInput() {
+        emailAccount.setEnabled(false);
+        username.setEnabled(false);
+        Server.setEnabled(false);
+        Type.setEnabled(false);
+        smtpServer.setEnabled(false);
+        ConfirmBtn.setEnabled(false);
+    }
+    
+    private void updateData(String id, String type, String service,  String smtp, String email, String name, String portTLS, String portSSL) {
+        try {
+            ps = connection.prepareStatement("UPDATE email SET name = ?, email = ?, type = ?, "
+                    + "server = ?, smtp = ? , portTLS = ?, portSSL = ? WHERE  ID = ? ");
+            //vì tên cho tài khoản email là không bắt buộc
+            if (name.equals("")) {
+                ps.setString(1, "NOT Available");
+            }
+            else {
+            ps.setString(1, name);
+            }
+            ps.setString(2, email);           
+            ps.setString(3, type);
+            ps.setString(4, service);
+            ps.setString(5, smtp);
+            ps.setString(6, portTLS);
+            ps.setString(7, portSSL);
+            ps.setString(8, id);
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(this,"Cập nhật tài khoản thành công","Thêm tài khoản",JOptionPane.INFORMATION_MESSAGE);
+                       
+        } catch (SQLException ex) {
+            Logger.getLogger(addAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                            
+    }
+    
+    private void checkService(String service, String smtp) { //kiểm tra xem mật khẩu nhập có phải mật khẩu ứng dụng (2FA ON) hay không
+        if (service.equals("gmail") && smtp.equals("smtp.gmail.com")) { //dịch vụ Gmail
+           portTLS = "587";
+           portSSL = "995";
+       }
+       else if (service.equals("outlook") && smtp.equals("smtp.office365.com")) { //dịch vụ Outlook
+           portTLS = "587";
+           portSSL = "995";
+       }
+       else { //dịch vụ còn lại yahoo mail
+           portTLS = "465";
+           portSSL = "995";
+       }      
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -44,40 +151,46 @@ public class manageAccount extends javax.swing.JFrame {
         smtpServer = new javax.swing.JComboBox<>();
         ConfirmBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableAccount = new javax.swing.JTable();
         jLabel8 = new javax.swing.JLabel();
         addAccount = new javax.swing.JButton();
         deleteAccount = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
+        jLabel1 = new javax.swing.JLabel();
+        idEmail = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         jLabel2.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Loại");
+        jLabel2.setText("Service");
 
         Type.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         Type.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "pop3", "imap" }));
+        Type.setEnabled(false);
 
         jLabel3.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Server");
+        jLabel3.setText("Loại");
 
         Server.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
-        Server.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "gmail", "outlook", "yahoo", " " }));
+        Server.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "gmail", "outlook", "yahoo" }));
+        Server.setEnabled(false);
 
         jLabel4.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Email");
 
         emailAccount.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        emailAccount.setEnabled(false);
 
         jLabel6.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("Tên tài khoản");
 
         username.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        username.setEnabled(false);
 
         jLabel7.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         jLabel7.setText("(Tùy chọn)");
@@ -87,28 +200,44 @@ public class manageAccount extends javax.swing.JFrame {
         jLabel9.setText("SMTP Server");
 
         smtpServer.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
-        smtpServer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "smtp.gmail.com", "smtp.office365.com", "smtp.mail.yahoo.com", " ", " " }));
+        smtpServer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "smtp.gmail.com", "smtp.office365.com", "smtp.mail.yahoo.com" }));
+        smtpServer.setEnabled(false);
 
         ConfirmBtn.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         ConfirmBtn.setText("Cập nhật thông tin");
+        ConfirmBtn.setEnabled(false);
         ConfirmBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ConfirmBtnActionPerformed(evt);
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableAccount.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
+        tableAccount.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Email", "Tên"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tableAccount.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableAccountMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableAccount);
 
         jLabel8.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -126,6 +255,18 @@ public class manageAccount extends javax.swing.JFrame {
 
         deleteAccount.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         deleteAccount.setText("-");
+        deleteAccount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteAccountActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("ID");
+
+        idEmail.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        idEmail.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -147,10 +288,6 @@ public class manageAccount extends javax.swing.JFrame {
                         .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(emailAccount))
                     .addComponent(jSeparator1)
                     .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
@@ -169,7 +306,17 @@ public class manageAccount extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(smtpServer, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(ConfirmBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(emailAccount)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(idEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
@@ -184,7 +331,11 @@ public class manageAccount extends javax.swing.JFrame {
                         .addComponent(jLabel8)
                         .addGap(18, 18, 18)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21)
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(idEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(13, 13, 13)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(emailAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4))
@@ -198,9 +349,9 @@ public class manageAccount extends javax.swing.JFrame {
                             .addComponent(jLabel2)
                             .addComponent(Server, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(Type, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(Type)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
@@ -220,13 +371,86 @@ public class manageAccount extends javax.swing.JFrame {
 
     private void ConfirmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmBtnActionPerformed
         // TODO add your handling code here:
+        //cập nhật thông tin tài khoản
+        id = idEmail.getText();
+        type = Type.getSelectedItem().toString();
+        service = Server.getSelectedItem().toString();
+        smtp = smtpServer.getSelectedItem().toString();
+        email = emailAccount.getText(); //có thể bỏ qua, không cần nhập     
+        name = username.getText();
+        if (email.equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ trường thông tin", "Thông báo", JOptionPane.ERROR_MESSAGE);
+        }
+        else {
+            //kiểm tra xem là dịch vụ gmail, outlook hay yahoo
+            checkService(service, smtp);
+            updateData(id, type, service, smtp, email, name, portTLS, portSSL);
+            loadTable();
+        }
+        
     }//GEN-LAST:event_ConfirmBtnActionPerformed
 
     private void addAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAccountActionPerformed
         // TODO add your handling code here:
         //Thêm tài khoản
+        this.dispose();
         frameAddAccount.callframe();
     }//GEN-LAST:event_addAccountActionPerformed
+
+    private void tableAccountMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableAccountMouseClicked
+        // TODO add your handling code here:
+        //kích hoạt lại tất cả các input
+        reEnableInput();
+        //từ dữ liệu đang có trả lại về input
+        tableModel = (DefaultTableModel)tableAccount.getModel();
+        int selectIndex = tableAccount.getSelectedRow();        
+        emailAccount.setText(tableModel.getValueAt(selectIndex, 0).toString());
+        username.setText(tableModel.getValueAt(selectIndex, 1).toString());
+        //lấy thông tin loại dịch vụ, loại (pop3 hay imap) và smtp server
+        email = emailAccount.getText();
+        name = username.getText();
+        
+        try {
+            ps = connection.prepareStatement("SELECT id, type, server, smtp FROM email WHERE email = ? and name = ?");
+            ps.setString(1, email);
+            ps.setString(2, name);
+            rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                idEmail.setText(rs.getString("id"));
+                Type.setSelectedItem(rs.getString("type"));
+                Server.setSelectedItem(rs.getString("server"));
+                smtpServer.setSelectedItem(rs.getString("smtp"));             
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(manageAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_tableAccountMouseClicked
+
+    private void deleteAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAccountActionPerformed
+        // TODO add your handling code here:
+        //xóa tài khoản khỏi lưu trữ cục bộ       
+        email = emailAccount.getText(); //có thể bỏ qua, không cần nhập     
+        name = username.getText();
+        
+        try {
+            ps = connection.prepareStatement("DELETE FROM email where email = ? and name = ?");
+            ps.setString(1, email);
+            ps.setString(2, name);
+            ps.executeUpdate();
+            
+            JOptionPane.showMessageDialog(this, "Đã xóa tài khoản","Thông báo",JOptionPane.INFORMATION_MESSAGE);
+            emailAccount.setText("");
+            username.setText("");
+            disableInput();
+            //load lại bảng
+            loadTable();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(manageAccount.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_deleteAccountActionPerformed
 
     /**
      * @param args the command line arguments
@@ -246,6 +470,8 @@ public class manageAccount extends javax.swing.JFrame {
     private javax.swing.JButton addAccount;
     private javax.swing.JButton deleteAccount;
     private javax.swing.JTextField emailAccount;
+    private javax.swing.JTextField idEmail;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -255,8 +481,8 @@ public class manageAccount extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JComboBox<String> smtpServer;
+    private javax.swing.JTable tableAccount;
     private javax.swing.JTextField username;
     // End of variables declaration//GEN-END:variables
 
