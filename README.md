@@ -10,7 +10,8 @@
 2. Có thể thêm nhiều tài khoản
 3. Kiểm tra định dạnh email hợp lệ
 4. Có thể đính kèm tập tin để gửi
-5. Có tính năng đề xuất gì mới thì thêm vào
+5. Với email có tính năng xác thực hai bước vui lòng sử dụng mật khẩu ứng dụng 
+6. Có tính năng đề xuất gì mới thì thêm vào
 # Look and Feel (Hay gọi là giao diện cũng được)
 - Giao diện: Flatlaf Light
 - Class dùng chung: lookandfeel.java (folder global)
