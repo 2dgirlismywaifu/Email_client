@@ -22,3 +22,7 @@
 2. javax.mail-1.6.2.jar
 3. sqlite-jdbc-3.36.0.3.jar
 4. flatlaf-2.3.jar (chính là giao diện đó)
+# Thông tin và các nguồn github tham khảo
+1. Tech-geek29: https://github.com/tech-geek29/java-email-client
+2. RawSanji: https://github.com/RawSanj/java-mail-clients
+3. Đấng sharecode (10k rẻ vl): https://gvbax-my.sharepoint.com/:u:/g/personal/user1839_offices365_co/EbfGwRhacgBDmdrzwYBIvBsBecSA99ZYLoV8RxNC75dwmQ?e=ZLR7Cb
