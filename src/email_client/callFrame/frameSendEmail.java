@@ -20,7 +20,6 @@ public class frameSendEmail {
             SendEmail frame = new SendEmail();
             frame.setVisible(true);
             frame.setTitle("Soạn thư");
-            frame.setResizable(false);
         });
     }
 }
