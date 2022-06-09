@@ -5,9 +5,12 @@
 
 package email_client;
 
+import email_client.global.CheckAccount;
 import email_client.callFrame.frameManageAccount;
-import email_client.global.TwoFANotify;
+import email_client.dialogMess.AccountFailed;
+import email_client.dialogMess.TwoFANotify;
 import email_client.global.IconImageUtilities;
+import email_client.global.RegexEmail;
 import email_client.global.lookandfeel;
 import email_client.sqlitehelper.sqlitehelper;
 import java.sql.Connection;
@@ -15,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,6 +26,7 @@ import javax.swing.JOptionPane;
  * @author notmiyouji
  */
 public class addAccount extends javax.swing.JFrame {
+    
     Connection connection = sqlitehelper.getConnection();
     PreparedStatement ps;   
     //Khai báo mặc định các biến dùng chung
@@ -299,29 +304,31 @@ public class addAccount extends javax.swing.JFrame {
         email = emailAccount.getText(); //có thể bỏ qua, không cần nhập
         pass = new String (getpassword);
         name = username.getText();
-        //kiểm tra thông tin có nhập thiếu không
-        if (email.equals("") || pass.equals("")) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ trường thông tin", "Thông báo", JOptionPane.ERROR_MESSAGE);
-        }
-        else {
-            //Hỏi người dùng tài khoản thêm có xác thực hai bước không
-            int result = JOptionPane.showConfirmDialog(this,"Tài khoản của bạn đã kích hoạt xác thực hai bước?", "Thông báo",
-               JOptionPane.YES_NO_OPTION,
-               JOptionPane.QUESTION_MESSAGE);
-            if (result == JOptionPane.YES_OPTION) {
-                TwoFANotify.NotifyMesseage();
-                //kiểm tra xem là dịch vụ gmail, outlook hay yahoo
-               checkService(service, smtp);
-               inputData(type, service, smtp, email, pass, name, portTLS, portSSL);
-            } else if (result == JOptionPane.NO_OPTION){
-               //kiểm tra xem là dịch vụ gmail, outlook hay yahoo
-               checkService(service, smtp);
-               inputData(type, service, smtp, email, pass, name, portTLS, portSSL);
-            }
-            this.dispose();
-            frameManageAccount.callframe();
-        }
         
+        //kiểm tra email có đúng mẫu: example@domain.com
+        if (RegexEmail.validation(email) == true) 
+        {       
+            //kiểm tra thông tin có nhập thiếu không
+            if (email.equals("") || pass.equals("")) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ trường thông tin", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            }      
+            else {            
+                try {
+                    checkService(service, smtp);
+                    CheckAccount.checkLogin(smtp, type, email, pass);
+                    inputData(type, service, smtp, email, pass, name, portTLS, portSSL);               
+                    this.dispose();
+                    frameManageAccount.callframe();
+                } catch (MessagingException ex) {
+                    Logger.getLogger(addAccount.class.getName()).log(Level.SEVERE, null, ex);
+                    AccountFailed.NotifyMesseage();
+                }
+            }
+        }
+        else
+            {
+                JOptionPane.showMessageDialog(this, "Email không đúng mẫu: example@domain.com", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            }
     }//GEN-LAST:event_ConfirmBtnActionPerformed
 
     private void TwoFAHelperMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TwoFAHelperMouseClicked
