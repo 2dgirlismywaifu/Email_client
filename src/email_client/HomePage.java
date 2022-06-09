@@ -6,6 +6,7 @@ package email_client;
 
 import email_client.callFrame.frameAddAccount;
 import email_client.callFrame.frameManageAccount;
+import email_client.callFrame.frameSendEmail;
 import email_client.global.lookandfeel;
 import email_client.global.IconImageUtilities;
 import email_client.dialogMess.NetworkNotify;
@@ -35,8 +36,6 @@ public class HomePage extends javax.swing.JFrame {
     public HomePage() {
         initComponents();
         loaddatabase();
-        //kiểm tra kết nối internet ngay khi mở phần mềm
-        NetworkNotify.NotifyMesseage();
         //icon mặc định của phần mềm
         IconImageUtilities.setIconImage(this);
         //load danh sách email
@@ -57,7 +56,7 @@ public class HomePage extends javax.swing.JFrame {
                     + "portTLS TEXT NOT NULL," //port của stmp server
                     + "portSSL TEXT NOT NULL )");   //port của pop3 server (pop3 phổ biến hơn)
         } catch (SQLException ex) {
-            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
             //bỏ qua cái exception này nếu bảng tồn tại thôi          
         }
     }
@@ -131,6 +130,7 @@ public class HomePage extends javax.swing.JFrame {
         setIconImage(getIconImage());
 
         emailList.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
+        emailList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Chọn tài khoản" }));
         emailList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 emailListActionPerformed(evt);
@@ -147,6 +147,11 @@ public class HomePage extends javax.swing.JFrame {
         composeMail.setToolTipText("");
         composeMail.setBorderPainted(false);
         composeMail.setPreferredSize(new java.awt.Dimension(180, 70));
+        composeMail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                composeMailActionPerformed(evt);
+            }
+        });
 
         importantMail.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         importantMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-important-50.png"))); // NOI18N
@@ -454,9 +459,7 @@ public class HomePage extends javax.swing.JFrame {
     }//GEN-LAST:event_MailSearchInputKeyTyped
 
     private void emailListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailListActionPerformed
-        // TODO add your handling code here:      
-        Object selected = emailList.getSelectedItem();
-     
+        // TODO add your handling code here:         
         try {
             //trước tiên chúng ta sẽ đổi Email Client thành tên của tk email
             ps = connection.prepareStatement("SELECT name FROM email WHERE email = ?");
@@ -484,6 +487,12 @@ public class HomePage extends javax.swing.JFrame {
         // TODO add your handling code here:
         frameManageAccount.callframe();
     }//GEN-LAST:event_accountManageActionPerformed
+
+    private void composeMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_composeMailActionPerformed
+        // TODO add your handling code here:
+        //gọi frame soạn thư. Hết
+        frameSendEmail.callframe();
+    }//GEN-LAST:event_composeMailActionPerformed
 
     /**
      * @param args the command line arguments
