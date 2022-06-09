@@ -26,7 +26,9 @@ public class AccountFailed {
             ImageIcon icon = new ImageIcon(AccountFailed.class.getResource("/icon/icons8-2fa-64.png"));
             
             
-            String text = "Kiểm tra thất bại.\nBạn có kích hoạt xác thực hai bước cho tài khoản không?";
+            String text = "Kiểm tra thất bại. "
+                    + "\n1. Tài khoản email của bạn có tồn tại không?"
+                    + "\nBạn có kích hoạt xác thực hai bước cho tài khoản không?";
                     
             JOptionPane.showMessageDialog(null, text, "Thông báo", JOptionPane.INFORMATION_MESSAGE, icon);
         });
