@@ -26,9 +26,7 @@ public class CheckAccount {
       properties.put("mail.pop3s.host", host);
       properties.put("mail.pop3s.port", "995");
       properties.put("mail.pop3s.starttls.enable", "true");
-      properties.put("mail.pop3.socketFactory.class", javax.net.ssl.SSLSocketFactory.
-
-        class.getName());
+      
 
       // Setup authentication, get session
       Session emailSession = Session.getInstance(properties,
