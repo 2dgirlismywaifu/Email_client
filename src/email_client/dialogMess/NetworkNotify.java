@@ -8,8 +8,6 @@ import email_client.global.NetworkUtils;
 import java.awt.EventQueue;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
