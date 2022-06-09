@@ -18,11 +18,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class NetworkNotify {
     public static void NotifyMesseage() {
         //Thông báo về các tài khoản xác thực hai bước
-        EventQueue.invokeLater(() -> {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            }
+        EventQueue.invokeLater(() -> {           
             ImageIcon connected = new ImageIcon(TwoFANotify.class.getResource("/icon/icons8-signal-64.png"));
             ImageIcon failed = new ImageIcon(TwoFANotify.class.getResource("/icon/icons8-no-connection-64.png"));
             
