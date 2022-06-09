@@ -8,7 +8,7 @@ import email_client.callFrame.frameAddAccount;
 import email_client.callFrame.frameManageAccount;
 import email_client.global.lookandfeel;
 import email_client.global.IconImageUtilities;
-import email_client.global.NetworkNotify;
+import email_client.dialogMess.NetworkNotify;
 import email_client.sqlitehelper.sqlitehelper;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -131,7 +131,6 @@ public class HomePage extends javax.swing.JFrame {
         setIconImage(getIconImage());
 
         emailList.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
-        emailList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Thêm tài khoản" }));
         emailList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 emailListActionPerformed(evt);
@@ -457,27 +456,22 @@ public class HomePage extends javax.swing.JFrame {
     private void emailListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailListActionPerformed
         // TODO add your handling code here:      
         Object selected = emailList.getSelectedItem();
+     
+        try {
+            //trước tiên chúng ta sẽ đổi Email Client thành tên của tk email
+            ps = connection.prepareStatement("SELECT name FROM email WHERE email = ?");
+            ps.setString(1, emailList.getSelectedItem().toString());
+            rs = ps.executeQuery();
 
-        if (selected.equals("Thêm tài khoản")) { //Thêm tài khoản
-            username.setText("Email Client");
-            frameAddAccount.callframe();
-        }
-        else {
-            try {
-                //trước tiên chúng ta sẽ đổi Email Client thành tên của tk email
-                ps = connection.prepareStatement("SELECT name FROM email WHERE email = ?");
-                ps.setString(1, emailList.getSelectedItem().toString());
-                rs = ps.executeQuery();
-                
-                while (rs.next()) {
-                    username.setText(rs.getString("name"));
-                }
-                
-            } catch (SQLException ex) {
-                Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+            while (rs.next()) {
+                username.setText(rs.getString("name"));
             }
-            //mặc định sẽ feed "Hộp thư đến của tài khoản
+
+        } catch (SQLException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
         }
+        //mặc định sẽ feed "Hộp thư đến của tài khoản
+        
     }//GEN-LAST:event_emailListActionPerformed
 
     private void closeMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeMenuActionPerformed
