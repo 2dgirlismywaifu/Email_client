@@ -6,6 +6,8 @@
 package email_client;
 
 import email_client.callFrame.frameAddAccount;
+import email_client.dialogMess.AccountFailed;
+import email_client.global.CheckAccount;
 import email_client.global.IconImageUtilities;
 import email_client.global.lookandfeel;
 import email_client.sqlitehelper.sqlitehelper;
@@ -17,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.Vector;
 import java.sql.SQLException;
+import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -29,7 +32,7 @@ public class manageAccount extends javax.swing.JFrame {
     DefaultTableModel tableModel;
     PreparedStatement ps; 
     ResultSet rs;
-    String id, type, service, smtp, email, name, portTLS, portSSL;
+    String id, type, service, smtp, email, pass, name, portTLS, portSSL;
     //portTLS: outgoing messeage = STMP Server
     //portSSL: incoming messeage = pop3
 
@@ -158,6 +161,9 @@ public class manageAccount extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
         idEmail = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        passEmail = new javax.swing.JPasswordField();
+        editPass = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -268,6 +274,21 @@ public class manageAccount extends javax.swing.JFrame {
         idEmail.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         idEmail.setEnabled(false);
 
+        jLabel5.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("Mật khẩu");
+
+        passEmail.setEditable(false);
+        passEmail.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+
+        editPass.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        editPass.setText("Sửa mật khẩu");
+        editPass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editPassActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -308,14 +329,21 @@ public class manageAccount extends javax.swing.JFrame {
                                     .addComponent(ConfirmBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(emailAccount)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(idEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(idEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(passEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(35, 35, 35)
+                                        .addComponent(editPass, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addGap(20, 20, 20))
         );
@@ -339,7 +367,12 @@ public class manageAccount extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(emailAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4))
-                        .addGap(15, 15, 15)
+                        .addGap(13, 13, 13)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(passEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(editPass))
+                        .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
                             .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -376,16 +409,24 @@ public class manageAccount extends javax.swing.JFrame {
         type = Type.getSelectedItem().toString();
         service = Server.getSelectedItem().toString();
         smtp = smtpServer.getSelectedItem().toString();
-        email = emailAccount.getText(); //có thể bỏ qua, không cần nhập     
+        email = emailAccount.getText(); //có thể bỏ qua, không cần nhập
+        char[] getpassword = passEmail.getPassword();
+        pass = new String (getpassword);
         name = username.getText();
         if (email.equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ trường thông tin", "Thông báo", JOptionPane.ERROR_MESSAGE);
         }
-        else {
-            //kiểm tra xem là dịch vụ gmail, outlook hay yahoo
-            checkService(service, smtp);
-            updateData(id, type, service, smtp, email, name, portTLS, portSSL);
-            loadTable();
+        else {           
+            try {
+                //kiểm tra xem là dịch vụ gmail, outlook hay yahoo
+                checkService(service, smtp);
+                CheckAccount.checkLogin(smtp, type, email, pass);              
+                updateData(id, type, service, smtp, email, name, portTLS, portSSL);
+                loadTable();
+            } catch (MessagingException ex) {
+                Logger.getLogger(manageAccount.class.getName()).log(Level.SEVERE, null, ex);
+                AccountFailed.NotifyMesseage();
+            }
         }
         
     }//GEN-LAST:event_ConfirmBtnActionPerformed
@@ -411,7 +452,7 @@ public class manageAccount extends javax.swing.JFrame {
         name = username.getText();
         
         try {
-            ps = connection.prepareStatement("SELECT id, type, server, smtp FROM email WHERE email = ? and name = ?");
+            ps = connection.prepareStatement("SELECT id, type, server, password, smtp FROM email WHERE email = ? and name = ?");
             ps.setString(1, email);
             ps.setString(2, name);
             rs = ps.executeQuery();
@@ -420,6 +461,7 @@ public class manageAccount extends javax.swing.JFrame {
                 idEmail.setText(rs.getString("id"));
                 Type.setSelectedItem(rs.getString("type"));
                 Server.setSelectedItem(rs.getString("server"));
+                passEmail.setText(rs.getString("password"));
                 smtpServer.setSelectedItem(rs.getString("smtp"));             
             }
         } catch (SQLException ex) {
@@ -452,6 +494,15 @@ public class manageAccount extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_deleteAccountActionPerformed
 
+    private void editPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPassActionPerformed
+        // TODO add your handling code here:
+        if (editPass.isSelected()){
+            passEmail.setEditable(true);
+        } else {
+            passEmail.setEditable(false);
+        }
+    }//GEN-LAST:event_editPassActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -469,18 +520,21 @@ public class manageAccount extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> Type;
     private javax.swing.JButton addAccount;
     private javax.swing.JButton deleteAccount;
+    private javax.swing.JCheckBox editPass;
     private javax.swing.JTextField emailAccount;
     private javax.swing.JTextField idEmail;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPasswordField passEmail;
     private javax.swing.JComboBox<String> smtpServer;
     private javax.swing.JTable tableAccount;
     private javax.swing.JTextField username;
