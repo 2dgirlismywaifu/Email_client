@@ -146,6 +146,8 @@ public class HomePage extends javax.swing.JFrame {
         composeMail.setText(" Soạn thư");
         composeMail.setToolTipText("");
         composeMail.setBorderPainted(false);
+        composeMail.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        composeMail.setMargin(new java.awt.Insets(2, -6, 2, 14));
         composeMail.setPreferredSize(new java.awt.Dimension(180, 70));
         composeMail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -157,33 +159,51 @@ public class HomePage extends javax.swing.JFrame {
         importantMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-important-50.png"))); // NOI18N
         importantMail.setText("   Quan trọng");
         importantMail.setBorderPainted(false);
+        importantMail.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        importantMail.setIconTextGap(-8);
+        importantMail.setMargin(new java.awt.Insets(2, -2, 2, 14));
         importantMail.setPreferredSize(new java.awt.Dimension(180, 70));
 
         sentMail.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         sentMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-sent-50.png"))); // NOI18N
         sentMail.setText("   Đã gửi");
         sentMail.setBorderPainted(false);
+        sentMail.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        sentMail.setIconTextGap(-8);
+        sentMail.setMargin(new java.awt.Insets(2, -2, 2, 14));
 
         spamMail.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         spamMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-spam-can-40.png"))); // NOI18N
         spamMail.setText("  Thư rác (spam)");
         spamMail.setBorderPainted(false);
+        spamMail.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        spamMail.setMargin(new java.awt.Insets(2, 0, 2, 14));
 
         inboxMail.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         inboxMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-inbox-50.png"))); // NOI18N
         inboxMail.setText("   Hộp thư đến");
         inboxMail.setBorderPainted(false);
+        inboxMail.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        inboxMail.setIconTextGap(-8);
+        inboxMail.setMargin(new java.awt.Insets(2, -4, 2, 14));
         inboxMail.setPreferredSize(new java.awt.Dimension(180, 70));
 
         trash.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         trash.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-trash-40.png"))); // NOI18N
         trash.setText(" Thùng rác");
         trash.setBorderPainted(false);
+        trash.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        trash.setMargin(new java.awt.Insets(2, 0, 2, 14));
 
         refreshAccount.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         refreshAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-refresh-30.png"))); // NOI18N
         refreshAccount.setText(" Làm mới");
         refreshAccount.setToolTipText("");
+        refreshAccount.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        refreshAccount.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        refreshAccount.setMargin(new java.awt.Insets(2, 4, 2, 14));
+        refreshAccount.setMaximumSize(new java.awt.Dimension(155, 59));
+        refreshAccount.setMinimumSize(new java.awt.Dimension(155, 59));
 
         username.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         username.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -194,20 +214,25 @@ public class HomePage extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(emailList, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(38, 38, 38))
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(inboxMail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(emailList, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(composeMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(importantMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(sentMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(spamMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
-                    .addComponent(trash, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(username, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(refreshAccount, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(inboxMail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(composeMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(importantMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(sentMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(spamMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+                            .addComponent(trash, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(username, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
+                    .addComponent(refreshAccount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -216,11 +241,11 @@ public class HomePage extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(emailList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15)
-                .addComponent(refreshAccount)
-                .addGap(15, 15, 15)
+                .addGap(18, 18, 18)
+                .addComponent(refreshAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
                 .addComponent(composeMail, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
