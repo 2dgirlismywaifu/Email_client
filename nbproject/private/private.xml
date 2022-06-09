@@ -4,9 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/ngoth/OneDrive%20-%20dada/Documents/Network_dev/Email_Client/src/email_client/HomePage.java</file>
-            <file>file:/C:/Users/ngoth/OneDrive%20-%20dada/Documents/Network_dev/Email_Client/src/email_client/global/CheckAccount.java</file>
-            <file>file:/C:/Users/ngoth/OneDrive%20-%20dada/Documents/Network_dev/Email_Client/src/email_client/manageAccount.java</file>
-            <file>file:/C:/Users/ngoth/OneDrive%20-%20dada/Documents/Network_dev/Email_Client/src/email_client/dialogMess/CheckAccountDialog.java</file>
+            <file>file:/C:/Users/ngoth/OneDrive%20-%20dada/Documents/Network_dev/Email_Client/src/email_client/callFrame/frameManageAccount.java</file>
+            <file>file:/C:/Users/ngoth/OneDrive%20-%20dada/Documents/Network_dev/Email_Client/src/email_client/SendEmail.java</file>
+            <file>file:/C:/Users/ngoth/OneDrive%20-%20dada/Documents/Network_dev/Email_Client/src/email_client/callFrame/frameSendEmail.java</file>
         </group>
     </open-files>
 </project-private>
