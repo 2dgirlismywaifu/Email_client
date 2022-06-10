@@ -6,6 +6,7 @@ package email_client.global;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -15,7 +16,7 @@ public class LookandFeel {
     public static void setTheme() {
         try { 
             UIManager.setLookAndFeel(new FlatLightLaf()); 
-        } catch (Exception ex) { 
+        } catch (UnsupportedLookAndFeelException ex) { 
             ex.printStackTrace(); 
         }
             }
