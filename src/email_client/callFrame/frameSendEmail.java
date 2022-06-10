@@ -5,7 +5,7 @@
 package email_client.callFrame;
 
 import email_client.SendEmail;
-import email_client.global.lookandfeel;
+import email_client.global.LookandFeel;
 
 
 /**
@@ -14,7 +14,7 @@ import email_client.global.lookandfeel;
  */
 public class frameSendEmail {
     public static void callframe() {
-        lookandfeel.setTheme();
+        LookandFeel.setTheme();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             SendEmail frame = new SendEmail();

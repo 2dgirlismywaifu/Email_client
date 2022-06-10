@@ -11,7 +11,7 @@ import email_client.dialogMess.AccountFailed;
 import email_client.dialogMess.TwoFANotify;
 import email_client.global.IconImageUtilities;
 import email_client.global.RegexEmail;
-import email_client.global.lookandfeel;
+import email_client.global.LookandFeel;
 import email_client.sqlitehelper.sqlitehelper;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -365,7 +365,7 @@ public class addAccount extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        lookandfeel.setTheme();
+        LookandFeel.setTheme();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new addAccount().setVisible(true);

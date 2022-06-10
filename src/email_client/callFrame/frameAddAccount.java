@@ -5,7 +5,7 @@
 package email_client.callFrame;
 
 import email_client.addAccount;
-import email_client.global.lookandfeel;
+import email_client.global.LookandFeel;
 
 /**
  *
@@ -13,7 +13,7 @@ import email_client.global.lookandfeel;
  */
 public class frameAddAccount {
     public static void callframe() {
-        lookandfeel.setTheme();
+        LookandFeel.setTheme();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             addAccount frame = new email_client.addAccount();

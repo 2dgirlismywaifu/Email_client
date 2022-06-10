@@ -4,7 +4,10 @@
  */
 package email_client;
 
-import email_client.global.lookandfeel;
+import email_client.dialogMess.ExplainBcc;
+import email_client.dialogMess.ExplainCC;
+import email_client.global.IconImageUtilities;
+import email_client.global.LookandFeel;
 
 /**
  *
@@ -17,6 +20,8 @@ public class SendEmail extends javax.swing.JFrame {
      */
     public SendEmail() {
         initComponents();
+        //icon mặc định của phần mềm
+        IconImageUtilities.setIconImage(this);
     }
 
     /**
@@ -46,34 +51,44 @@ public class SendEmail extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Soạn thư");
 
-        sendBtn.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
+        sendBtn.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         sendBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-email-send-48.png"))); // NOI18N
         sendBtn.setText("Gửi");
         sendBtn.setBorderPainted(false);
         sendBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         sendBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("To");
 
-        hintCC.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        hintCC.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         hintCC.setText("CC");
         hintCC.setBorderPainted(false);
+        hintCC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hintCCActionPerformed(evt);
+            }
+        });
 
         toField.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
 
         ccField.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
 
-        hintBcc.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        hintBcc.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         hintBcc.setText("Bcc");
         hintBcc.setBorderPainted(false);
+        hintBcc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hintBccActionPerformed(evt);
+            }
+        });
 
         BccField.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
 
         subjectField.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Chủ đề");
 
@@ -81,7 +96,7 @@ public class SendEmail extends javax.swing.JFrame {
         emailField.setRows(5);
         jScrollPane1.setViewportView(emailField);
 
-        attachmentBtn.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        attachmentBtn.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         attachmentBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-attachment-32.png"))); // NOI18N
         attachmentBtn.setText("Đính kèm");
         attachmentBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -90,7 +105,7 @@ public class SendEmail extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Tập tin");
 
@@ -164,7 +179,7 @@ public class SendEmail extends javax.swing.JFrame {
                             .addComponent(subjectField)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(sendBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -179,12 +194,22 @@ public class SendEmail extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_attachmentBtnActionPerformed
 
+    private void hintCCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hintCCActionPerformed
+        // TODO add your handling code here:
+        ExplainCC.NotifyMesseage();
+    }//GEN-LAST:event_hintCCActionPerformed
+
+    private void hintBccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hintBccActionPerformed
+        // TODO add your handling code here:
+        ExplainBcc.NotifyMesseage();
+    }//GEN-LAST:event_hintBccActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        lookandfeel.setTheme();
+        LookandFeel.setTheme();
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

@@ -9,7 +9,7 @@ import email_client.callFrame.frameAddAccount;
 import email_client.dialogMess.AccountFailed;
 import email_client.global.CheckAccount;
 import email_client.global.IconImageUtilities;
-import email_client.global.lookandfeel;
+import email_client.global.LookandFeel;
 import email_client.sqlitehelper.sqlitehelper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -518,7 +518,7 @@ public class manageAccount extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        lookandfeel.setTheme();
+        LookandFeel.setTheme();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new manageAccount().setVisible(true);
