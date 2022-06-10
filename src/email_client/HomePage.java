@@ -308,7 +308,7 @@ public class HomePage extends javax.swing.JFrame {
         jScrollPane2.setViewportView(mailMesseage);
 
         MailSearchInput.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
-        MailSearchInput.setToolTipText("");
+        MailSearchInput.setToolTipText("Nhập thư cần tìm");
 
         deleteMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-delete-32.png"))); // NOI18N
         deleteMail.setText("Xóa thư");
@@ -336,14 +336,17 @@ public class HomePage extends javax.swing.JFrame {
         jLabel2.setText("Từ");
 
         jTextField2.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
+        jTextField2.setToolTipText("Người gửi");
 
         jLabel3.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Tới");
 
         jTextField3.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
+        jTextField3.setToolTipText("Người nhận");
 
         jTextField4.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
+        jTextField4.setToolTipText("Ngày gửi thư");
 
         jLabel4.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -354,6 +357,7 @@ public class HomePage extends javax.swing.JFrame {
         jLabel5.setText("Tiêu đề");
 
         jTextField5.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
+        jTextField5.setToolTipText("Tiêu đề thư");
 
         jLabel6.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
