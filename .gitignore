@@ -2,3 +2,4 @@
 /dist/
 database/database.db
 *.db
+nbproject/private/private.properties
