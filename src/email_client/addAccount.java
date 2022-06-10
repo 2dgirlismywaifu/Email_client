@@ -38,6 +38,8 @@ public class addAccount extends javax.swing.JFrame {
         initComponents();
         //icon mặc định của phần mềm
         IconImageUtilities.setIconImage(this);
+        verifyStatus.setVisible(false);
+        hideProblem();
     }
 
     /** This method is called from within the constructor to
@@ -67,6 +69,11 @@ public class addAccount extends javax.swing.JFrame {
         ConfirmBtn = new javax.swing.JButton();
         CancelBtn = new javax.swing.JButton();
         passwordEmail = new javax.swing.JPasswordField();
+        verifyStatus = new javax.swing.JLabel();
+        passProblem = new javax.swing.JLabel();
+        emailProblem = new javax.swing.JLabel();
+        smtpProblem = new javax.swing.JLabel();
+        servicesProblem = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Thêm tài khoản");
@@ -138,7 +145,7 @@ public class addAccount extends javax.swing.JFrame {
         jLabel9.setText("SMTP Server");
 
         smtpServer.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
-        smtpServer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "smtp.gmail.com", "smtp.office365.com", "smtp.mail.yahoo.com", " " }));
+        smtpServer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "smtp.gmail.com", "smtp.office365.com", "smtp.mail.yahoo.com" }));
 
         ConfirmBtn.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
         ConfirmBtn.setText("OK");
@@ -158,6 +165,37 @@ public class addAccount extends javax.swing.JFrame {
 
         passwordEmail.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
 
+        verifyStatus.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        verifyStatus.setText("Đang kiểm tra tài khoản! Vui lòng chờ....");
+
+        passProblem.setFont(new java.awt.Font("SF Pro Display", 0, 20)); // NOI18N
+        passProblem.setForeground(new java.awt.Color(255, 0, 0));
+        passProblem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        passProblem.setText("*");
+        passProblem.setToolTipText("");
+        passProblem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        emailProblem.setFont(new java.awt.Font("SF Pro Display", 0, 20)); // NOI18N
+        emailProblem.setForeground(new java.awt.Color(255, 0, 0));
+        emailProblem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        emailProblem.setText("*");
+        emailProblem.setToolTipText("");
+        emailProblem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        smtpProblem.setFont(new java.awt.Font("SF Pro Display", 0, 20)); // NOI18N
+        smtpProblem.setForeground(new java.awt.Color(255, 0, 0));
+        smtpProblem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        smtpProblem.setText("*");
+        smtpProblem.setToolTipText("");
+        smtpProblem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        servicesProblem.setFont(new java.awt.Font("SF Pro Display", 0, 20)); // NOI18N
+        servicesProblem.setForeground(new java.awt.Color(255, 0, 0));
+        servicesProblem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        servicesProblem.setText("*");
+        servicesProblem.setToolTipText("");
+        servicesProblem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -167,8 +205,15 @@ public class addAccount extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
+                .addGap(135, 135, 135)
+                .addComponent(ConfirmBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(CancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(135, 135, 135))
+            .addGroup(layout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(verifyStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -182,7 +227,8 @@ public class addAccount extends javax.swing.JFrame {
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(Services, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(42, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(servicesProblem, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(34, 34, 34)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -190,27 +236,25 @@ public class addAccount extends javax.swing.JFrame {
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(showPasswordCheck)
                                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(emailProblem, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(smtpServer, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(smtpProblem, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(smtpServer, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(passwordEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(passwordEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(TwoFAHelper, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap())))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(135, 135, 135)
-                .addComponent(ConfirmBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(CancelBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(101, 101, 101))
+                                .addComponent(passProblem, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TwoFAHelper, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -222,11 +266,13 @@ public class addAccount extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(Type, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(Services, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(Services, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(servicesProblem))
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(emailAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(emailAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(emailProblem))
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -236,14 +282,18 @@ public class addAccount extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(showPasswordCheck)
-                    .addComponent(passwordEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(passwordEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(passProblem))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(TwoFAHelper)
                 .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(smtpServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                    .addComponent(smtpServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(smtpProblem))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addComponent(verifyStatus)
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ConfirmBtn)
                     .addComponent(CancelBtn))
@@ -253,7 +303,43 @@ public class addAccount extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-   
+   ////////////////////Đây là lỗi đầu vào/////////////////////////////
+    private void hideProblem() {
+        emailProblem.setVisible(false);
+        passProblem.setVisible(false);
+        smtpProblem.setVisible(false);
+        servicesProblem.setVisible(false);
+    }
+    
+    private void showProblem() {
+        emailProblem.setVisible(true);
+        passProblem.setVisible(true);
+        smtpProblem.setVisible(true);
+        servicesProblem.setVisible(true);
+    }
+    ///////////////////////////////////////////////////////////
+    private void enableInput() {
+        Type.setEnabled(true);
+        Services.setEnabled(true);
+        emailAccount.setEnabled(true);
+        username.setEnabled(true);
+        passwordEmail.setEnabled(true);
+        smtpServer.setEnabled(true);
+        ConfirmBtn.setEnabled(true);
+        CancelBtn.setEnabled(true);
+    }
+    
+    private void disableInput() {
+        Type.setEnabled(false);
+        Services.setEnabled(false);
+        emailAccount.setEnabled(false);
+        username.setEnabled(false);
+        passwordEmail.setEnabled(false);
+        smtpServer.setEnabled(false);
+        ConfirmBtn.setEnabled(false);
+        CancelBtn.setEnabled(false);
+    }
+    
     private void inputData(String type, String service,  String smtp, String email, String pass, String name, String portTLS, String portSSL) {
         try {
             ps = connection.prepareStatement("INSERT INTO email(name, email, password, type, server, smtp, portTLS, portSSL) values(?,?,?,?,?,?,?,?) ");
@@ -308,30 +394,49 @@ public class addAccount extends javax.swing.JFrame {
         email = emailAccount.getText(); //có thể bỏ qua, không cần nhập
         pass = new String (getpassword);
         name = username.getText();
-        
-        //kiểm tra email có đúng mẫu: example@domain.com
-        if (RegexEmail.validation(email) == true) 
-        {       
-            //kiểm tra thông tin có nhập thiếu không
-            if (email.equals("") || pass.equals("")) {
+        //kiểm tra thông tin có nhập thiếu không
+        if (email.equals("") || pass.equals("")) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ trường thông tin", "Thông báo", JOptionPane.ERROR_MESSAGE);
-            }      
-            else {            
-                try {
-                    checkService(service, smtp);
-                    CheckAccount.checkLogin(smtp, type, email, pass);
-                    inputData(type, service, smtp, email, pass, name, portTLS, portSSL);               
-                    this.dispose();
-                    frameManageAccount.callframe();
-                } catch (MessagingException ex) {
-                    Logger.getLogger(addAccount.class.getName()).log(Level.SEVERE, null, ex);
-                    AccountFailed.NotifyMesseage();
+                emailProblem.setVisible(true);
+                passProblem.setVisible(true);
+                emailProblem.setToolTipText("Vui lòng điền tài khoản email");
+                passProblem.setToolTipText("Vui lòng điền mật khẩu");
+         }      
+        //kiểm tra email có đúng mẫu: example@domain.com
+        else if (RegexEmail.validation(email) == true) 
+        {       
+            verifyStatus.setVisible(true);
+            hideProblem();
+            disableInput();
+            Thread addAccount = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        checkService(service, smtp);
+                        CheckAccount.checkLogin(smtp, type, email, pass);
+                        inputData(type, service, smtp, email, pass, name, portTLS, portSSL);
+                        dispose();
+                        frameManageAccount.callframe();
+                        } catch (MessagingException ex) {
+                        Logger.getLogger(addAccount.class.getName()).log(Level.SEVERE, null, ex);
+                        AccountFailed.NotifyMesseage();
+                        verifyStatus.setVisible(false);
+                        enableInput();
+                        showProblem();
+                        emailProblem.setToolTipText("Vui lòng kiểm tài khoản email");
+                        passProblem.setToolTipText("Mật khẩu sai hoặc tài khoản dùng xác thực hai bước");
+                        smtpProblem.setToolTipText("Kiểm tra SMTP của tài khoản");
+                        servicesProblem.setToolTipText("Kiểm tra dịch vụ email của bạn");
+                    }
                 }
-            }
-        }
+            };
+            addAccount.start();             
+        }  
         else
             {
                 JOptionPane.showMessageDialog(this, "Email không đúng mẫu: example@domain.com", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                emailProblem.setVisible(true);            
+                emailProblem.setToolTipText("Kiểm tra lại email của bạn");
             }
     }//GEN-LAST:event_ConfirmBtnActionPerformed
 
@@ -379,6 +484,7 @@ public class addAccount extends javax.swing.JFrame {
     private javax.swing.JLabel TwoFAHelper;
     private javax.swing.JComboBox<String> Type;
     private javax.swing.JTextField emailAccount;
+    private javax.swing.JLabel emailProblem;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -387,10 +493,14 @@ public class addAccount extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel passProblem;
     private javax.swing.JPasswordField passwordEmail;
+    private javax.swing.JLabel servicesProblem;
     private javax.swing.JCheckBox showPasswordCheck;
+    private javax.swing.JLabel smtpProblem;
     private javax.swing.JComboBox<String> smtpServer;
     private javax.swing.JTextField username;
+    private javax.swing.JLabel verifyStatus;
     // End of variables declaration//GEN-END:variables
 
 }
