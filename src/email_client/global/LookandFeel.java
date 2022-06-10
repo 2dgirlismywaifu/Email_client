@@ -11,7 +11,7 @@ import javax.swing.UIManager;
  *
  * @author notmiyouji
  */
-public class lookandfeel {
+public class LookandFeel {
     public static void setTheme() {
         try { 
             UIManager.setLookAndFeel(new FlatLightLaf()); 
