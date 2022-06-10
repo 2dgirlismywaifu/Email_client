@@ -7,8 +7,6 @@ package email_client.dialogMess;
 import java.awt.EventQueue;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -18,11 +16,7 @@ public class TwoFANotify {
 
     public static void NotifyMesseage() {
         //Thông báo về các tài khoản xác thực hai bước
-        EventQueue.invokeLater(() -> {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            }
+        EventQueue.invokeLater(() -> {        
             ImageIcon icon = new ImageIcon(TwoFANotify.class.getResource("/icon/icons8-2fa-64.png"));
             
             

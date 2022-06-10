@@ -7,8 +7,6 @@ package email_client.dialogMess;
 import java.awt.EventQueue;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -17,12 +15,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class ExplainBcc {
     public static void NotifyMesseage() {
         //Thông báo về các tài khoản xác thực hai bước
-        EventQueue.invokeLater(() -> {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            }
-            ImageIcon icon = new ImageIcon(TwoFANotify.class.getResource("/icon/icons8-2fa-64.png"));
+        EventQueue.invokeLater(() -> {         
+            ImageIcon icon = new ImageIcon(TwoFANotify.class.getResource("/icon/icons8-email-64.png"));
             
             
             String text = "BCC là từ viết tắt của Blind Carbon Coppy cũng có nghĩa là tạo ra những bản sao tạm thời."

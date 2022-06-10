@@ -4,6 +4,7 @@
  */
 package email_client.global;
 
+import email_client.manageAccount;
 import java.util.Properties;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
@@ -15,35 +16,33 @@ import javax.mail.Store;
  *
  * @author notmiyouji
  */
-public class CheckAccount {
+public class CheckAccount  extends Thread {
     public static void checkLogin(String host, String storeType, String user,
-      String password) throws NoSuchProviderException, MessagingException 
+      String password)  throws NoSuchProviderException, MessagingException 
    {
-      
-      // create properties field
-      Properties properties = new Properties();
+        // create properties field
+              Properties properties = new Properties();
 
-      properties.put("mail.pop3s.host", host);
-      properties.put("mail.pop3s.port", "995");
-      properties.put("mail.pop3s.starttls.enable", "true");
-      
+              properties.put("mail.pop3s.host", host);
+              properties.put("mail.pop3s.port", "995");
+              properties.put("mail.pop3s.starttls.enable", "true");
 
-      // Setup authentication, get session
-      Session emailSession = Session.getInstance(properties,
-         new javax.mail.Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-               return new PasswordAuthentication(user, password);
-            }
-         });
-      
 
-      
-      Store store = emailSession.getStore("pop3s");
-      store.connect();
+              // Setup authentication, get session
+              Session emailSession = Session.getInstance(properties,
+                 new javax.mail.Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                       return new PasswordAuthentication(user, password);
+                    }
+                 });
 
-      // close the store      
-      store.close();
+              Store store = emailSession.getStore("pop3s");
+              store.connect();
+
+              // close the store      
+              store.close();
+              
 
     }
     
