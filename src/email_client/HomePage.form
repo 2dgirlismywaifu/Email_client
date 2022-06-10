@@ -33,6 +33,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="closeMenu">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Alt+F4"/>
+                </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/icon/icons8-exit-30.png"/>
                 </Property>
@@ -99,22 +102,16 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                          <Component id="MailSearchInput" min="-2" pref="431" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="refreshBtn" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
                   <Component id="jScrollPane1" pref="501" max="32767" attributes="0"/>
                   <Component id="jSeparator2" max="32767" attributes="0"/>
+                  <Component id="MailSearchInput" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane2" pref="704" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" pref="694" max="32767" attributes="0"/>
                   <Component id="jSeparator5" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabel2" min="-2" pref="68" max="-2" attributes="0"/>
@@ -139,18 +136,18 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                              <Component id="deleteMail" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                              <Component id="replyMail" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                              <Component id="forwardMail" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jLabel6" min="-2" pref="68" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -162,13 +159,13 @@
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jButton1" max="32767" attributes="0"/>
-                          <Component id="jButton2" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jButton3" alignment="0" max="32767" attributes="0"/>
+                          <Component id="deleteMail" max="32767" attributes="0"/>
+                          <Component id="replyMail" alignment="0" max="32767" attributes="0"/>
+                          <Component id="forwardMail" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                       <Component id="jSeparator5" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -196,17 +193,14 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="refreshBtn" pref="0" max="32767" attributes="0"/>
-                          <Component id="MailSearchInput" pref="30" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                      <Component id="MailSearchInput" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                       <Component id="jSeparator2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                       <Component id="jScrollPane1" max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -222,25 +216,21 @@
                   <Component id="emailList" min="-2" pref="154" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
               </Group>
-              <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="inboxMail" max="32767" attributes="0"/>
-                              <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
-                              <Component id="composeMail" alignment="0" max="32767" attributes="0"/>
-                              <Component id="importantMail" alignment="0" max="32767" attributes="0"/>
-                              <Component id="sentMail" alignment="0" max="32767" attributes="0"/>
-                              <Component id="spamMail" alignment="0" pref="216" max="32767" attributes="0"/>
-                              <Component id="trash" alignment="0" max="32767" attributes="0"/>
-                              <Component id="username" alignment="0" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                      <Component id="refreshAccount" alignment="1" max="32767" attributes="0"/>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="refreshAccount" max="32767" attributes="0"/>
+                      <Component id="inboxMail" max="32767" attributes="0"/>
+                      <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
+                      <Component id="composeMail" alignment="0" max="32767" attributes="0"/>
+                      <Component id="importantMail" alignment="0" max="32767" attributes="0"/>
+                      <Component id="sentMail" alignment="0" max="32767" attributes="0"/>
+                      <Component id="spamMail" alignment="0" pref="216" max="32767" attributes="0"/>
+                      <Component id="trashMail" alignment="0" max="32767" attributes="0"/>
+                      <Component id="username" alignment="0" max="32767" attributes="0"/>
                   </Group>
+                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -268,7 +258,7 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="spamMail" min="-2" pref="45" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="trash" min="-2" pref="45" max="-2" attributes="0"/>
+                  <Component id="trashMail" min="-2" pref="45" max="-2" attributes="0"/>
                   <EmptySpace pref="156" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -315,7 +305,7 @@
               <Image iconType="3" name="/icon/icons8-writer-50.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value=" So&#x1ea1;n th&#x1b0;"/>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
+            <Property name="toolTipText" type="java.lang.String" value="So&#x1ea1;n th&#x1b0; m&#x1edb;i"/>
             <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
@@ -338,6 +328,7 @@
               <Image iconType="3" name="/icon/icons8-important-50.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="   Quan tr&#x1ecd;ng"/>
+            <Property name="toolTipText" type="java.lang.String" value="C&#xe1;c th&#x1b0; &#x111;&#xe1;nh nh&#xe3;n quan tr&#x1ecd;ng"/>
             <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
             <Property name="iconTextGap" type="int" value="-8"/>
@@ -358,6 +349,7 @@
               <Image iconType="3" name="/icon/icons8-sent-50.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="   &#x110;&#xe3; g&#x1eed;i"/>
+            <Property name="toolTipText" type="java.lang.String" value="C&#xe1;c th&#x1b0; &#x111;&#xe3; g&#x1eed;i &#x111;i"/>
             <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
             <Property name="iconTextGap" type="int" value="-8"/>
@@ -375,6 +367,7 @@
               <Image iconType="3" name="/icon/icons8-spam-can-40.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="  Th&#x1b0; r&#xe1;c (spam)"/>
+            <Property name="toolTipText" type="java.lang.String" value="C&#x1ea9;n th&#x1ead;n v&#x1edb;i th&#x1b0; l&#x1eeb;a &#x111;&#x1ea3;o"/>
             <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
@@ -391,6 +384,7 @@
               <Image iconType="3" name="/icon/icons8-inbox-50.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="   H&#x1ed9;p th&#x1b0; &#x111;&#x1ebf;n"/>
+            <Property name="toolTipText" type="java.lang.String" value="M&#x1edf; h&#x1ed9;p th&#x1b0; &#x111;&#x1ebf;n"/>
             <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
             <Property name="iconTextGap" type="int" value="-8"/>
@@ -402,7 +396,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="trash">
+        <Component class="javax.swing.JButton" name="trashMail">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="SF Pro Display" size="16" style="0"/>
@@ -411,6 +405,7 @@
               <Image iconType="3" name="/icon/icons8-trash-40.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value=" Th&#xf9;ng r&#xe1;c"/>
+            <Property name="toolTipText" type="java.lang.String" value="C&#xe1;c th&#x1b0; &#x111;&#xe3; x&#xf3;a l&#x1b0;u &#x1edf; &#x111;&#xe2;y"/>
             <Property name="borderPainted" type="boolean" value="false"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
@@ -427,7 +422,7 @@
               <Image iconType="3" name="/icon/icons8-refresh-30.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value=" L&#xe0;m m&#x1edb;i"/>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
+            <Property name="toolTipText" type="java.lang.String" value="L&#xe0;m m&#x1edb;i danh s&#xe1;ch t&#xe0;i kho&#x1ea3;n"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
             <Property name="horizontalTextPosition" type="int" value="4"/>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
@@ -512,33 +507,45 @@
     <Component class="javax.swing.JTextField" name="MailSearchInput">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="16" style="0"/>
+          <Font name="SF Pro Display" size="14" style="0"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
-      <Events>
-        <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="MailSearchInputKeyTyped"/>
-      </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="deleteMail">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/icon/icons8-trash-48.png"/>
+          <Image iconType="3" name="/icon/icons8-delete-32.png"/>
         </Property>
+        <Property name="text" type="java.lang.String" value="X&#xf3;a th&#x1b0;"/>
+        <Property name="toolTipText" type="java.lang.String" value="X&#xf3;a th&#x1b0;"/>
+        <Property name="borderPainted" type="boolean" value="false"/>
+        <Property name="horizontalTextPosition" type="int" value="0"/>
+        <Property name="verticalTextPosition" type="int" value="3"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="replyMail">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/icon/icons8-reply-48.png"/>
+          <Image iconType="3" name="/icon/icons8-reply-32.png"/>
         </Property>
+        <Property name="text" type="java.lang.String" value="Tr&#x1ea3; l&#x1edd;i th&#x1b0;"/>
+        <Property name="toolTipText" type="java.lang.String" value="Tr&#x1ea3; l&#x1edd;i th&#x1b0;"/>
+        <Property name="borderPainted" type="boolean" value="false"/>
+        <Property name="horizontalTextPosition" type="int" value="0"/>
+        <Property name="verticalTextPosition" type="int" value="3"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton3">
+    <Component class="javax.swing.JButton" name="forwardMail">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/icon/icons8-fast-forward-48.png"/>
+          <Image iconType="3" name="/icon/icons8-forward-32.png"/>
         </Property>
+        <Property name="text" type="java.lang.String" value="Chuy&#x1ec3;n ti&#x1ebf;p"/>
+        <Property name="toolTipText" type="java.lang.String" value="Chuy&#x1ec3;n ti&#x1ebf;p th&#x1b0;"/>
+        <Property name="borderPainted" type="boolean" value="false"/>
+        <Property name="horizontalTextPosition" type="int" value="0"/>
+        <Property name="verticalTextPosition" type="int" value="3"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator5">
@@ -614,17 +621,6 @@
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="N&#x1ed9;i dung"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="refreshBtn">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="16" style="0"/>
-        </Property>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/icon/icons8-refresh-30.png"/>
-        </Property>
-        <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
