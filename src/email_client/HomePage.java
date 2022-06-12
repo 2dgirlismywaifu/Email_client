@@ -660,8 +660,8 @@ public class HomePage extends javax.swing.JFrame {
         //đọc nội dung thư
         AbstractTableModel model = (AbstractTableModel) mailList.getModel();
         fromTXT.setText(model.getValueAt(mailList.getSelectedRow(),0).toString());
-        dateTXT.setText(model.getValueAt(mailList.getSelectedRow(),1).toString());
-        subjectTXT.setText(model.getValueAt(mailList.getSelectedRow(),2).toString());
+        dateTXT.setText(model.getValueAt(mailList.getSelectedRow(),2).toString());
+        subjectTXT.setText(model.getValueAt(mailList.getSelectedRow(),1).toString());
         int rowSelected = mailList.getSelectedRow();
         System.out.println("Hang: "+ rowSelected);
         
