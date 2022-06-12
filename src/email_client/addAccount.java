@@ -11,6 +11,7 @@ import email_client.global.IconImageUtilities;
 import email_client.global.RegexEmail;
 import email_client.global.LookandFeel;
 import email_client.sqlitehelper.sqlitehelper;
+import java.awt.Dialog;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -406,6 +407,7 @@ public class addAccount extends javax.swing.JFrame {
         //kiểm tra email có đúng mẫu: example@domain.com
         else if (RegexEmail.validation(email) == true) 
         {       
+            dialogChecking.setModalityType(Dialog.ModalityType.MODELESS);
             dialogChecking.setVisible(true);
             hideProblem();
             disableInput();
