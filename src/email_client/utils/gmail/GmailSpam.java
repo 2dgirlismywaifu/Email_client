@@ -82,7 +82,7 @@ public class GmailSpam {
                                    
                 }
             }
-             
+             store.close();
           return mailListModel;
     }
     

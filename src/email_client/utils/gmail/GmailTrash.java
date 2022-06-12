@@ -82,7 +82,7 @@ public class GmailTrash {
                                    
                 }
             }
-             
+             store.close();
           return mailListModel;
     }
     

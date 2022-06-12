@@ -81,7 +81,7 @@ public class OutlookTrash {
                                    
                 }
             }
-             
+             store.close();
           return mailListModel;
     }
     

@@ -81,7 +81,7 @@ public class OutlookSpam {
                                    
                 }
             }
-             
+             store.close();
           return mailListModel;
     }
     

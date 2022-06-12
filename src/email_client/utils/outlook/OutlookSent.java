@@ -81,7 +81,7 @@ public class OutlookSent {
                                    
                 }
             }
-             
+             store.close();
           return mailListModel;
     }
     

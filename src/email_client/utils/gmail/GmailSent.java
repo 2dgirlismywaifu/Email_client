@@ -82,7 +82,7 @@ public class GmailSent {
                                    
                 }
             }
-             
+             store.close();            
           return mailListModel;
     }
 }

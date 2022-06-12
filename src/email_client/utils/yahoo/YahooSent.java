@@ -82,7 +82,7 @@ public class YahooSent {
                                    
                 }
             }
-             
+             store.close();
           return mailListModel;
     }
     
