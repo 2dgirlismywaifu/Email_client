@@ -4,13 +4,27 @@
  */
 package email_client;
 
-import email_client.callFrame.frameAddAccount;
+import email_client.callFrame.frameDownloadMailMesseage;
 import email_client.callFrame.frameManageAccount;
 import email_client.callFrame.frameSendEmail;
 import email_client.global.LookandFeel;
 import email_client.global.IconImageUtilities;
 import email_client.dialogMess.NetworkNotify;
 import email_client.sqlitehelper.sqlitehelper;
+import email_client.utils.gmail.Gmail_Inbox;
+import email_client.utils.gmail.GmailSent;
+import email_client.utils.gmail.GmailSpam;
+import email_client.utils.gmail.GmailTrash;
+import email_client.utils.FetchContentMail;
+import email_client.utils.outlook.OutlookInbox;
+import email_client.utils.outlook.OutlookSent;
+import email_client.utils.outlook.OutlookSpam;
+import email_client.utils.outlook.OutlookTrash;
+import email_client.utils.yahoo.YahooInbox;
+import email_client.utils.yahoo.YahooSent;
+import email_client.utils.yahoo.YahooSpam;
+import email_client.utils.yahoo.YahooTrash;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,6 +32,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.MessagingException;
+import javax.swing.JOptionPane;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -25,10 +43,33 @@ import java.util.logging.Logger;
  */
 public class HomePage extends javax.swing.JFrame {
     
+    frameDownloadMailMesseage frame = new frameDownloadMailMesseage();
     Connection connection = sqlitehelper.getConnection();
     PreparedStatement ps;
     ResultSet rs;
-    
+    String smtp, storeType, user, password, server;
+    //smtp chính là server kết nối của dịch vụ email
+    //storeType: pop3 - mail lưu cục bộ, imap: mail ko lưu cục bộ, giao tiếp với server
+    //user: chính là email
+    //pass: khỏi cần giải thích :)
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    //gọi utils fetch email
+    FetchContentMail content = new FetchContentMail();
+    //Tài khoản Gmail
+    Gmail_Inbox inboxGmail = new Gmail_Inbox();
+    GmailSent sentGmail = new GmailSent();
+    GmailSpam spamGmail = new GmailSpam();
+    GmailTrash trashGmail = new GmailTrash();
+    //Tài khoản Outlook, Office 365
+    OutlookInbox inboxOutlook = new OutlookInbox();
+    OutlookSent sentOutlook = new OutlookSent();
+    OutlookSpam spamOutlook = new OutlookSpam();
+    OutlookTrash trashOutlook = new OutlookTrash();
+    //Tài khoản Yahoo Mail
+    YahooInbox inboxYahoo = new YahooInbox();
+    YahooSent sentYahoo = new YahooSent();
+    YahooSpam spamYahoo = new YahooSpam();
+    YahooTrash trashYahoo = new YahooTrash();
     
     /**
      * Creates new form HomePage
@@ -45,6 +86,7 @@ public class HomePage extends javax.swing.JFrame {
     }
     
     public final void loaddatabase() {
+        //bỏ pop3, sử dụng loại imap
         try {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec          
@@ -52,11 +94,13 @@ public class HomePage extends javax.swing.JFrame {
                     + "name TEXT NULL, "    //tên cho tài khoản email (Không bắt buộc)
                     + "email TEXT NOT NULL, " //địa chỉ tài khoản email
                     + "password TEXT NOT NULL, " //mật khẩu
-                    + "type TEXT NOT NULL, " //loại (imap hay pop3) incoming messeage
+                    + "type TEXT NOT NULL, " //loại (imap hay pop3) incoming messeage --> không sử dụng pop3
                     + "server TEXT NOT NULL, " //gmail, outlook và yahoo (hiện tại thế này đã)
                     + "smtp TEXT NOT NULL,"   //smtp server của email outgoing messeage
+                    + "imap TEXT NOT NULL,"   //imap server của email incoming messeage
                     + "portTLS TEXT NOT NULL," //port của stmp server
-                    + "portSSL TEXT NOT NULL )");   //port của pop3 server (pop3 phổ biến hơn)
+                    + "portSSL TEXT NOT NULL , "   //port của stmp server
+                    + "portIMAP TEXT NOT NULL )");   //port của IMAP server
         } catch (SQLException ex) {
             //Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
             //bỏ qua cái exception này nếu bảng tồn tại thôi          
@@ -65,8 +109,7 @@ public class HomePage extends javax.swing.JFrame {
     
     private void enableFunction() {
         composeMail.setEnabled(true);
-        inboxMail.setEnabled(true);
-        importantMail.setEnabled(true);
+        inboxMail.setEnabled(true);    
         sentMail.setEnabled(true);
         spamMail.setEnabled(true);
         trashMail.setEnabled(true);
@@ -78,7 +121,6 @@ public class HomePage extends javax.swing.JFrame {
     private void disableFunction() {
         composeMail.setEnabled(false);
         inboxMail.setEnabled(false);
-        importantMail.setEnabled(false);
         sentMail.setEnabled(false);
         spamMail.setEnabled(false);
         trashMail.setEnabled(false);
@@ -99,7 +141,13 @@ public class HomePage extends javax.swing.JFrame {
             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    public boolean isEmpty() {
+        if (mailList != null && mailList.getModel() != null) {
+            return mailList.getModel().getRowCount()<=0;
+        }
+        return false;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -114,7 +162,6 @@ public class HomePage extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         composeMail = new javax.swing.JButton();
-        importantMail = new javax.swing.JButton();
         sentMail = new javax.swing.JButton();
         spamMail = new javax.swing.JButton();
         inboxMail = new javax.swing.JButton();
@@ -123,24 +170,22 @@ public class HomePage extends javax.swing.JFrame {
         username = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         mailList = new javax.swing.JTable();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        mailMesseage = new javax.swing.JTextArea();
         MailSearchInput = new javax.swing.JTextField();
         deleteMail = new javax.swing.JButton();
         replyMail = new javax.swing.JButton();
         forwardMail = new javax.swing.JButton();
         jSeparator5 = new javax.swing.JSeparator();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        fromTXT = new javax.swing.JTextField();
+        dateTXT = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        subjectTXT = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        mailMessage = new javax.swing.JEditorPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         CheckNetwork = new javax.swing.JMenuItem();
@@ -180,16 +225,6 @@ public class HomePage extends javax.swing.JFrame {
             }
         });
 
-        importantMail.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
-        importantMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-important-50.png"))); // NOI18N
-        importantMail.setText("   Quan trọng");
-        importantMail.setToolTipText("Các thư đánh nhãn quan trọng");
-        importantMail.setBorderPainted(false);
-        importantMail.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        importantMail.setIconTextGap(-8);
-        importantMail.setMargin(new java.awt.Insets(2, -2, 2, 14));
-        importantMail.setPreferredSize(new java.awt.Dimension(180, 70));
-
         sentMail.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         sentMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-sent-50.png"))); // NOI18N
         sentMail.setText("   Đã gửi");
@@ -198,6 +233,11 @@ public class HomePage extends javax.swing.JFrame {
         sentMail.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         sentMail.setIconTextGap(-8);
         sentMail.setMargin(new java.awt.Insets(2, -2, 2, 14));
+        sentMail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sentMailActionPerformed(evt);
+            }
+        });
 
         spamMail.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         spamMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-spam-can-40.png"))); // NOI18N
@@ -206,6 +246,11 @@ public class HomePage extends javax.swing.JFrame {
         spamMail.setBorderPainted(false);
         spamMail.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         spamMail.setMargin(new java.awt.Insets(2, 0, 2, 14));
+        spamMail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                spamMailActionPerformed(evt);
+            }
+        });
 
         inboxMail.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         inboxMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-inbox-50.png"))); // NOI18N
@@ -216,6 +261,11 @@ public class HomePage extends javax.swing.JFrame {
         inboxMail.setIconTextGap(-8);
         inboxMail.setMargin(new java.awt.Insets(2, -4, 2, 14));
         inboxMail.setPreferredSize(new java.awt.Dimension(180, 70));
+        inboxMail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inboxMailActionPerformed(evt);
+            }
+        });
 
         trashMail.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         trashMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-trash-40.png"))); // NOI18N
@@ -224,6 +274,11 @@ public class HomePage extends javax.swing.JFrame {
         trashMail.setBorderPainted(false);
         trashMail.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         trashMail.setMargin(new java.awt.Insets(2, 0, 2, 14));
+        trashMail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                trashMailActionPerformed(evt);
+            }
+        });
 
         refreshAccount.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         refreshAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-refresh-30.png"))); // NOI18N
@@ -255,7 +310,6 @@ public class HomePage extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(composeMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(importantMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(sentMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(spamMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
                     .addComponent(trashMail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -280,32 +334,28 @@ public class HomePage extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addComponent(inboxMail, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
-                .addComponent(importantMail, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15)
                 .addComponent(sentMail, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(spamMail, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(trashMail, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addContainerGap(216, Short.MAX_VALUE))
         );
 
         mailList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
                 "Người gửi", "Tiêu đề", "Ngày gửi"
             }
         ));
+        mailList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mailListMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(mailList);
-
-        mailMesseage.setColumns(20);
-        mailMesseage.setRows(5);
-        jScrollPane2.setViewportView(mailMesseage);
 
         MailSearchInput.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
         MailSearchInput.setToolTipText("Nhập thư cần tìm");
@@ -331,40 +381,35 @@ public class HomePage extends javax.swing.JFrame {
         forwardMail.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         forwardMail.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        jLabel2.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Từ");
 
-        jTextField2.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
-        jTextField2.setToolTipText("Người gửi");
+        fromTXT.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
+        fromTXT.setToolTipText("Người gửi");
 
-        jLabel3.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Tới");
+        dateTXT.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
+        dateTXT.setToolTipText("Ngày gửi thư");
 
-        jTextField3.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
-        jTextField3.setToolTipText("Người nhận");
-
-        jTextField4.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
-        jTextField4.setToolTipText("Ngày gửi thư");
-
-        jLabel4.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Ngày gửi");
 
-        jLabel5.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Tiêu đề");
 
-        jTextField5.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
-        jTextField5.setToolTipText("Tiêu đề thư");
+        subjectTXT.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
+        subjectTXT.setToolTipText("Tiêu đề thư");
 
-        jLabel6.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("Nội dung");
 
         jLabel8.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel8.setText("Nhập để tìm kiếm thư");
+
+        jScrollPane3.setViewportView(mailMessage);
 
         jMenu1.setText("File");
 
@@ -424,36 +469,36 @@ public class HomePage extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
                     .addComponent(jSeparator2)
                     .addComponent(MailSearchInput))
-                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)
-                    .addComponent(jSeparator5)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField3))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField4))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextField5))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator5)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(deleteMail)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(replyMail)
+                                .addComponent(fromTXT))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(forwardMail))
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(dateTXT))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(subjectTXT))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(deleteMail)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(replyMail)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(forwardMail))
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 385, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane3)))
                 .addGap(10, 10, 10))
         );
         layout.setVerticalGroup(
@@ -472,30 +517,26 @@ public class HomePage extends javax.swing.JFrame {
                         .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(fromTXT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(dateTXT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(subjectTXT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(20, 20, 20)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2))
+                        .addComponent(jScrollPane3))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(MailSearchInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(15, 15, 15)
+                        .addGap(44, 44, 44)
                         .addComponent(jScrollPane1)))
                 .addGap(10, 10, 10))
         );
@@ -511,35 +552,6 @@ public class HomePage extends javax.swing.JFrame {
         
     }//GEN-LAST:event_CheckNetworkActionPerformed
 
-    private void emailListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailListActionPerformed
-        // TODO add your handling code here:
-        if (emailList.getSelectedItem() == "Chọn tài khoản") { //nếu danh sách emailList ở chọn tài khoản
-            //vô hiệu hóa tất cả chức năng tại màn hình chính
-            disableFunction();
-            username.setText("Email Manager");
-        }
-        else {
-            //mở khóa lại toàn bộ chức năng
-            enableFunction();
-            try {
-            //trước tiên chúng ta sẽ đổi Email Client thành tên của tk email
-            ps = connection.prepareStatement("SELECT name FROM email WHERE email = ?");
-            ps.setString(1, emailList.getSelectedItem().toString());
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                username.setText(rs.getString("name"));
-            }
-
-            } catch (SQLException ex) {
-                Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            //mặc định sẽ feed "Hộp thư đến của tài khoản
-        }
-        
-        
-    }//GEN-LAST:event_emailListActionPerformed
-
     private void closeMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeMenuActionPerformed
         // TODO add your handling code here:
         this.dispose();
@@ -551,15 +563,292 @@ public class HomePage extends javax.swing.JFrame {
         frameManageAccount.callframe();
     }//GEN-LAST:event_accountManageActionPerformed
 
+   
+    private void inboxMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inboxMailActionPerformed
+        // TODO add your handling code here:      
+        if (isEmpty() == false) { 
+            int reply = JOptionPane.showConfirmDialog(this, "Bảng đã có danh sách thư, bạn muốn tiếp tục?\n"
+                    + "Nếu bạn muốn tải thư mới, bạn có thể tiếp tục.", "Thông báo", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION ) {
+                inboxMailAction();
+            }         
+        }
+        else {
+            inboxMailAction();
+        }     
+    }//GEN-LAST:event_inboxMailActionPerformed
+
     private void composeMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_composeMailActionPerformed
         // TODO add your handling code here:
         //gọi frame soạn thư. Hết
         frameSendEmail.callframe();
     }//GEN-LAST:event_composeMailActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void emailListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailListActionPerformed
+        // TODO add your handling code here:
+        if (emailList.getSelectedItem() == "Chọn tài khoản") { //nếu danh sách emailList ở chọn tài khoản
+            //vô hiệu hóa tất cả chức năng tại màn hình chính
+            disableFunction();
+            username.setText("Email Manager");
+        }
+        else {
+            //mở khóa lại toàn bộ chức năng
+            enableFunction();
+            try {
+                //trước tiên chúng ta sẽ đổi Email Client thành tên của tk email
+                ps = connection.prepareStatement("SELECT name FROM email WHERE email = ?");
+                ps.setString(1, emailList.getSelectedItem().toString());
+                rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    username.setText(rs.getString("name"));
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+
+    }//GEN-LAST:event_emailListActionPerformed
+     
+    //Thư đã gửi
+    private void sentMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sentMailActionPerformed
+             if (isEmpty() == false) { 
+            int reply = JOptionPane.showConfirmDialog(this, "Bảng đã có danh sách thư, bạn muốn tiếp tục?\n"
+                    + "Nếu bạn muốn tải thư mới, bạn có thể tiếp tục.", "Thông báo", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION ) {
+                sentMailAction();
+            }         
+        }
+        else {
+            sentMailAction();
+        }     
+        
+    }//GEN-LAST:event_sentMailActionPerformed
+
+    private void spamMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spamMailActionPerformed
+        // TODO add your handling code here:
+         if (isEmpty() == false) { 
+            int reply = JOptionPane.showConfirmDialog(this, "Bảng đã có danh sách thư, bạn muốn tiếp tục?\n"
+                    + "Nếu bạn muốn tải thư mới, bạn có thể tiếp tục.", "Thông báo", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION ) {
+                spamMailAction();
+            }         
+        }
+        else {
+            spamMailAction();
+        }     
+    }//GEN-LAST:event_spamMailActionPerformed
+
+    private void trashMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trashMailActionPerformed
+        // TODO add your handling code here:
+         if (isEmpty() == false) { 
+            int reply = JOptionPane.showConfirmDialog(this, "Bảng đã có danh sách thư, bạn muốn tiếp tục?\n"
+                    + "Nếu bạn muốn tải thư mới, bạn có thể tiếp tục.", "Thông báo", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION ) {
+                trashMailAction();
+            }         
+        }
+        else {
+            trashMailAction();
+        }     
+    }//GEN-LAST:event_trashMailActionPerformed
+
+    private void mailListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mailListMouseClicked
+        // TODO add your handling code here:
+        //đọc nội dung thư
+        AbstractTableModel model = (AbstractTableModel) mailList.getModel();
+        fromTXT.setText(model.getValueAt(mailList.getSelectedRow(),0).toString());
+        dateTXT.setText(model.getValueAt(mailList.getSelectedRow(),1).toString());
+        subjectTXT.setText(model.getValueAt(mailList.getSelectedRow(),2).toString());
+        int n=mailList.getSelectedRow();
+        System.out.println("Hang: "+n);
+        try {
+            ReadMail(n);
+        } catch (IOException ex) {
+            System.out.println("Lỗi: "+ex.getMessage());
+        }
+    }//GEN-LAST:event_mailListMouseClicked
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //tất cả các quá trình fetch đều dùng thread
+    //với các hộp thư đến
+    private void inboxMailAction()  {
+        mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
+        frame.callframe();
+        Thread inbox = new Thread() {
+               @Override
+                public void run() {                
+                        try {
+                        ps = connection.prepareStatement("SELECT email, password, imap, type, server FROM email WHERE email = ?");
+                        ps.setString(1, emailList.getSelectedItem().toString());
+                        rs = ps.executeQuery();
+
+                       smtp = rs.getString("imap");
+                       storeType = rs.getString("type");
+                       user = rs.getString("email");
+                       password = rs.getString("password");
+
+                       server = rs.getString("server");
+                        switch (server) {
+                            case "gmail" -> {
+                                    mailList.setModel(inboxGmail.startFetch(smtp, storeType, user, password)); 
+                                    break;
+                            }
+                            case "outlook" -> {
+                                    mailList.setModel(inboxOutlook.startFetch(smtp, storeType, user, password)); 
+                                    break;
+                            }
+                            case "yahoo" -> {
+                                    mailList.setModel(inboxYahoo.startFetch(smtp, storeType, user, password)); 
+                                    break;
+                            }
+                            default -> {
+                                    break;
+                            }
+                        }                
+                       frame.closeNotify();
+                        } catch (SQLException | MessagingException ex) {
+                            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                };
+                inbox.start();
+    }    
+    //với các hộp thư đã gửi
+    private void sentMailAction() {
+         mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
+        frame.callframe();
+        Thread sent = new Thread() {
+               @Override
+                public void run() {                
+                        try {
+                        ps = connection.prepareStatement("SELECT email, password, imap, type, server FROM email WHERE email = ?");
+                        ps.setString(1, emailList.getSelectedItem().toString());
+                        rs = ps.executeQuery();
+
+                       smtp = rs.getString("imap");
+                       storeType = rs.getString("type");
+                       user = rs.getString("email");
+                       password = rs.getString("password");
+
+                       server = rs.getString("server");
+                        switch (server) {
+                            case "gmail" -> {
+                                    mailList.setModel(sentGmail.startFetch(smtp, storeType, user, password)); 
+                                    break;
+                            }
+                            case "outlook" -> {
+                                    mailList.setModel(sentOutlook.startFetch(smtp, storeType, user, password)); 
+                                    break;
+                            }
+                            case "yahoo" -> {
+                                    mailList.setModel(sentYahoo.startFetch(smtp, storeType, user, password)); 
+                                    break;
+                            }
+                            default -> {
+                                    break;
+                            }
+                        }                
+                       frame.closeNotify();
+                        } catch (SQLException | MessagingException ex) {
+                            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                };
+                sent.start();
+    }
+    //với các hộp thư rác spam
+    private void spamMailAction() {
+        mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
+        frame.callframe();
+        Thread spam = new Thread() {
+               @Override
+                public void run() {                
+                        try {
+                        ps = connection.prepareStatement("SELECT email, password, imap, type, server FROM email WHERE email = ?");
+                        ps.setString(1, emailList.getSelectedItem().toString());
+                        rs = ps.executeQuery();
+
+                       smtp = rs.getString("imap");
+                       storeType = rs.getString("type");
+                       user = rs.getString("email");
+                       password = rs.getString("password");
+
+                       server = rs.getString("server");
+                        switch (server) {
+                            case "gmail" -> {
+                                    mailList.setModel(spamGmail.startFetch(smtp, storeType, user, password)); 
+                                    break;
+                            }
+                            case "outlook" -> {
+                                    mailList.setModel(spamOutlook.startFetch(smtp, storeType, user, password)); 
+                                    break;
+                            }
+                            case "yahoo" -> {
+                                    JOptionPane.showMessageDialog(null, "Spam email Yahoo chưa hỗ trợ\n"
+                                    + "Vui lòng thử lại sau.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                                    break;
+                            }
+                            default -> {
+                                    break;
+                            }
+                        }                
+                       frame.closeNotify();
+                        } catch (SQLException | MessagingException ex) {
+                            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                };
+                spam.start();
+        
+    }
+    //với các thùng rác
+    private void trashMailAction() {
+        mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
+        frame.callframe();
+        Thread spam = new Thread() {
+               @Override
+                public void run() {                
+                        try {
+                        ps = connection.prepareStatement("SELECT email, password, imap, type, server FROM email WHERE email = ?");
+                        ps.setString(1, emailList.getSelectedItem().toString());
+                        rs = ps.executeQuery();
+
+                       smtp = rs.getString("imap");
+                       storeType = rs.getString("type");
+                       user = rs.getString("email");
+                       password = rs.getString("password");
+
+                       server = rs.getString("server");
+                        switch (server) {
+                            case "gmail" -> {
+                                    mailList.setModel(trashGmail.startFetch(smtp, storeType, user, password)); 
+                                    break;
+                            }
+                            case "outlook" -> {
+                                    mailList.setModel(trashOutlook.startFetch(smtp, storeType, user, password)); 
+                                    break;
+                            }
+                            case "yahoo" -> {
+                                    mailList.setModel(trashYahoo.startFetch(smtp, storeType, user, password)); 
+                                    break;
+                            }
+                            default -> {
+                                    break;
+                            }
+                        }                
+                       frame.closeNotify();
+                        } catch (SQLException | MessagingException ex) {
+                            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                };
+                spam.start();
+        
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
     public static void main(String args[]) {
         /* Set the FlaLaf Light */
         //theme này đẹp hơn nhiều
@@ -583,14 +872,14 @@ public class HomePage extends javax.swing.JFrame {
     private javax.swing.JMenuItem accountManage;
     private javax.swing.JMenuItem closeMenu;
     private javax.swing.JButton composeMail;
+    private javax.swing.JTextField dateTXT;
     private javax.swing.JButton deleteMail;
     private javax.swing.JComboBox<String> emailList;
     private javax.swing.JButton forwardMail;
-    private javax.swing.JButton importantMail;
+    private javax.swing.JTextField fromTXT;
     private javax.swing.JButton inboxMail;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -599,20 +888,17 @@ public class HomePage extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JTable mailList;
-    private javax.swing.JTextArea mailMesseage;
+    private javax.swing.JEditorPane mailMessage;
     private javax.swing.JButton refreshAccount;
     private javax.swing.JButton replyMail;
     private javax.swing.JButton sentMail;
     private javax.swing.JButton spamMail;
+    private javax.swing.JTextField subjectTXT;
     private javax.swing.JButton trashMail;
     private javax.swing.JLabel username;
     // End of variables declaration//GEN-END:variables
