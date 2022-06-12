@@ -4,7 +4,6 @@
  */
 package email_client.global;
 
-import email_client.manageAccount;
 import java.util.Properties;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
@@ -16,16 +15,18 @@ import javax.mail.Store;
  *
  * @author notmiyouji
  */
-public class CheckAccount  extends Thread {
-    public static void checkLogin(String host, String storeType, String user,
+public class CheckAccount {
+    
+    PropertiesAPI propsAPI = new PropertiesAPI();
+    
+    public  void checkLogin(String host, String storeType, String user,
       String password)  throws NoSuchProviderException, MessagingException 
    {
         // create properties field
               Properties properties = new Properties();
-
-              properties.put("mail.pop3s.host", host);
-              properties.put("mail.pop3s.port", "995");
-              properties.put("mail.pop3s.starttls.enable", "true");
+              properties.put(propsAPI.getHost(), host);
+              properties.put(propsAPI.getPort(), "993");
+              properties.put(propsAPI.getStartTLS(), "true");
 
 
               // Setup authentication, get session
@@ -37,7 +38,7 @@ public class CheckAccount  extends Thread {
                     }
                  });
 
-              Store store = emailSession.getStore("pop3s");
+              Store store = emailSession.getStore(storeType);
               store.connect();
 
               // close the store      
