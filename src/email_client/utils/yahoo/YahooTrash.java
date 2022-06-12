@@ -38,6 +38,7 @@ public class YahooTrash {
               properties.put(propsAPI.getHost(), imap);
               properties.put(propsAPI.getPort(), "993");
               properties.put(propsAPI.getStartTLS(), "true");
+              properties.put(propsAPI.getTrustSSL(), imap);
              
               // Setup authentication, get session
               Session emailSession = Session.getInstance(properties,

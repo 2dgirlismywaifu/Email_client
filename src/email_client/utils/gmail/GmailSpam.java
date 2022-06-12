@@ -36,6 +36,7 @@ public class GmailSpam {
               // create properties field
               Properties properties = new Properties();
               properties.put(propsAPI.getHost(), imap);
+              properties.put(propsAPI.getTrustSSL(), imap);
               properties.put(propsAPI.getPort(), "993");
               properties.put(propsAPI.getStartTLS(), "true");
              
