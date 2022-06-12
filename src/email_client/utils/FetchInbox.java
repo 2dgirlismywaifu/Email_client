@@ -1,5 +1,5 @@
 
-package email_client.utils.outlook;
+package email_client.utils;
 
 import email_client.global.PropertiesAPI;
 import email_client.utils.gmail.*;
@@ -20,7 +20,7 @@ import javax.mail.internet.InternetAddress;
 import javax.swing.table.DefaultTableModel;
 
 
-public class  OutlookInbox{
+public class FetchInbox{
     PropertiesAPI propsAPI = new PropertiesAPI();
     public final DefaultTableModel tableModel = new DefaultTableModel();
      MailListModel mailListModel;
@@ -47,7 +47,7 @@ public class  OutlookInbox{
                 
             Store store =  emailSession.getStore(storeType);
             store.connect();
-            Folder emailFolder = store.getFolder("Inbox");
+            Folder emailFolder = store.getFolder("INBOX");
             emailFolder.open(Folder.READ_WRITE);
              
              Message[] messages = emailFolder.getMessages();
@@ -78,7 +78,7 @@ public class  OutlookInbox{
                                    
                 }
             }
-             
+             store.close();
           return mailListModel;
     }
 }
