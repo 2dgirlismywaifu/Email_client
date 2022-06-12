@@ -13,6 +13,7 @@ import email_client.global.PortServices;
 import email_client.global.IconImageUtilities;
 import email_client.global.LookandFeel;
 import email_client.sqlitehelper.sqlitehelper;
+import java.awt.Dialog;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.Connection;
@@ -422,7 +423,8 @@ public class manageAccount extends javax.swing.JFrame {
         if (email.equals("")) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ trường thông tin", "Thông báo", JOptionPane.ERROR_MESSAGE);
         }
-        else { 
+        else {
+            dialogChecking.setModalityType(Dialog.ModalityType.MODELESS);
             dialogChecking.setVisible(true);
             disableInput();
             Thread updateAccount = new Thread () { //thread cập nhật tài khoản
