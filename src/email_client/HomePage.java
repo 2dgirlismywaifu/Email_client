@@ -4,9 +4,9 @@
  */
 package email_client;
 
-import email_client.callFrame.frameDownloadMailMesseage;
 import email_client.callFrame.frameManageAccount;
 import email_client.callFrame.frameSendEmail;
+import email_client.dialogMess.DownloadMailMesseage;
 import email_client.global.LookandFeel;
 import email_client.global.IconImageUtilities;
 import email_client.dialogMess.NetworkNotify;
@@ -24,7 +24,7 @@ import email_client.utils.yahoo.YahooInbox;
 import email_client.utils.yahoo.YahooSent;
 import email_client.utils.yahoo.YahooSpam;
 import email_client.utils.yahoo.YahooTrash;
-import java.io.IOException;
+import java.awt.Dialog;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -43,7 +43,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class HomePage extends javax.swing.JFrame {
     
-    frameDownloadMailMesseage frame = new frameDownloadMailMesseage();
+    DownloadMailMesseage downloadDialog = new DownloadMailMesseage(this, true);
     Connection connection = sqlitehelper.getConnection();
     PreparedStatement ps;
     ResultSet rs;
@@ -662,20 +662,17 @@ public class HomePage extends javax.swing.JFrame {
         fromTXT.setText(model.getValueAt(mailList.getSelectedRow(),0).toString());
         dateTXT.setText(model.getValueAt(mailList.getSelectedRow(),1).toString());
         subjectTXT.setText(model.getValueAt(mailList.getSelectedRow(),2).toString());
-        int n=mailList.getSelectedRow();
-        System.out.println("Hang: "+n);
-        try {
-            ReadMail(n);
-        } catch (IOException ex) {
-            System.out.println("Lỗi: "+ex.getMessage());
-        }
+        int rowSelected = mailList.getSelectedRow();
+        System.out.println("Hang: "+ rowSelected);
+        
     }//GEN-LAST:event_mailListMouseClicked
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //tất cả các quá trình fetch đều dùng thread
     //với các hộp thư đến
     private void inboxMailAction()  {
         mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
-        frame.callframe();
+        downloadDialog.setModalityType(Dialog.ModalityType.MODELESS);
+        downloadDialog.setVisible(true);
         Thread inbox = new Thread() {
                @Override
                 public void run() {                
@@ -707,9 +704,10 @@ public class HomePage extends javax.swing.JFrame {
                                     break;
                             }
                         }                
-                       frame.closeNotify();
+                        downloadDialog.setVisible(false);
                         } catch (SQLException | MessagingException ex) {
                             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                            downloadDialog.setVisible(false);
                         }
                     }
                 };
@@ -718,7 +716,8 @@ public class HomePage extends javax.swing.JFrame {
     //với các hộp thư đã gửi
     private void sentMailAction() {
          mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
-        frame.callframe();
+        downloadDialog.setModalityType(Dialog.ModalityType.MODELESS);
+        downloadDialog.setVisible(true);
         Thread sent = new Thread() {
                @Override
                 public void run() {                
@@ -750,9 +749,10 @@ public class HomePage extends javax.swing.JFrame {
                                     break;
                             }
                         }                
-                       frame.closeNotify();
+                       downloadDialog.setVisible(false);
                         } catch (SQLException | MessagingException ex) {
                             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                            downloadDialog.setVisible(false);
                         }
                     }
                 };
@@ -761,7 +761,8 @@ public class HomePage extends javax.swing.JFrame {
     //với các hộp thư rác spam
     private void spamMailAction() {
         mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
-        frame.callframe();
+        downloadDialog.setModalityType(Dialog.ModalityType.MODELESS);
+        downloadDialog.setVisible(true);
         Thread spam = new Thread() {
                @Override
                 public void run() {                
@@ -794,9 +795,10 @@ public class HomePage extends javax.swing.JFrame {
                                     break;
                             }
                         }                
-                       frame.closeNotify();
+                       downloadDialog.setVisible(false);
                         } catch (SQLException | MessagingException ex) {
                             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                            downloadDialog.setVisible(false);
                         }
                     }
                 };
@@ -806,7 +808,8 @@ public class HomePage extends javax.swing.JFrame {
     //với các thùng rác
     private void trashMailAction() {
         mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
-        frame.callframe();
+        downloadDialog.setModalityType(Dialog.ModalityType.MODELESS);
+        downloadDialog.setVisible(true);
         Thread spam = new Thread() {
                @Override
                 public void run() {                
@@ -838,9 +841,10 @@ public class HomePage extends javax.swing.JFrame {
                                     break;
                             }
                         }                
-                       frame.closeNotify();
+                        downloadDialog.dispose();
                         } catch (SQLException | MessagingException ex) {
                             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                            downloadDialog.setVisible(false);
                         }
                     }
                 };

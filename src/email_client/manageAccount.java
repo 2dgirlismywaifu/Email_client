@@ -6,8 +6,8 @@
 package email_client;
 
 import email_client.callFrame.frameAddAccount;
-import email_client.callFrame.frameCheckAccountMesseage;
 import email_client.dialogMess.AccountFailed;
+import email_client.dialogMess.CheckAccountMesseage;
 import email_client.global.CheckAccount;
 import email_client.global.PortServices;
 import email_client.global.IconImageUtilities;
@@ -33,7 +33,7 @@ public class manageAccount extends javax.swing.JFrame {
     Connection connection = sqlitehelper.getConnection();
     CheckAccount checkAcc = new CheckAccount();
     PortServices getServices = new PortServices();
-    frameCheckAccountMesseage frame = new frameCheckAccountMesseage();
+    CheckAccountMesseage dialogChecking = new CheckAccountMesseage(this, true);
     DefaultTableModel tableModel;
     PreparedStatement ps; 
     ResultSet rs;
@@ -423,21 +423,21 @@ public class manageAccount extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ trường thông tin", "Thông báo", JOptionPane.ERROR_MESSAGE);
         }
         else { 
-            frame.callframe();
+            dialogChecking.setVisible(true);
             disableInput();
             Thread updateAccount = new Thread () { //thread cập nhật tài khoản
                @Override
                public void run() {
                    try {            
                     checkAcc.checkLogin(imap, type, email, pass);              
-                    frame.closeNotify();
+                    dialogChecking.setVisible(false);
                     updateData(id, type, service, smtp, imap, email, pass, name, portTLS, portSSL, portIMAP);
                     loadTable();                 
                     reEnableInput();
                     } catch (MessagingException | SQLException ex  ) {
                         Logger.getLogger(manageAccount.class.getName()).log(Level.SEVERE, null, ex);
                         AccountFailed.NotifyMesseage();
-                        frame.closeNotify();
+                        dialogChecking.setVisible(false);
                         //kích hoạt lại input
                         reEnableInput();
                     }

@@ -1,10 +1,10 @@
 
 package email_client;
 
-import email_client.callFrame.frameCheckAccountMesseage;
 import email_client.global.CheckAccount;
 import email_client.callFrame.frameManageAccount;
 import email_client.dialogMess.AccountFailed;
+import email_client.dialogMess.CheckAccountMesseage;
 import email_client.dialogMess.TwoFANotify;
 import email_client.global.PortServices;
 import email_client.global.IconImageUtilities;
@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
 
 
 public class addAccount extends javax.swing.JFrame {
-    frameCheckAccountMesseage frame = new frameCheckAccountMesseage();
+    CheckAccountMesseage dialogChecking = new CheckAccountMesseage(this, true);
     CheckAccount checkAcc  =  new CheckAccount();
     PortServices getServices = new PortServices();
     Connection connection = sqlitehelper.getConnection();
@@ -406,7 +406,7 @@ public class addAccount extends javax.swing.JFrame {
         //kiểm tra email có đúng mẫu: example@domain.com
         else if (RegexEmail.validation(email) == true) 
         {       
-            frame.callframe();
+            dialogChecking.setVisible(true);
             hideProblem();
             disableInput();
             Thread addAccount = new Thread() { //thread thêm tài khoản
@@ -414,13 +414,13 @@ public class addAccount extends javax.swing.JFrame {
                 public void run() {
                     try {                    
                         checkAcc.checkLogin(imap, type, email, pass);
-                        frame.closeNotify();
+                        dialogChecking.setVisible(false);
                         inputData(type, service, smtp, imap, email, pass, name, portTLS, portSSL, portIMAP);
                         dispose();
                         frameManageAccount.callframe();
                         } catch (MessagingException ex) {
                         Logger.getLogger(addAccount.class.getName()).log(Level.SEVERE, null, ex);
-                        frame.closeNotify();
+                        dialogChecking.setVisible(false);
                         AccountFailed.NotifyMesseage();                      
                         enableInput();
                         showProblem();
