@@ -10,7 +10,7 @@
 2. Có thể thêm nhiều tài khoản
 3. Kiểm tra định dạnh email hợp lệ
 4. Có thể đính kèm tập tin để gửi
-5. Với email có tính năng xác thực hai bước vui lòng sử dụng mật khẩu ứng dụng 
+5. Với email có tính năng xác thực hai bước vui lòng sử dụng mật khẩu ứng dụng
 6. Có tính năng đề xuất gì mới thì thêm vào
 # Look and Feel (Hay gọi là giao diện cũng được)
 - Giao diện: Flatlaf Light
@@ -27,3 +27,8 @@
 1. Tech-geek29: https://github.com/tech-geek29/java-email-client
 2. RawSanji: https://github.com/RawSanj/java-mail-clients
 3. Đấng sharecode (10k rẻ vl): https://gvbax-my.sharepoint.com/:u:/g/personal/user1839_offices365_co/EbfGwRhacgBDmdrzwYBIvBsBecSA99ZYLoV8RxNC75dwmQ?e=ZLR7Cb
+# Xin chú ý: các thành viên cần để ý
+1. Anti-virus có thể ngăn kết nối SSL HandShake. Nếu anti-virus quét các gói tin SSL, vui lòng vô hiệu hoá.
+2. Tài khoản có xác thực hai bước cần sử dụng mật khẩu ứng dụng
+3. Fetch nhanh hay chậm tuỳ thuộc Internet nhanh hay chậm
+4. Không còn hỗ trợ pop3. Sử dụng IMAP thay thế
