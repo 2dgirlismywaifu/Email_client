@@ -220,10 +220,7 @@ public class manageAccount extends javax.swing.JFrame {
         tableAccount.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         tableAccount.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+
             },
             new String [] {
                 "Email", "Tên"
