@@ -59,6 +59,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="V&#x1ec1; ph&#x1ea7;n m&#x1ec1;m"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="aboutSoftwareActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="aboutTeam">
               <Properties>
@@ -67,6 +70,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="V&#x1ec1; nh&#xf3;m"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="aboutTeamActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -420,6 +426,9 @@
               <Dimension value="[155, 59]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshAccountActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="username">
           <Properties>
