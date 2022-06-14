@@ -17,7 +17,7 @@ public class frameAboutSoftware {
         LookandFeel.setTheme();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            aboutSoftware frame = new abstract ();
+            aboutSoftware frame = new aboutSoftware();
             frame.setVisible(true);
             frame.setTitle("Thông tin phần mềm");
             frame.setResizable(false);
