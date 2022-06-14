@@ -911,8 +911,6 @@ public class HomePage extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             HomePage home = new HomePage();
             home.setVisible(true);
-            
-           
         });
     }
 
