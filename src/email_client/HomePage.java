@@ -715,24 +715,25 @@ public class HomePage extends javax.swing.JFrame {
     //load nội dung thư (chú ý: đây là testing với folder INBOX)
     private void loadContent(int rowSelected) {
         mailMessage.setText("");
-        Thread contentMail = new Thread() {
-               @Override
-                public void run() {                
-                        try {
-                        ps = connection.prepareStatement("SELECT email, password, imap, type FROM email WHERE email = ?");
-                        ps.setString(1, emailList.getSelectedItem().toString());
-                        rs = ps.executeQuery();
-
-                       smtp = rs.getString("imap");
-                       storeType = rs.getString("type");
-                       user = rs.getString("email");
-                       password = rs.getString("password");
-                       getContent.ReadMail(rowSelected, user, password, mailMessage);
-                        } catch (SQLException | IOException ex) {
-                            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);                        
-                        }
-                    }
-                };
+        Thread contentMail;
+        contentMail = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    ps = connection.prepareStatement("SELECT email, password, imap, type FROM email WHERE email = ?");
+                    ps.setString(1, emailList.getSelectedItem().toString());
+                    rs = ps.executeQuery();
+                    
+                    smtp = rs.getString("imap");
+                    storeType = rs.getString("type");
+                    user = rs.getString("email");
+                    password = rs.getString("password");
+                    getContent.ReadMail(rowSelected, user, password, mailMessage);
+                } catch (SQLException ex) {
+                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
                 contentMail.start();
     }
     //với các hộp thư đến

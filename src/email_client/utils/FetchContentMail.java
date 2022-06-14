@@ -70,5 +70,9 @@ public class FetchContentMail {
                 ex.printStackTrace();
         }        
     }
+
+    public void ReadMail(int rowSelected, String user, String password, JEditorPane mailMessage) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
