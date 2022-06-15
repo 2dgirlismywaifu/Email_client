@@ -1,80 +1,101 @@
 package email_client.utils;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Date;
+import javax.mail.Address;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.swing.table.AbstractTableModel;
 
-public class MailListModel extends  AbstractTableModel{
+public class MailListModel extends  AbstractTableModel {
     
-    private  String[] hearders = {"Người Gửi", "Tiêu Đề",  "Thời Gian"};
-    private List<MailList> Data = new  LinkedList<>();
-
-    public MailListModel(String[] hearders,List<MailList> Data)
-    {
-        this.hearders = hearders;
-        this.Data = Data;
-    }
+    private static final String[] columnNames = {"Người Gửi", "Tiêu Đề",  "Thời Gian"};
+      
     
     private ArrayList messageList = new ArrayList();
-
-   
      
 
     public void setMessages(Message[] messages) {
         for (int i = messages.length - 1; i >= 0; i--) {
             messageList.add(messages[i]);
         }
-         
-     
+              
         fireTableDataChanged();
     }
      
+    public void setModel() {
+        
+    }
     
     public Message getMessage(int row) {
         return (Message) messageList.get(row);
     }
+     
     
-    @Override
-    public int getRowCount() {
-        if(Data!=null)
-        {
-            return  Data.size();
-        }
-        return  0;
+    public void deleteMessage(int row) {
+        messageList.remove(row);
+         
+       
+        fireTableRowsDeleted(row, row);
     }
-    @Override
-    public String getColumnName(int columnIndex)
-    {
-        if(columnIndex<getColumnCount())
-        {
-            return hearders[columnIndex];
-        }
-        return "";
-    }
+     
+   
     @Override
     public int getColumnCount() {
-         if(hearders!=null)
-        {
-            return  hearders.length;
-        }
-        return  0;
+        return columnNames.length;
     }
+     
 
     @Override
-    public String getValueAt(int rowIndex, int columnIndex) {
-        if(rowIndex> getRowCount()||columnIndex>getColumnCount())
-        {
+    public String getColumnName(int col) {
+        return columnNames[col];
+    }
+     
+  
+    @Override
+    public int getRowCount() {
+        return messageList.size();
+    }
+     
+    
+    @Override
+    public Object getValueAt(int row, int col) {
+        try {
+            Message message = (Message) messageList.get(row);
+            switch (col) {
+                case 0 -> { 
+                    Address[] senders = message.getFrom();
+                    if (senders != null || senders.length > 0) {
+                        return senders[0].toString();
+                    } else {
+                        return "[none]";
+                    }
+                }
+                case 1 -> {
+                    // Subject
+                    String subject = message.getSubject();
+                    if (subject != null && subject.length() > 0) {
+                        return subject;
+                    } else {
+                        return "[none]";
+                    }
+                }
+                case 2 -> {
+                    // Date
+                    Date date = message.getSentDate();
+                    if (date != null) {
+                        return date.toString();
+                    } else {
+                        return "[none]";
+                    }
+                }
+            }
+        } catch (MessagingException e) {
+           
             return "";
         }
-        MailList row = Data.get(rowIndex);
-        return switch (columnIndex) {
-            case 0 -> row.getFrom();
-            case 1 -> row.getSubject();
-            case 2 -> row.getDate();
-            default -> "";
-        };
+         
+        return "";
     }
     
 }
