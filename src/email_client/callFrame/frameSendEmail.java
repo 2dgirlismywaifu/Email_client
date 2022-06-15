@@ -13,13 +13,14 @@ import email_client.global.LookandFeel;
  * @author notmiyouji
  */
 public class frameSendEmail {
-    public static void callframe() {
+    public void callframe(String email) {
         LookandFeel.setTheme();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             SendEmail frame = new SendEmail();
             frame.setVisible(true);
             frame.setTitle("Soạn thư");
+            frame.emailFrom.setText(email);
         });
     }
 }
