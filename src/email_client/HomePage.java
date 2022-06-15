@@ -39,8 +39,13 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -50,11 +55,12 @@ public class HomePage extends javax.swing.JFrame {
     
     DownloadMailMesseage downloadDialog = new DownloadMailMesseage(this, true);
     folderMailName foldername = new folderMailName();
-    frameSendEmail sendGUI = new frameSendEmail();   
+    frameSendEmail sendGUI = new frameSendEmail();
+    MailListModel mailListModel;
     Connection connection = sqlitehelper.getConnection();
     PreparedStatement ps;
     ResultSet rs;   
-    Message selectedMessage;
+    Message selectedMessage;   
     String imap, storeType, user, password, server, mailfoldername;
     //imap chính là server kết nối của dịch vụ email
     //storeType: pop3 - mail lưu cục bộ, imap: mail ko lưu cục bộ, giao tiếp với server
@@ -92,6 +98,7 @@ public class HomePage extends javax.swing.JFrame {
         loadEmailList();
         //mặc định tạm tắt chức năng trừ thêm tài khoản, thông tin về phần mềm
         disableFunction();
+        mailListModel = new MailListModel();        
     }
     
     public final void loaddatabase() {
@@ -178,7 +185,7 @@ public class HomePage extends javax.swing.JFrame {
         refreshAccount = new javax.swing.JButton();
         username = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        mailList = new javax.swing.JTable();
+        mailList = new javax.swing.JTable((TableModel) mailListModel);
         MailSearchInput = new javax.swing.JTextField();
         deleteMail = new javax.swing.JButton();
         replyMail = new javax.swing.JButton();
@@ -360,7 +367,7 @@ public class HomePage extends javax.swing.JFrame {
 
         mailList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null}
+
             },
             new String [] {
                 "Người gửi", "Tiêu đề", "Ngày gửi"
@@ -372,6 +379,11 @@ public class HomePage extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(mailList);
+        if (mailList.getColumnModel().getColumnCount() > 0) {
+            mailList.getColumnModel().getColumn(0).setHeaderValue("Người gửi");
+            mailList.getColumnModel().getColumn(1).setHeaderValue("Tiêu đề");
+            mailList.getColumnModel().getColumn(2).setHeaderValue("Ngày gửi");
+        }
 
         MailSearchInput.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
         MailSearchInput.setToolTipText("Nhập thư cần tìm");
@@ -669,19 +681,20 @@ public class HomePage extends javax.swing.JFrame {
             trashMailAction();
         }     
     }//GEN-LAST:event_trashMailActionPerformed
-
+  
+    
     private void mailListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mailListMouseClicked
         // TODO add your handling code here:
         //đọc nội dung thư
         AbstractTableModel model = (AbstractTableModel) mailList.getModel();
         fromTXT.setText(model.getValueAt(mailList.getSelectedRow(),0).toString());
         dateTXT.setText(model.getValueAt(mailList.getSelectedRow(),2).toString());
-        subjectTXT.setText(model.getValueAt(mailList.getSelectedRow(),1).toString());
-        int rowSelected = mailList.getSelectedRow();
-        System.out.println("Hang: "+rowSelected);
-        //loadContent(rowSelected);
-               
-        getContent.showSelectedMessage(mailMessage, rowSelected);
+        try {
+            subjectTXT.setText(model.getValueAt(mailList.getSelectedRow(),1).toString());
+        } catch (NullPointerException ex) {
+            subjectTXT.setText("Mail không có tiêu đề");
+        }        
+        loadContent(mailList.getSelectedRow());   
     }//GEN-LAST:event_mailListMouseClicked
 
     private void refreshAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshAccountActionPerformed
@@ -747,18 +760,18 @@ public class HomePage extends javax.swing.JFrame {
             @Override
             public void run() {
                 try {
-                    ps = connection.prepareStatement("SELECT email, password, imap, type FROM email WHERE email = ?");
-                    ps.setString(1, emailList.getSelectedItem().toString());
-                    rs = ps.executeQuery();
-                    
-                    imap = rs.getString("imap");
-                    storeType = rs.getString("type");
-                    user = rs.getString("email");
-                    password = rs.getString("password");
-                    mailfoldername = folderMailName.getText();
-                    getContent.readMail(rowSelected, imap, user, password, mailfoldername ,mailMessage);
-                } catch (SQLException | IOException ex) {
-                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                ps = connection.prepareStatement("SELECT email, password, imap, type FROM email WHERE email = ?");
+                ps.setString(1, emailList.getSelectedItem().toString());
+                rs = ps.executeQuery();
+
+                imap = rs.getString("imap");
+                storeType = folderMailName.getText();
+                user = rs.getString("email");
+                password = rs.getString("password");
+
+                getContent.readEmail(rowSelected, imap, storeType, user, password, mailMessage);
+                } catch (SQLException | MessagingException | IOException ex) {
+                 Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         };
@@ -782,9 +795,9 @@ public class HomePage extends javax.swing.JFrame {
                        imap = rs.getString("imap");
                        storeType = rs.getString("type");
                        user = rs.getString("email");
-                       password = rs.getString("password");
-                       mailList.setModel(fetchInbox.startFetch(imap, storeType, user, password));                                                          
-                        downloadDialog.setVisible(false);
+                       password = rs.getString("password");                      
+                       mailList.setModel(fetchInbox.startFetch(imap, storeType, user, password));
+                       downloadDialog.setVisible(false);
                         } catch (SQLException | MessagingException ex) {
                             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                             downloadDialog.setVisible(false);
