@@ -12,12 +12,14 @@ import email_client.dialogMess.DownloadMailMesseage;
 import email_client.global.LookandFeel;
 import email_client.global.IconImageUtilities;
 import email_client.dialogMess.NetworkNotify;
+import email_client.global.folderMailName;
 import email_client.sqlitehelper.sqlitehelper;
 import email_client.utils.gmail.GmailSent;
 import email_client.utils.gmail.GmailSpam;
 import email_client.utils.gmail.GmailTrash;
 import email_client.utils.FetchContentMail;
 import email_client.utils.FetchInbox;
+import email_client.utils.MailListModel;
 import email_client.utils.outlook.OutlookSent;
 import email_client.utils.outlook.OutlookSpam;
 import email_client.utils.outlook.OutlookTrash;
@@ -33,6 +35,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -46,14 +49,18 @@ import javax.swing.table.DefaultTableModel;
 public class HomePage extends javax.swing.JFrame {
     
     DownloadMailMesseage downloadDialog = new DownloadMailMesseage(this, true);
+    folderMailName foldername = new folderMailName();
+    frameSendEmail sendGUI = new frameSendEmail();   
     Connection connection = sqlitehelper.getConnection();
     PreparedStatement ps;
-    ResultSet rs;
-    String smtp, storeType, user, password, server;
-    //smtp chính là server kết nối của dịch vụ email
+    ResultSet rs;   
+    Message selectedMessage;
+    String imap, storeType, user, password, server, mailfoldername;
+    //imap chính là server kết nối của dịch vụ email
     //storeType: pop3 - mail lưu cục bộ, imap: mail ko lưu cục bộ, giao tiếp với server
     //user: chính là email
     //pass: khỏi cần giải thích :)
+    //mailfoldername: đây là một trick dành cho đọc nội dung mail
     //////////////////////////////////////////////////////////////////////////////////////////////
     //gọi utils fetch email
     FetchContentMail content = new FetchContentMail();
@@ -188,6 +195,8 @@ public class HomePage extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jScrollPane3 = new javax.swing.JScrollPane();
         mailMessage = new javax.swing.JEditorPane();
+        jLabel3 = new javax.swing.JLabel();
+        folderMailName = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         CheckNetwork = new javax.swing.JMenuItem();
@@ -351,7 +360,7 @@ public class HomePage extends javax.swing.JFrame {
 
         mailList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null, null}
             },
             new String [] {
                 "Người gửi", "Tiêu đề", "Ngày gửi"
@@ -418,6 +427,12 @@ public class HomePage extends javax.swing.JFrame {
 
         jScrollPane3.setViewportView(mailMessage);
 
+        jLabel3.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
+        jLabel3.setText("Danh sách thư:");
+
+        folderMailName.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
+        folderMailName.setText("...............................");
+
         jMenu1.setText("File");
 
         CheckNetwork.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-internet-30.png"))); // NOI18N
@@ -480,12 +495,18 @@ public class HomePage extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel8)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
-                    .addComponent(jSeparator2)
-                    .addComponent(MailSearchInput))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel8)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
+                        .addComponent(jSeparator2)
+                        .addComponent(MailSearchInput))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(9, 9, 9)
+                        .addComponent(folderMailName, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(3, 3, 3)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(15, 15, 15)
@@ -553,7 +574,11 @@ public class HomePage extends javax.swing.JFrame {
                         .addComponent(MailSearchInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(44, 44, 44)
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(folderMailName))
+                        .addGap(15, 15, 15)
                         .addComponent(jScrollPane1)))
                 .addGap(10, 10, 10))
         );
@@ -597,17 +622,18 @@ public class HomePage extends javax.swing.JFrame {
 
     private void composeMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_composeMailActionPerformed
         // TODO add your handling code here:
-        //gọi frame soạn thư. Hết
-        frameSendEmail.callframe();
+        //gọi frame soạn thư. Hết 
+        user = emailList.getSelectedItem().toString();
+        sendGUI.callframe(user);
     }//GEN-LAST:event_composeMailActionPerformed
      
     //Thư đã gửi
     private void sentMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sentMailActionPerformed
-             if (isEmpty() == false) { 
-            int reply = JOptionPane.showConfirmDialog(this, "Bảng đã có danh sách thư, bạn muốn tiếp tục?\n"
-                    + "Nếu bạn muốn tải thư mới, bạn có thể tiếp tục.", "Thông báo", JOptionPane.YES_NO_OPTION);
-            if (reply == JOptionPane.YES_OPTION ) {
-                sentMailAction();
+        if (isEmpty() == false) { 
+        int reply = JOptionPane.showConfirmDialog(this, "Bảng đã có danh sách thư, bạn muốn tiếp tục?\n"
+                + "Nếu bạn muốn tải thư mới, bạn có thể tiếp tục.", "Thông báo", JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION ) {
+            sentMailAction();
             }         
         }
         else {
@@ -652,8 +678,10 @@ public class HomePage extends javax.swing.JFrame {
         dateTXT.setText(model.getValueAt(mailList.getSelectedRow(),2).toString());
         subjectTXT.setText(model.getValueAt(mailList.getSelectedRow(),1).toString());
         int rowSelected = mailList.getSelectedRow();
-        loadContent(rowSelected);
-        
+        System.out.println("Hang: "+rowSelected);
+        //loadContent(rowSelected);
+               
+        getContent.showSelectedMessage(mailMessage, rowSelected);
     }//GEN-LAST:event_mailListMouseClicked
 
     private void refreshAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshAccountActionPerformed
@@ -715,8 +743,7 @@ public class HomePage extends javax.swing.JFrame {
     //load nội dung thư (chú ý: đây là testing với folder INBOX)
     private void loadContent(int rowSelected) {
         mailMessage.setText("");
-        Thread contentMail;
-        contentMail = new Thread() {
+        Thread contentMail = new Thread() {
             @Override
             public void run() {
                 try {
@@ -724,12 +751,13 @@ public class HomePage extends javax.swing.JFrame {
                     ps.setString(1, emailList.getSelectedItem().toString());
                     rs = ps.executeQuery();
                     
-                    smtp = rs.getString("imap");
+                    imap = rs.getString("imap");
                     storeType = rs.getString("type");
                     user = rs.getString("email");
                     password = rs.getString("password");
-                    getContent.ReadMail(rowSelected, user, password, mailMessage);
-                } catch (SQLException ex) {
+                    mailfoldername = folderMailName.getText();
+                    getContent.readMail(rowSelected, imap, user, password, mailfoldername ,mailMessage);
+                } catch (SQLException | IOException ex) {
                     Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -741,6 +769,8 @@ public class HomePage extends javax.swing.JFrame {
         mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
         downloadDialog.setModalityType(Dialog.ModalityType.MODELESS);
         downloadDialog.setVisible(true);
+        //trick cho đọc nội dung mail
+        folderMailName.setText(foldername.getInboxFolder());
         Thread inbox = new Thread() {
                @Override
                 public void run() {                
@@ -749,11 +779,11 @@ public class HomePage extends javax.swing.JFrame {
                         ps.setString(1, emailList.getSelectedItem().toString());
                         rs = ps.executeQuery();
 
-                       smtp = rs.getString("imap");
+                       imap = rs.getString("imap");
                        storeType = rs.getString("type");
                        user = rs.getString("email");
                        password = rs.getString("password");
-                       mailList.setModel(fetchInbox.startFetch(smtp, storeType, user, password));                                                          
+                       mailList.setModel(fetchInbox.startFetch(imap, storeType, user, password));                                                          
                         downloadDialog.setVisible(false);
                         } catch (SQLException | MessagingException ex) {
                             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
@@ -765,7 +795,7 @@ public class HomePage extends javax.swing.JFrame {
     }    
     //với các hộp thư đã gửi
     private void sentMailAction() {
-         mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
+        mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
         downloadDialog.setModalityType(Dialog.ModalityType.MODELESS);
         downloadDialog.setVisible(true);
         Thread sent = new Thread() {
@@ -776,7 +806,7 @@ public class HomePage extends javax.swing.JFrame {
                         ps.setString(1, emailList.getSelectedItem().toString());
                         rs = ps.executeQuery();
 
-                       smtp = rs.getString("imap");
+                       imap = rs.getString("imap");
                        storeType = rs.getString("type");
                        user = rs.getString("email");
                        password = rs.getString("password");
@@ -784,15 +814,18 @@ public class HomePage extends javax.swing.JFrame {
                        server = rs.getString("server");
                         switch (server) {
                             case "gmail" -> {
-                                    mailList.setModel(sentGmail.startFetch(smtp, storeType, user, password)); 
+                                    mailList.setModel(sentGmail.startFetch(imap, storeType, user, password));
+                                    folderMailName.setText(foldername.getSentGmail());
                                     break;
                             }
                             case "outlook" -> {
-                                    mailList.setModel(sentOutlook.startFetch(smtp, storeType, user, password)); 
+                                    mailList.setModel(sentOutlook.startFetch(imap, storeType, user, password));
+                                    folderMailName.setText(foldername.getSentOutlook());
                                     break;
                             }
                             case "yahoo" -> {
-                                    mailList.setModel(sentYahoo.startFetch(smtp, storeType, user, password)); 
+                                    mailList.setModel(sentYahoo.startFetch(imap, storeType, user, password));
+                                    folderMailName.setText(foldername.getSentYahoo());
                                     break;
                             }
                             default -> {
@@ -821,7 +854,7 @@ public class HomePage extends javax.swing.JFrame {
                         ps.setString(1, emailList.getSelectedItem().toString());
                         rs = ps.executeQuery();
 
-                       smtp = rs.getString("imap");
+                       imap = rs.getString("imap");
                        storeType = rs.getString("type");
                        user = rs.getString("email");
                        password = rs.getString("password");
@@ -829,16 +862,17 @@ public class HomePage extends javax.swing.JFrame {
                        server = rs.getString("server");
                         switch (server) {
                             case "gmail" -> {
-                                    mailList.setModel(spamGmail.startFetch(smtp, storeType, user, password)); 
+                                    mailList.setModel(spamGmail.startFetch(imap, storeType, user, password));
+                                    folderMailName.setText(foldername.getSpamGmail());
                                     break;
                             }
                             case "outlook" -> {
-                                    mailList.setModel(spamOutlook.startFetch(smtp, storeType, user, password)); 
+                                    mailList.setModel(spamOutlook.startFetch(imap, storeType, user, password));
+                                    folderMailName.setText(foldername.getSpamOutlook());
                                     break;
                             }
                             case "yahoo" -> {
-                                    JOptionPane.showMessageDialog(null, "Spam email Yahoo chưa hỗ trợ\n"
-                                    + "Vui lòng thử lại sau.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                                    spamYahoo.notifyMesseage();
                                     break;
                             }
                             default -> {
@@ -868,7 +902,7 @@ public class HomePage extends javax.swing.JFrame {
                         ps.setString(1, emailList.getSelectedItem().toString());
                         rs = ps.executeQuery();
 
-                       smtp = rs.getString("imap");
+                       imap = rs.getString("imap");
                        storeType = rs.getString("type");
                        user = rs.getString("email");
                        password = rs.getString("password");
@@ -876,15 +910,18 @@ public class HomePage extends javax.swing.JFrame {
                        server = rs.getString("server");
                         switch (server) {
                             case "gmail" -> {
-                                    mailList.setModel(trashGmail.startFetch(smtp, storeType, user, password)); 
+                                    mailList.setModel(trashGmail.startFetch(imap, storeType, user, password));
+                                    folderMailName.setText(foldername.getTrashGmail());
                                     break;
                             }
                             case "outlook" -> {
-                                    mailList.setModel(trashOutlook.startFetch(smtp, storeType, user, password)); 
+                                    mailList.setModel(trashOutlook.startFetch(imap, storeType, user, password));
+                                    folderMailName.setText(foldername.getTrashOutlook());
                                     break;
                             }
                             case "yahoo" -> {
-                                    mailList.setModel(trashYahoo.startFetch(smtp, storeType, user, password)); 
+                                    mailList.setModel(trashYahoo.startFetch(imap, storeType, user, password));
+                                    folderMailName.setText(foldername.getTrashYahoo());
                                     break;
                             }
                             default -> {
@@ -927,11 +964,13 @@ public class HomePage extends javax.swing.JFrame {
     private javax.swing.JTextField dateTXT;
     private javax.swing.JButton deleteMail;
     private javax.swing.JComboBox<String> emailList;
+    private javax.swing.JLabel folderMailName;
     private javax.swing.JButton forwardMail;
     private javax.swing.JTextField fromTXT;
     private javax.swing.JButton inboxMail;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
