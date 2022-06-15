@@ -56,10 +56,25 @@ public class FetchContentPlainText {
             fetchProfile.add(FetchProfile.Item.ENVELOPE);
             emailFolder.fetch(messages, fetchProfile);
             Message msg = messages[rowSelected];
-                    
-            System.out.println("Nội dung: " + getMessageContent(msg));
+              
+            Object content = msg.getContent();
             messagePane.setContentType("text/html");
-            messagePane.setText(getMessageContent(msg));
+            if (content instanceof Multipart) {
+                StringBuilder messageContent = new StringBuilder();
+                Multipart multipart = (Multipart) content;
+                for (int i = 0; i < multipart.getCount(); i++) {
+                    Part part = (Part) multipart.getBodyPart(i);
+                    if (part.isMimeType("text/plain")) {
+                        messageContent.append(part.getContent().toString());
+                    }
+                }
+                System.out.println("Nội dung: " + messageContent.toString());                
+                messagePane.setText(messageContent.toString());              
+            } else {
+                System.out.println("Nội dung: " + content.toString());               
+                messagePane.setText(content.toString());                
+            }
+                      
             emailFolder.close(false);
             store.close();
             
