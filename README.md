@@ -33,3 +33,13 @@
 3. Fetch nhanh hay chậm tuỳ thuộc Internet nhanh hay chậm
 4. Không còn hỗ trợ pop3. Sử dụng IMAP thay thế
 5. Một số mail không thể load được nội dụng. Đây là vấn đề thuộc JavaMail và chúng ta không thể làm được gì cả.
+# macOS Support
+- Các dòng properties hỗ trợ cho macOS
+1. System.setProperty( "apple.laf.useScreenMenuBar", "true" ); //menubar lên Screen Menu Bar
+2. System.setProperty( "apple.awt.application.name", "FlatLaf Demo" ); //tên phần mềm lên Screen Menu Bar
+3. System.setProperty( "apple.awt.application.appearance", "system" ); //titlebar theo system của macos
+4. if( SystemInfo.isMacFullWindowContentSupported )
+    frame.getRootPane().putClientProperty( "apple.awt.transparentTitleBar", true ); //transparent titlebar
+5. frame.getRootPane().putClientProperty( "apple.awt.windowTitleVisible", false ); //ẩn tên phần mềm trên titlebar
+6. frame.getRootPane().putClientProperty( "apple.awt.fullscreenable", true ); //fullscreen mode
+7. Thông tin thêm tại: https://www.formdev.com/flatlaf/macos/#window_settings
