@@ -29,12 +29,12 @@
           <Group type="102" attributes="0">
               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
               <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="24" max="32767" attributes="0"/>
+              <EmptySpace pref="30" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -42,8 +42,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Group type="102" attributes="0">
                       <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
@@ -66,7 +66,7 @@
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="&#x110;ang ki&#x1ec3;m tra t&#xe0;i kho&#x1ea3;n. Vui l&#xf2;ng &#x111;&#x1ee3;i......."/>
       </Properties>
@@ -74,7 +74,7 @@
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="T&#xf9;y thu&#x1ed9;c v&#xe0;o t&#x1ed1;c &#x111;&#x1ed9; Internet, qu&#xe1; tr&#xec;nh n&#xe0;y c&#xf3; th&#x1ec3; m&#x1ea5;t m&#x1ed9;t l&#xfa;c"/>
       </Properties>

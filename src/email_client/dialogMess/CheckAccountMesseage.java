@@ -40,10 +40,10 @@ public class CheckAccountMesseage extends javax.swing.JDialog {
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-checking-64.png"))); // NOI18N
 
-        jLabel6.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel6.setText("Đang kiểm tra tài khoản. Vui lòng đợi.......");
 
-        jLabel7.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel7.setText("Tùy thuộc vào tốc độ Internet, quá trình này có thể mất một lúc");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -53,18 +53,18 @@ public class CheckAccountMesseage extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel5)
-                .addGap(10, 10, 10)
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel6))
-                .addContainerGap(24, Short.MAX_VALUE))
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel7))
