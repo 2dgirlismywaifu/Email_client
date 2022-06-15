@@ -22,8 +22,7 @@ import javax.swing.JEditorPane;
 public class FetchContentMail {   
         
     PropertiesAPI propsAPI = new PropertiesAPI();
-    folderMailName foldername = new folderMailName();   
-    MailListModel mailListModel = new MailListModel();
+    folderMailName foldername = new folderMailName();      
      
     public void readEmail(int rowSelected,String imap, String foldername, String user, String password, JEditorPane messagePane ) 
             throws NoSuchProviderException, MessagingException, IOException {
@@ -52,10 +51,12 @@ public class FetchContentMail {
             FetchProfile fetchProfile = new FetchProfile();
             fetchProfile.add(FetchProfile.Item.ENVELOPE);
             emailFolder.fetch(messages, fetchProfile);
-            Message msg = messages[rowSelected];           
+            Message msg = messages[rowSelected];
+            
             String contentType = msg.getContentType();
-            String messageContent = "";
-             if (contentType.contains("multipart")) {
+            String messageContent = "";           
+        
+            if (contentType.contains("multipart")) {
                 Multipart multiPart = (Multipart) msg.getContent();
                 int numberOfParts = multiPart.getCount();
                 for (int partCount = 0; partCount < numberOfParts; partCount++) {
@@ -64,22 +65,25 @@ public class FetchContentMail {
                 }
             }
             else if (contentType.contains("multipart")|| contentType.contains("text/html")) {
-                try {
-                    BASE64DecoderStream content =(BASE64DecoderStream) msg.getContent();
-                    if (content != null) {
-                        messageContent = content.toString();
-                    }
-                } catch (Exception ex) {
-                    messageContent = "[Không thể tải nội dung]";
-                    ex.printStackTrace();
-                }
-            }                                     
+                
+                BASE64DecoderStream content =(BASE64DecoderStream) msg.getContent();
+                if (content != null) {
+                    messageContent = content.toString();
+               }     
+               
+            }
+          
+            System.out.println("Nội dung: " + messageContent);
             messagePane.setContentType("text/html");
             messagePane.setText(messageContent);
             emailFolder.close(false);
             store.close();
             
-       }      
+       }
+    
+    
+    
+    
  }
 
 
