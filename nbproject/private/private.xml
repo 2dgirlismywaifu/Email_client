@@ -3,10 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ngoth/OneDrive%20-%20dada/Documents/Network_dev/Email_Client/src/email_client/HomePage.java</file>
-            <file>file:/C:/Users/ngoth/OneDrive%20-%20dada/Documents/Network_dev/Email_Client/src/email_client/utils/FetchInbox.java</file>
-            <file>file:/C:/Users/ngoth/OneDrive%20-%20dada/Documents/Network_dev/Email_Client/src/email_client/addAccount.java</file>
-            <file>file:/C:/Users/ngoth/OneDrive%20-%20dada/Documents/Network_dev/Email_Client/src/email_client/dialogMess/DownloadMailMesseage.java</file>
+            <file>file:/E:/Email_client/src/email_client/aboutSoftware.java</file>
+            <file>file:/E:/Email_client/src/email_client/addAccount.java</file>
+            <file>file:/E:/Email_client/src/email_client/aboutTeam.java</file>
+            <file>file:/E:/Email_client/src/email_client/manageAccount.java</file>
+            <file>file:/E:/Email_client/src/email_client/SendEmail.java</file>
+            <file>file:/E:/Email_client/src/email_client/HomePage.java</file>
         </group>
     </open-files>
 </project-private>
