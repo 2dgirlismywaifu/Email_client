@@ -19,7 +19,7 @@ import email_client.utils.gmail.GmailSpam;
 import email_client.utils.gmail.GmailTrash;
 import email_client.utils.FetchContentMail;
 import email_client.utils.FetchInbox;
-import email_client.utils.MailListModel;
+import email_client.utils.FetchContentPlainText;
 import email_client.utils.outlook.OutlookSent;
 import email_client.utils.outlook.OutlookSpam;
 import email_client.utils.outlook.OutlookTrash;
@@ -39,13 +39,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -55,9 +49,9 @@ public class HomePage extends javax.swing.JFrame {
     
     DownloadMailMesseage downloadDialog = new DownloadMailMesseage(this, true);
     folderMailName foldername = new folderMailName();
-    frameSendEmail sendGUI = new frameSendEmail();
-    MailListModel mailListModel;
+    frameSendEmail sendGUI = new frameSendEmail();    
     Connection connection = sqlitehelper.getConnection();
+    DefaultTableModel model ;
     PreparedStatement ps;
     ResultSet rs;   
     Message selectedMessage;   
@@ -83,9 +77,9 @@ public class HomePage extends javax.swing.JFrame {
     YahooSent sentYahoo = new YahooSent();
     YahooSpam spamYahoo = new YahooSpam();
     YahooTrash trashYahoo = new YahooTrash();
-    //Testing fetching mail content
-    FetchContentMail getContent = new FetchContentMail();
     
+    FetchContentMail getContent = new FetchContentMail();
+    FetchContentPlainText contentPlainText = new FetchContentPlainText();   
     /**
      * Creates new form HomePage
      */
@@ -98,7 +92,7 @@ public class HomePage extends javax.swing.JFrame {
         loadEmailList();
         //mặc định tạm tắt chức năng trừ thêm tài khoản, thông tin về phần mềm
         disableFunction();
-        mailListModel = new MailListModel();        
+        loadingMesseage.setVisible(false);       
     }
     
     public final void loaddatabase() {
@@ -132,6 +126,7 @@ public class HomePage extends javax.swing.JFrame {
         deleteMail.setEnabled(true);
         replyMail.setEnabled(true);
         forwardMail.setEnabled(true);
+        plainTextBtn.setEnabled(true);
     }
     
     private void disableFunction() {
@@ -143,6 +138,7 @@ public class HomePage extends javax.swing.JFrame {
         deleteMail.setEnabled(false);
         replyMail.setEnabled(false);
         forwardMail.setEnabled(false);
+        plainTextBtn.setEnabled(false);
     }
     
     private void loadEmailList() {
@@ -185,7 +181,7 @@ public class HomePage extends javax.swing.JFrame {
         refreshAccount = new javax.swing.JButton();
         username = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        mailList = new javax.swing.JTable((TableModel) mailListModel);
+        mailList = new javax.swing.JTable();
         MailSearchInput = new javax.swing.JTextField();
         deleteMail = new javax.swing.JButton();
         replyMail = new javax.swing.JButton();
@@ -204,6 +200,8 @@ public class HomePage extends javax.swing.JFrame {
         mailMessage = new javax.swing.JEditorPane();
         jLabel3 = new javax.swing.JLabel();
         folderMailName = new javax.swing.JLabel();
+        loadingMesseage = new javax.swing.JLabel();
+        plainTextBtn = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         CheckNetwork = new javax.swing.JMenuItem();
@@ -372,18 +370,23 @@ public class HomePage extends javax.swing.JFrame {
             new String [] {
                 "Người gửi", "Tiêu đề", "Ngày gửi"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        mailList.setColumnSelectionAllowed(true);
         mailList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 mailListMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(mailList);
-        if (mailList.getColumnModel().getColumnCount() > 0) {
-            mailList.getColumnModel().getColumn(0).setHeaderValue("Người gửi");
-            mailList.getColumnModel().getColumn(1).setHeaderValue("Tiêu đề");
-            mailList.getColumnModel().getColumn(2).setHeaderValue("Ngày gửi");
-        }
+        mailList.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         MailSearchInput.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
         MailSearchInput.setToolTipText("Nhập thư cần tìm");
@@ -444,6 +447,20 @@ public class HomePage extends javax.swing.JFrame {
 
         folderMailName.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
         folderMailName.setText("...............................");
+
+        loadingMesseage.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
+        loadingMesseage.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        loadingMesseage.setText("Đang tải nội dung ...");
+
+        plainTextBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-multiline-text-32.png"))); // NOI18N
+        plainTextBtn.setText("Plain Text");
+        plainTextBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        plainTextBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        plainTextBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plainTextBtnActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("File");
 
@@ -537,15 +554,18 @@ public class HomePage extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(subjectTXT))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(deleteMail)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(replyMail)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(forwardMail))
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 385, Short.MAX_VALUE))))
+                                .addComponent(deleteMail)
+                                .addGap(18, 18, 18)
+                                .addComponent(replyMail, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(forwardMail, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(plainTextBtn)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 248, Short.MAX_VALUE)
+                                .addComponent(loadingMesseage, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane3)))
@@ -561,24 +581,27 @@ public class HomePage extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(deleteMail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(replyMail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(forwardMail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(10, 10, 10)
+                            .addComponent(forwardMail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(plainTextBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(15, 15, 15)
                         .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(fromTXT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(20, 20, 20)
+                        .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(dateTXT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(20, 20, 20)
+                        .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(subjectTXT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(loadingMesseage))
+                        .addGap(18, 18, 18)
                         .addComponent(jScrollPane3))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel8)
@@ -655,8 +678,8 @@ public class HomePage extends javax.swing.JFrame {
     }//GEN-LAST:event_sentMailActionPerformed
 
     private void spamMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spamMailActionPerformed
-        // TODO add your handling code here:
-         if (isEmpty() == false) { 
+        // TODO add your handling code here:        
+        if (isEmpty() == false) { 
             int reply = JOptionPane.showConfirmDialog(this, "Bảng đã có danh sách thư, bạn muốn tiếp tục?\n"
                     + "Nếu bạn muốn tải thư mới, bạn có thể tiếp tục.", "Thông báo", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION ) {
@@ -669,8 +692,8 @@ public class HomePage extends javax.swing.JFrame {
     }//GEN-LAST:event_spamMailActionPerformed
 
     private void trashMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trashMailActionPerformed
-        // TODO add your handling code here:
-         if (isEmpty() == false) { 
+        // TODO add your handling code here: 
+        if (isEmpty() == false) { 
             int reply = JOptionPane.showConfirmDialog(this, "Bảng đã có danh sách thư, bạn muốn tiếp tục?\n"
                     + "Nếu bạn muốn tải thư mới, bạn có thể tiếp tục.", "Thông báo", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION ) {
@@ -685,8 +708,8 @@ public class HomePage extends javax.swing.JFrame {
     
     private void mailListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mailListMouseClicked
         // TODO add your handling code here:
-        //đọc nội dung thư
-        AbstractTableModel model = (AbstractTableModel) mailList.getModel();
+        //đọc nội dung thư       
+        DefaultTableModel model = (DefaultTableModel) mailList.getModel();
         fromTXT.setText(model.getValueAt(mailList.getSelectedRow(),0).toString());
         dateTXT.setText(model.getValueAt(mailList.getSelectedRow(),2).toString());
         try {
@@ -751,11 +774,29 @@ public class HomePage extends javax.swing.JFrame {
         // TODO add your handling code here:
         frameAboutTeam.callframe();
     }//GEN-LAST:event_aboutTeamActionPerformed
+
+    private void plainTextBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plainTextBtnActionPerformed
+        // TODO add your handling code here:
+        int countRow = mailList.getRowCount();
+        if (countRow == 0) {
+            JOptionPane.showMessageDialog(this, "Danh sách thư trống", "Thông báo", JOptionPane.ERROR_MESSAGE);
+        }
+        else if (mailList.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(this, "Chưa có thư nào được chọn!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+            {
+               showPlainText(mailList.getSelectedRow()); 
+            }
+               
+    }//GEN-LAST:event_plainTextBtnActionPerformed
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //tất cả các quá trình fetch đều dùng thread
     //load nội dung thư (chú ý: đây là testing với folder INBOX)
     private void loadContent(int rowSelected) {
         mailMessage.setText("");
+        loadingMesseage.setVisible(true);
+        loadingMesseage.setText("Đang tải nội dung ...");
         Thread contentMail = new Thread() {
             @Override
             public void run() {
@@ -770,16 +811,47 @@ public class HomePage extends javax.swing.JFrame {
                 password = rs.getString("password");
 
                 getContent.readEmail(rowSelected, imap, storeType, user, password, mailMessage);
+                loadingMesseage.setVisible(false);
                 } catch (SQLException | MessagingException | IOException ex) {
-                 Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);              
+                } 
             }
         };
                 contentMail.start();
     }
+    
+    private void showPlainText(int rowSelected) {
+        mailMessage.setText("");
+        loadingMesseage.setVisible(true);
+        loadingMesseage.setText("Đang tải dạng plain text ...");
+        Thread plaintextMail = new Thread() {
+            @Override
+            public void run() {
+                try {
+                ps = connection.prepareStatement("SELECT email, password, imap, type FROM email WHERE email = ?");
+                ps.setString(1, emailList.getSelectedItem().toString());
+                rs = ps.executeQuery();
+
+                imap = rs.getString("imap");
+                storeType = folderMailName.getText();
+                user = rs.getString("email");
+                password = rs.getString("password");
+                
+                contentPlainText.plainTextShow(rowSelected, imap, storeType, user, password, mailMessage);
+                loadingMesseage.setVisible(false);
+                } catch (SQLException | MessagingException | IOException ex) {
+                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        plaintextMail.start();
+    }
+    
     //với các hộp thư đến
     private void inboxMailAction()  {
-        mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
+        mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng       
         downloadDialog.setModalityType(Dialog.ModalityType.MODELESS);
         downloadDialog.setVisible(true);
         //trick cho đọc nội dung mail
@@ -792,12 +864,14 @@ public class HomePage extends javax.swing.JFrame {
                         ps.setString(1, emailList.getSelectedItem().toString());
                         rs = ps.executeQuery();
 
-                       imap = rs.getString("imap");
-                       storeType = rs.getString("type");
-                       user = rs.getString("email");
-                       password = rs.getString("password");                      
-                       mailList.setModel(fetchInbox.startFetch(imap, storeType, user, password));
-                       downloadDialog.setVisible(false);
+                        imap = rs.getString("imap");
+                        storeType = rs.getString("type");
+                        user = rs.getString("email");
+                        password = rs.getString("password");                      
+                        model = fetchInbox.startFetch(imap, storeType, user, password);
+                        mailList.setModel(model);
+                        model.setRowCount(0);
+                        downloadDialog.setVisible(false);
                         } catch (SQLException | MessagingException ex) {
                             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
                             downloadDialog.setVisible(false);
@@ -808,7 +882,7 @@ public class HomePage extends javax.swing.JFrame {
     }    
     //với các hộp thư đã gửi
     private void sentMailAction() {
-        mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
+        mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng       
         downloadDialog.setModalityType(Dialog.ModalityType.MODELESS);
         downloadDialog.setVisible(true);
         Thread sent = new Thread() {
@@ -827,17 +901,23 @@ public class HomePage extends javax.swing.JFrame {
                        server = rs.getString("server");
                         switch (server) {
                             case "gmail" -> {
-                                    mailList.setModel(sentGmail.startFetch(imap, storeType, user, password));
+                                    model = sentGmail.startFetch(imap, storeType, user, password);
+                                    mailList.setModel(model);
+                                    model.setRowCount(0);
                                     folderMailName.setText(foldername.getSentGmail());
                                     break;
                             }
                             case "outlook" -> {
-                                    mailList.setModel(sentOutlook.startFetch(imap, storeType, user, password));
+                                    model = sentOutlook.startFetch(imap, storeType, user, password);
+                                    mailList.setModel(model);
+                                    model.setRowCount(0);
                                     folderMailName.setText(foldername.getSentOutlook());
                                     break;
                             }
                             case "yahoo" -> {
-                                    mailList.setModel(sentYahoo.startFetch(imap, storeType, user, password));
+                                    model = sentYahoo.startFetch(imap, storeType, user, password);
+                                    mailList.setModel(model);
+                                    model.setRowCount(0);
                                     folderMailName.setText(foldername.getSentYahoo());
                                     break;
                             }
@@ -857,6 +937,7 @@ public class HomePage extends javax.swing.JFrame {
     //với các hộp thư rác spam
     private void spamMailAction() {
         mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
+        
         downloadDialog.setModalityType(Dialog.ModalityType.MODELESS);
         downloadDialog.setVisible(true);
         Thread spam = new Thread() {
@@ -996,8 +1077,10 @@ public class HomePage extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JTable mailList;
+    private javax.swing.JLabel loadingMesseage;
+    public javax.swing.JTable mailList;
     private javax.swing.JEditorPane mailMessage;
+    private javax.swing.JButton plainTextBtn;
     private javax.swing.JButton refreshAccount;
     private javax.swing.JButton replyMail;
     private javax.swing.JButton sentMail;
