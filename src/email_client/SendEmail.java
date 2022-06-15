@@ -8,12 +8,20 @@ import email_client.dialogMess.ExplainBcc;
 import email_client.dialogMess.ExplainCC;
 import email_client.global.IconImageUtilities;
 import email_client.global.LookandFeel;
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author notmiyouji
  */
 public class SendEmail extends javax.swing.JFrame {
+    
+    String toUser, cc, bcc, subject, content;
+    //toUser: gửi tới địa chỉ email
+    //subject: tiêu đề thư
+    //content: nội dung thư
 
     /**
      * Creates new form NewJFrame
@@ -49,6 +57,7 @@ public class SendEmail extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         toField = new javax.swing.JTextField();
         emailFrom = new javax.swing.JLabel();
+        pathAttachment = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Soạn thư");
@@ -59,6 +68,11 @@ public class SendEmail extends javax.swing.JFrame {
         sendBtn.setBorderPainted(false);
         sendBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         sendBtn.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        sendBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendBtnActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -139,6 +153,9 @@ public class SendEmail extends javax.swing.JFrame {
         emailFrom.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         emailFrom.setText("Tài khoản");
 
+        pathAttachment.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
+        pathAttachment.setText("Path");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -148,7 +165,8 @@ public class SendEmail extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(pathAttachment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(sendBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -202,7 +220,9 @@ public class SendEmail extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(sendBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pathAttachment, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
                 .addContainerGap())
@@ -214,6 +234,23 @@ public class SendEmail extends javax.swing.JFrame {
 
     private void attachmentBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_attachmentBtnActionPerformed
         // TODO add your handling code here:
+        Thread chooseAttachment = new Thread() {
+            @Override
+            public void run() {
+                JFileChooser chooser = new JFileChooser();                                                   
+                chooser.setCurrentDirectory(new File(System.getProperty("user.home")));              
+                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                // disable the "All files" option.
+                chooser.setAcceptAllFileFilterUsed(false);
+                if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
+                {                 
+                    File targetFileName = chooser.getSelectedFile(); 
+                    //Print location saved file
+                    pathAttachment.setText(targetFileName.getAbsolutePath());                           
+                }
+            }
+        };
+        chooseAttachment.start();      
     }//GEN-LAST:event_attachmentBtnActionPerformed
 
     private void hintCCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hintCCActionPerformed
@@ -226,18 +263,26 @@ public class SendEmail extends javax.swing.JFrame {
         ExplainBcc.NotifyMesseage();
     }//GEN-LAST:event_hintBccActionPerformed
 
+    private void sendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendBtnActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_sendBtnActionPerformed
+
+    
+    private void checkInput() {
+        
+    }
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
+        System.setProperty("illegal-access", "deny");
         LookandFeel.setTheme();
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SendEmail().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new SendEmail().setVisible(true);
         });
     }
 
@@ -255,6 +300,7 @@ public class SendEmail extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel pathAttachment;
     private javax.swing.JButton sendBtn;
     private javax.swing.JTextField subjectField;
     private javax.swing.JTextField toField;
