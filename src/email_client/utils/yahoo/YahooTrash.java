@@ -5,6 +5,7 @@
 package email_client.utils.yahoo;
 
 import email_client.global.PropertiesAPI;
+import email_client.global.folderMailName;
 import email_client.utils.MailList;
 import email_client.utils.MailListModel;
 import java.util.LinkedList;
@@ -26,10 +27,11 @@ import javax.swing.table.DefaultTableModel;
  * @author notmiyouji
  */
 public class YahooTrash {
-     PropertiesAPI propsAPI = new PropertiesAPI();
+    PropertiesAPI propsAPI = new PropertiesAPI();
+    folderMailName foldername = new folderMailName();
     public final DefaultTableModel tableModel = new DefaultTableModel();
-     MailListModel mailListModel;
-     List<MailList> Data = new  LinkedList<>();
+    MailListModel mailListModel;
+    List<MailList> Data = new  LinkedList<>();
     
     public MailListModel startFetch(String imap, String storeType, String user, String password ) throws NoSuchProviderException, MessagingException {
               
@@ -51,7 +53,7 @@ public class YahooTrash {
                 
             Store store =  emailSession.getStore(storeType);
             store.connect();
-            Folder emailFolder = store.getFolder("Trash");
+            Folder emailFolder = store.getFolder(foldername.getTrashYahoo());
             emailFolder.open(Folder.READ_WRITE);
              
             

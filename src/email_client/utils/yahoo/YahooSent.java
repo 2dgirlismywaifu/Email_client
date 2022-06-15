@@ -5,6 +5,7 @@
 package email_client.utils.yahoo;
 
 import email_client.global.PropertiesAPI;
+import email_client.global.folderMailName;
 import email_client.utils.MailList;
 import email_client.utils.MailListModel;
 import java.util.LinkedList;
@@ -27,9 +28,10 @@ import javax.swing.table.DefaultTableModel;
  */
 public class YahooSent {
     PropertiesAPI propsAPI = new PropertiesAPI();
+    folderMailName foldername = new folderMailName();
     public final DefaultTableModel tableModel = new DefaultTableModel();
-     MailListModel mailListModel;
-     List<MailList> Data = new  LinkedList<>();
+    MailListModel mailListModel;
+    List<MailList> Data = new  LinkedList<>();
     
     public MailListModel startFetch(String imap, String storeType, String user, String password ) throws NoSuchProviderException, MessagingException {
               
@@ -51,7 +53,7 @@ public class YahooSent {
                 
             Store store =  emailSession.getStore(storeType);
             store.connect();
-            Folder emailFolder = store.getFolder("Sent");
+            Folder emailFolder = store.getFolder(foldername.getSentYahoo());
             emailFolder.open(Folder.READ_WRITE);
              
             
@@ -68,6 +70,7 @@ public class YahooSent {
             else {
              for(int i = messages.length - 1; i >= 0; i--) 
              {     
+                 System.out.println("Hang: "+i);
                  Message message = messages[i];
                  String from = "";
                  InternetAddress[] addresses  =(InternetAddress[]) message.getFrom();

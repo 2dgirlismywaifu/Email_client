@@ -17,6 +17,7 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -57,9 +58,7 @@ public class FetchInbox{
              
              if (messages.length == 0)
             {
-                  String[] headers = {"Người Gửi", "Tiêu Đề",  "Thời Gian"};
-                 Data.add(new MailList("Hộp thư trống", "Hộp thư trống", "Hộp thư trống"));               
-                 mailListModel = new MailListModel(headers, Data);  
+                JOptionPane.showMessageDialog(null, "Hộp thư trống", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
             }
             else {
              for(int i = messages.length - 1; i >= 0; i--) 
