@@ -6,7 +6,10 @@ package email_client.utils.gmail;
 
 import email_client.global.PropertiesAPI;
 import email_client.global.folderMailName;
+import email_client.utils.MailList;
 import email_client.utils.MailListModel;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 import javax.mail.FetchProfile;
 import javax.mail.Folder;
@@ -16,6 +19,8 @@ import javax.mail.NoSuchProviderException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.internet.InternetAddress;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -24,25 +29,28 @@ import javax.mail.Store;
 public class GmailTrash {
     PropertiesAPI propsAPI = new PropertiesAPI();
     folderMailName foldername = new folderMailName();
-    MailListModel mailListModel = new MailListModel();
-       
+    public final DefaultTableModel tableModel = new DefaultTableModel();
+    MailListModel mailListModel;
+    List<MailList> Data = new  LinkedList<>();
+    
     public MailListModel startFetch(String imap, String storeType, String user, String password ) throws NoSuchProviderException, MessagingException {
-              
+            Data.clear(); //clear old linked list
             // create properties field
             Properties properties = new Properties();
             properties.put(propsAPI.getHost(), imap);
             properties.put(propsAPI.getTrustSSL(), imap);
             properties.put(propsAPI.getPort(), "993");
             properties.put(propsAPI.getStartTLS(), "true");
+            properties.put(propsAPI.getDebug(), "true");
              
             // Setup authentication, get session
             Session emailSession = Session.getInstance(properties,
-               new javax.mail.Authenticator() {
-                  @Override
-                  protected PasswordAuthentication getPasswordAuthentication() {
-                     return new PasswordAuthentication(user, password);
-                  }
-               });
+                new javax.mail.Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                       return new PasswordAuthentication(user, password);
+                    }
+                 });
                 
             Store store =  emailSession.getStore(storeType);
             store.connect();
@@ -54,9 +62,30 @@ public class GmailTrash {
             FetchProfile fetchProfile = new FetchProfile();
             fetchProfile.add(FetchProfile.Item.ENVELOPE);
             emailFolder.fetch(messages, fetchProfile);
-            mailListModel.setMessages(messages); 
-            
-            store.close();
+             if (messages.length == 0)
+            {
+                 String[] headers = {"Người Gửi", "Tiêu Đề",  "Thời Gian"};
+                 Data.add(new MailList("Hộp thư trống", "Hộp thư trống", "Hộp thư trống"));               
+                 mailListModel = new MailListModel(headers, Data);  
+            }
+            else {
+             for(int i = 0, n = messages.length; i < n; i++) 
+             {     
+                 Message message = messages[i];
+                 String from = "";
+                 InternetAddress[] addresses  =(InternetAddress[]) message.getFrom();
+                          
+                 for(InternetAddress address:addresses)
+                 {
+                     from+=address.getAddress();
+                 }
+                 String[] headers = {"Người Gửi", "Tiêu Đề",  "Thời Gian"};
+                 Data.add(new MailList(from,message.getSubject(),message.getSentDate().toString()));               
+                 mailListModel = new MailListModel(headers, Data);            
+                                   
+                }
+            }
+             store.close();
           return mailListModel;
     }
     
