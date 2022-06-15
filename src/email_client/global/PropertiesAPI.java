@@ -2,12 +2,17 @@
 package email_client.global;
 
 public class PropertiesAPI {
-        public static final String host = "mail.imaps.host";
-        public static final String port = "mail.imaps.port";
-        public static final String startTLS = "mail.imaps.starttls.enable";
-        public static final String trustSSL = "mail.protocol.ssl.trust";
-        public static final String mailProtocol = "mail.store.protocol"; //sử dụng đọc content mail
+        public final String host = "mail.imaps.host";
+        public final String port = "mail.imaps.port";
+        public final String startTLS = "mail.imaps.starttls.enable";
+        public final String trustSSL = "mail.protocol.ssl.trust";
+        public final String mailProtocol = "mail.store.protocol"; //sử dụng đọc content mail
+        public final String debug = "mail.debug";
 
+    public String getDebug() {
+        return debug;
+    }
+        
     public String getMailProtocol() {
         return mailProtocol;
     }
