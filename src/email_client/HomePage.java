@@ -4,6 +4,7 @@
  */
 package email_client;
 
+import com.formdev.flatlaf.util.SystemInfo;
 import email_client.callFrame.frameManageAccount;
 import email_client.callFrame.frameAboutSoftware;
 import email_client.callFrame.frameAboutTeam;
@@ -26,6 +27,7 @@ import email_client.utils.outlook.OutlookTrash;
 import email_client.utils.yahoo.YahooSent;
 import email_client.utils.yahoo.YahooSpam;
 import email_client.utils.yahoo.YahooTrash;
+import java.awt.Desktop;
 import java.awt.Dialog;
 import java.io.IOException;
 import java.sql.Connection;
@@ -92,7 +94,21 @@ public class HomePage extends javax.swing.JFrame {
         loadEmailList();
         //mặc định tạm tắt chức năng trừ thêm tài khoản, thông tin về phần mềm
         disableFunction();
-        loadingMesseage.setVisible(false);       
+        loadingMesseage.setVisible(false); 
+        //////////////////////////////////////////////////////////
+        //macOS ONLY
+        Desktop desktop = Desktop.getDesktop();
+        if( desktop.isSupported( Desktop.Action.APP_ABOUT ) ) {
+            desktop.setAboutHandler( e -> {
+                // show about dialog
+            } );
+        }
+        if( desktop.isSupported( Desktop.Action.APP_PREFERENCES ) ) {
+            desktop.setPreferencesHandler( e -> {
+                // show preferences dialog
+            } );
+        }             
+        //////////////////////////////////////////////////////////////////
     }
     
     public final void loaddatabase() {
@@ -1038,11 +1054,21 @@ public class HomePage extends javax.swing.JFrame {
         /* Set the FlaLaf Light */
         //theme này đẹp hơn nhiều
         LookandFeel.setTheme();
-
+        if( SystemInfo.isMacOS ) {
+            System.setProperty( "apple.laf.useScreenMenuBar", "true" ); //menubar lên Screen Menu Bar
+            System.setProperty( "apple.awt.application.name", "EmailClient" ); //tên phần mềm lên Screen Menu Bar               
+        }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            HomePage home = new HomePage();
-            home.setVisible(true);
+            HomePage frame = new HomePage();
+            frame.setVisible(true);
+            if( SystemInfo.isMacFullWindowContentSupported ) { //macOS ONLY                              
+                frame.getRootPane().putClientProperty( "apple.awt.transparentTitleBar", true ); //transparent titlebar
+                frame.getRootPane().putClientProperty( "apple.awt.fullWindowContent", true );        
+            }
+            frame.getRootPane().putClientProperty( "apple.awt.windowTitleVisible", false ); //ẩn tên phần mềm trên titlebar
+            frame.getRootPane().putClientProperty( "apple.awt.fullscreenable", true ); //fullscreen mode
+            
         });
     }
 
