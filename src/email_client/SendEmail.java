@@ -6,9 +6,20 @@ package email_client;
 
 import email_client.dialogMess.ExplainBcc;
 import email_client.dialogMess.ExplainCC;
+import email_client.dialogMess.SendMesseage;
+import email_client.function.globalAction;
 import email_client.global.IconImageUtilities;
 import email_client.global.LookandFeel;
+import email_client.global.RegexEmail;
+import email_client.sqlitehelper.sqlitehelper;
+import java.awt.Dialog;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -18,7 +29,12 @@ import javax.swing.JOptionPane;
  */
 public class SendEmail extends javax.swing.JFrame {
     
-    String toUser, cc, bcc, subject, content;
+    SendMesseage sendMesseage = new SendMesseage(this, true);
+    globalAction gAction = new globalAction();
+    Connection connection = sqlitehelper.getConnection();
+    PreparedStatement ps;
+    ResultSet rs;
+    String fromUser, toUser, cc, bcc, subject, content, filepath;
     //toUser: gửi tới địa chỉ email
     //subject: tiêu đề thư
     //content: nội dung thư
@@ -31,7 +47,24 @@ public class SendEmail extends javax.swing.JFrame {
         //icon mặc định của phần mềm
         IconImageUtilities.setIconImage(this);
     }
-
+    
+//    private void EnableFunction() {
+//        sendBtn.setEnabled(true);
+//        toField.setEnabled(true);
+//        ccField.setEnabled(true);
+//        BccField.setEnabled(true);
+//        subjectField.setEnabled(true);
+//        attachmentBtn.setEnabled(true);
+//    }
+    
+    private void DisableFunction() {
+        sendBtn.setEnabled(false);
+        toField.setEnabled(false);
+        ccField.setEnabled(false);
+        BccField.setEnabled(false);
+        subjectField.setEnabled(false);
+        attachmentBtn.setEnabled(false);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -50,7 +83,7 @@ public class SendEmail extends javax.swing.JFrame {
         subjectField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        emailField = new javax.swing.JTextArea();
+        mailField = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
         attachmentBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -106,9 +139,10 @@ public class SendEmail extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Chủ đề");
 
-        emailField.setColumns(20);
-        emailField.setRows(5);
-        jScrollPane1.setViewportView(emailField);
+        mailField.setColumns(20);
+        mailField.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
+        mailField.setRows(5);
+        jScrollPane1.setViewportView(mailField);
 
         attachmentBtn.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         attachmentBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-attachment-32.png"))); // NOI18N
@@ -154,7 +188,6 @@ public class SendEmail extends javax.swing.JFrame {
         emailFrom.setText("Tài khoản");
 
         pathAttachment.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
-        pathAttachment.setText("Path");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -239,9 +272,7 @@ public class SendEmail extends javax.swing.JFrame {
             public void run() {
                 JFileChooser chooser = new JFileChooser();                                                   
                 chooser.setCurrentDirectory(new File(System.getProperty("user.home")));              
-                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                // disable the "All files" option.
-                chooser.setAcceptAllFileFilterUsed(false);
+                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);               
                 if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
                 {                 
                     File targetFileName = chooser.getSelectedFile(); 
@@ -265,12 +296,63 @@ public class SendEmail extends javax.swing.JFrame {
 
     private void sendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendBtnActionPerformed
         // TODO add your handling code here:
-        
+        fromUser = emailFrom.getText();
+        toUser = toField.getText(); //người nhận
+        cc = ccField.getText(); //có thể bỏ qua
+        bcc = BccField.getText(); //có thể bỏ qua
+        subject = subjectField.getText(); //tiêu đề thư, hãy tôn trọng người nhận thư, đừng bỏ trống phần này
+        content = mailField.getText(); //nội dung thư
+        filepath = pathAttachment.getText(); //file đính kèm
+        if (checkInput(toUser) == true) {
+            SendEmail(fromUser, toUser, cc, bcc, subject, content, filepath);         
+        }      
+              
     }//GEN-LAST:event_sendBtnActionPerformed
 
+    private void SendEmail(String fromUser, String toUser, String cc, String bcc, String subject, String content, String filepath) {
+        sendMesseage.setModalityType(Dialog.ModalityType.MODELESS);
+        sendMesseage.setVisible(true);
+        DisableFunction();
+        Thread startSend = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        ps = connection.prepareStatement("SELECT * FROM email WHERE email = ?");
+                        ps.setString(1, fromUser);
+                        rs = ps.executeQuery();
+                        while (rs.next()) {
+                            gAction.SendAction(rs.getString("email"), rs.getString("password"), 
+                                    rs.getString("smtp"), rs.getString("portSSL"),
+                                    toUser, subject, cc, bcc, filepath, content);
+                            sendMesseage.setVisible(false);
+                            int reply = JOptionPane.showOptionDialog(null, "Gửi thư thành công!", "Thông báo", 
+                                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+                            if (reply == JOptionPane.OK_OPTION ) {
+                                dispose();
+                            }
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
+                        sendMesseage.setVisible(false);
+                    }
+                }
+            };
+            startSend.start();
+    }
     
-    private void checkInput() {
-        
+    private boolean checkInput(String touser) {
+        //kiểm tra định dạng mail
+        if (toUser.equals("")) {
+            JOptionPane.showMessageDialog(this, "Người gửi không được để trống", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        else if (RegexEmail.validation(touser) == false) {
+            JOptionPane.showMessageDialog(this, "Email không đúng mẫu: example@domain.com", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }        
+        else {
+            return true;
+        }                
     }
     /**
      * @param args the command line arguments
@@ -290,7 +372,6 @@ public class SendEmail extends javax.swing.JFrame {
     private javax.swing.JTextField BccField;
     private javax.swing.JButton attachmentBtn;
     private javax.swing.JTextField ccField;
-    private javax.swing.JTextArea emailField;
     public javax.swing.JLabel emailFrom;
     private javax.swing.JButton hintBcc;
     private javax.swing.JButton hintCC;
@@ -300,6 +381,7 @@ public class SendEmail extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea mailField;
     private javax.swing.JLabel pathAttachment;
     private javax.swing.JButton sendBtn;
     private javax.swing.JTextField subjectField;
