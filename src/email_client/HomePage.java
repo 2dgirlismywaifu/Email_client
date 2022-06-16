@@ -4,7 +4,6 @@
  */
 package email_client;
 
-import com.formdev.flatlaf.util.SystemInfo;
 import email_client.callFrame.frameManageAccount;
 import email_client.callFrame.frameAboutSoftware;
 import email_client.callFrame.frameAboutTeam;
@@ -15,6 +14,7 @@ import email_client.global.LookandFeel;
 import email_client.global.IconImageUtilities;
 import email_client.dialogMess.NetworkNotify;
 import email_client.global.folderMailName;
+import email_client.global.macOS.mainForm;
 import email_client.sqlitehelper.sqlitehelper;
 import email_client.utils.gmail.GmailSent;
 import email_client.utils.gmail.GmailSpam;
@@ -28,7 +28,6 @@ import email_client.utils.outlook.OutlookTrash;
 import email_client.utils.yahoo.YahooSent;
 import email_client.utils.yahoo.YahooSpam;
 import email_client.utils.yahoo.YahooTrash;
-import java.awt.Desktop;
 import java.awt.Dialog;
 import java.io.IOException;
 import java.sql.Connection;
@@ -38,7 +37,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -51,22 +49,21 @@ import javax.swing.table.DefaultTableModel;
 public class HomePage extends javax.swing.JFrame {
     
     DownloadMailMesseage downloadDialog = new DownloadMailMesseage(this, true);
+    mainForm main = new mainForm();
     folderMailName foldername = new folderMailName();
     frameSendEmail sendGUI = new frameSendEmail();    
     Connection connection = sqlitehelper.getConnection();
     DefaultTableModel model ;
     PreparedStatement ps;
-    ResultSet rs;   
-    Message selectedMessage;   
-    String imap, storeType, user, password, server, mailfoldername;
+    ResultSet rs;     
+    String imap, storeType, user, password, server;
     //imap chính là server kết nối của dịch vụ email
     //storeType: pop3 - mail lưu cục bộ, imap: mail ko lưu cục bộ, giao tiếp với server
     //user: chính là email
     //pass: khỏi cần giải thích :)
     //mailfoldername: đây là một trick dành cho đọc nội dung mail
     //////////////////////////////////////////////////////////////////////////////////////////////
-    //gọi utils fetch email
-    FetchContentMail content = new FetchContentMail();
+    //gọi utils fetch email   
     FetchInbox fetchInbox = new FetchInbox();
     //Tài khoản Gmail   
     GmailSent sentGmail = new GmailSent();
@@ -98,17 +95,7 @@ public class HomePage extends javax.swing.JFrame {
         loadingMesseage.setVisible(false); 
         //////////////////////////////////////////////////////////
         //macOS ONLY
-        Desktop desktop = Desktop.getDesktop();
-        if( desktop.isSupported( Desktop.Action.APP_ABOUT ) ) {
-            desktop.setAboutHandler( e -> {
-                // show about dialog
-            } );
-        }
-        if( desktop.isSupported( Desktop.Action.APP_PREFERENCES ) ) {
-            desktop.setPreferencesHandler( e -> {
-                // show preferences dialog
-            } );
-        }             
+        main.desktopMac();
         //////////////////////////////////////////////////////////////////
         //Người dùng mới
         firstTime();
@@ -817,7 +804,8 @@ public class HomePage extends javax.swing.JFrame {
 
     private void aboutTeamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutTeamActionPerformed
         // TODO add your handling code here:
-        frameAboutTeam.callframe();
+        //frameAboutTeam.callframe();
+        frameAboutTeam.anotherframe();
     }//GEN-LAST:event_aboutTeamActionPerformed
 
     private void plainTextBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plainTextBtnActionPerformed
@@ -1094,21 +1082,12 @@ public class HomePage extends javax.swing.JFrame {
         /* Set the FlaLaf Light */
         //theme này đẹp hơn nhiều
         LookandFeel.setTheme();
-        if( SystemInfo.isMacOS ) {
-            System.setProperty( "apple.laf.useScreenMenuBar", "true" ); //menubar lên Screen Menu Bar
-            System.setProperty( "apple.awt.application.name", "EmailClient" ); //tên phần mềm lên Screen Menu Bar               
-        }
+        mainForm.isMacOS();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             HomePage frame = new HomePage();
             frame.setVisible(true);
-            if( SystemInfo.isMacFullWindowContentSupported ) { //macOS ONLY                              
-                frame.getRootPane().putClientProperty( "apple.awt.transparentTitleBar", true ); //transparent titlebar
-                frame.getRootPane().putClientProperty( "apple.awt.fullWindowContent", true );        
-            }
-            frame.getRootPane().putClientProperty( "apple.awt.windowTitleVisible", false ); //ẩn tên phần mềm trên titlebar
-            frame.getRootPane().putClientProperty( "apple.awt.fullscreenable", true ); //fullscreen mode
-            
+            mainForm.isMacFullWindowContentSupported(frame);           
         });
     }
 

@@ -4,9 +4,10 @@
  */
 package email_client.callFrame;
 
-import com.formdev.flatlaf.util.SystemInfo;
 import email_client.aboutTeam;
+import email_client.anotherAboutTeam;
 import email_client.global.LookandFeel;
+import email_client.global.macOS.subForm;
 
 /**
  *
@@ -15,17 +16,24 @@ import email_client.global.LookandFeel;
 public class frameAboutTeam {
     public static void callframe() {
         LookandFeel.setTheme();
-        if( SystemInfo.isMacOS ) {
-            System.setProperty( "apple.laf.useScreenMenuBar", "true" ); //menubar lên Screen Menu Bar
-            //System.setProperty( "apple.awt.application.name", "Thông tin phần mềm" ); //tên phần mềm lên Screen Menu Bar               
-        }
+        subForm.isMacOS();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             aboutTeam frame = new aboutTeam();
-            if( SystemInfo.isMacFullWindowContentSupported ) { //macOS ONLY
-                frame.getRootPane().putClientProperty( "apple.awt.transparentTitleBar", true ); //transparent titlebar
-                //frame.getRootPane().putClientProperty( "apple.awt.fullscreenable", true ); //fullscreen mode
-            }
+            subForm.isMacFullWindowContentSupported(frame);
+            frame.setVisible(true);
+            frame.setTitle("Thông tin nhóm");
+            frame.setResizable(false);
+        });
+    }
+    
+    public static void anotherframe() {
+        LookandFeel.setTheme();
+        subForm.isMacOS();
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            anotherAboutTeam frame = new anotherAboutTeam();
+            subForm.isMacFullWindowContentSupported(frame);
             frame.setVisible(true);
             frame.setTitle("Thông tin nhóm");
             frame.setResizable(false);
