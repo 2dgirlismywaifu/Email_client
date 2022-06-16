@@ -8,7 +8,38 @@ public class PropertiesAPI {
         public final String trustSSL = "mail.protocol.ssl.trust";
         public final String mailProtocol = "mail.store.protocol"; //sử dụng đọc content mail
         public final String debug = "mail.debug";
+        //SMTP services
+        public final String smtpAuth = "mail.smtp.auth";
+        public final String smtpHost = "mail.smtp.host";
+        public final String smtpSocketPort = "mail.smtp.socketFactory.port";
+        public final String smtpSocketClass = "mail.smtp.socketFactory.class";
+        public final String smtpPort = "mail.smtp.port";
+        public final String smtpTLS = "mail.smtp.starttls.enable";
 
+    public String getSmtpTLS() {
+        return smtpTLS;
+    }
+
+    public String getSmtpAuth() {
+        return smtpAuth;
+    }
+
+    public String getSmtpHost() {
+        return smtpHost;
+    }
+
+    public String getSmtpSocketPort() {
+        return smtpSocketPort;
+    }
+
+    public String getSmtpSocketClass() {
+        return smtpSocketClass;
+    }
+
+    public String getSmtpPort() {
+        return smtpPort;
+    }
+        
     public String getDebug() {
         return debug;
     }
