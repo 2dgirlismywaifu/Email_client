@@ -59,6 +59,10 @@ public class anotherAboutTeam extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         fourthGithub = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Thông tin nhóm");
@@ -68,8 +72,8 @@ public class anotherAboutTeam extends javax.swing.JFrame {
 
         imageAvatar2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/picture_profile/59259855.jpg"))); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel1.setText("@2dgirlismywaifu");
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel1.setText("Ngô Thành Long");
 
         jLabel2.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel2.setText("Email: ngothanhlong19943@gmail.com");
@@ -82,8 +86,8 @@ public class anotherAboutTeam extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel3.setText("@PhoebeHa0320");
+        jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel3.setText("Nguyễn Ngọc Hoàng Hà");
 
         jLabel4.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel4.setText("Email: hoangha2000@gmail.com");
@@ -98,8 +102,8 @@ public class anotherAboutTeam extends javax.swing.JFrame {
 
         imageAvatar3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/picture_profile/47359493.jpg"))); // NOI18N
 
-        jLabel5.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel5.setText("@ngohien0810");
+        jLabel5.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel5.setText("Ngô Thị Hiền");
 
         jLabel6.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel6.setText("Email: example@domain.com");
@@ -114,8 +118,8 @@ public class anotherAboutTeam extends javax.swing.JFrame {
 
         imageAvatar4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/picture_profile/70122193.jpg"))); // NOI18N
 
-        jLabel7.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel7.setText("@ledat220497");
+        jLabel7.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel7.setText("Lê Tiến Đạtl");
 
         jLabel8.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel8.setText("Email: example@domain.com");
@@ -131,6 +135,18 @@ public class anotherAboutTeam extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Dialog", 0, 20)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("Nhóm 7: Email Client Manager - Quản lý Email người dùng");
+
+        jLabel10.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel10.setText("@2dgirlismywaifu");
+
+        jLabel11.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel11.setText("@PhoebeHa0320");
+
+        jLabel12.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel12.setText("@ngohien0810");
+
+        jLabel13.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel13.setText("@ledat220497");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -159,7 +175,11 @@ public class anotherAboutTeam extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(secondGithub)
-                                    .addComponent(jLabel3))))
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel11)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(143, 143, 143)
+                                .addComponent(jLabel10)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -180,23 +200,29 @@ public class anotherAboutTeam extends javax.swing.JFrame {
                                         .addGap(3, 3, 3)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(fourthGithub))))))
+                                            .addComponent(fourthGithub)))
+                                    .addComponent(jLabel13)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(143, 143, 143)
+                                .addComponent(jLabel12)))
                         .addGap(30, 30, 30))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addGap(30, 30, 30)
                 .addComponent(jLabel9)
-                .addGap(20, 20, 20)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(imageAvatar2, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                        .addComponent(imageAvatar2, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
                         .addGap(53, 53, 53))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel5)
+                                .addGap(15, 15, 15)
+                                .addComponent(jLabel12)
                                 .addGap(15, 15, 15)
                                 .addComponent(jLabel6)
                                 .addGap(15, 15, 15)
@@ -204,16 +230,20 @@ public class anotherAboutTeam extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addGap(15, 15, 15)
+                                .addComponent(jLabel10)
+                                .addGap(15, 15, 15)
                                 .addComponent(jLabel2)
                                 .addGap(15, 15, 15)
                                 .addComponent(firstGithub))
                             .addComponent(imageAvatar3, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
+                                .addGap(15, 15, 15)
+                                .addComponent(jLabel11)
                                 .addGap(15, 15, 15)
                                 .addComponent(jLabel4)
                                 .addGap(15, 15, 15)
@@ -221,14 +251,16 @@ public class anotherAboutTeam extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel7)
                                 .addGap(15, 15, 15)
+                                .addComponent(jLabel13)
+                                .addGap(15, 15, 15)
                                 .addComponent(jLabel8)
                                 .addGap(15, 15, 15)
                                 .addComponent(fourthGithub)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(imageAvatar1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                            .addComponent(imageAvatar4, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE))
+                            .addComponent(imageAvatar1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                            .addComponent(imageAvatar4, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
                         .addContainerGap(30, Short.MAX_VALUE))))
         );
 
@@ -288,6 +320,10 @@ public class anotherAboutTeam extends javax.swing.JFrame {
     private email_client.global.ImageAvatar imageAvatar3;
     private email_client.global.ImageAvatar imageAvatar4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
