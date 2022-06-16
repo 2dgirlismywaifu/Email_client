@@ -82,10 +82,15 @@
                                               <Component id="passProblem" min="-2" pref="19" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="showPasswordCheck" alignment="0" min="-2" pref="118" max="-2" attributes="0"/>
-                                          <Component id="jLabel7" min="-2" pref="121" max="-2" attributes="0"/>
+                                          <Group type="102" attributes="0">
+                                              <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
+                                              <Component id="jLabel7" min="-2" pref="121" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
+                                              <Component id="showPasswordCheck" min="-2" max="-2" attributes="0"/>
+                                          </Group>
                                       </Group>
                                   </Group>
                                   <Component id="Services" min="-2" pref="425" max="-2" attributes="0"/>
@@ -145,7 +150,7 @@
                   <Component id="imapServer" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="imapProblem" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="20" max="32767" attributes="0"/>
+              <EmptySpace pref="36" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="ConfirmBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="CancelBtn" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -159,7 +164,7 @@
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="24" style="1"/>
+          <Font name="SF Pro Display" size="18" style="1"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -171,7 +176,7 @@
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="text" type="java.lang.String" value="D&#x1ecb;ch v&#x1ee5;"/>
@@ -180,7 +185,7 @@
     <Component class="javax.swing.JComboBox" name="Services">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="3">
@@ -197,7 +202,7 @@
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="text" type="java.lang.String" value="Email"/>
@@ -206,14 +211,14 @@
     <Component class="javax.swing.JTextField" name="emailAccount">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="text" type="java.lang.String" value="M&#x1ead;t kh&#x1ea9;u"/>
@@ -235,7 +240,7 @@
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="text" type="java.lang.String" value="T&#xea;n Email"/>
@@ -244,7 +249,7 @@
     <Component class="javax.swing.JTextField" name="username">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
       </Properties>
       <Events>
@@ -254,7 +259,7 @@
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="(T&#xf9;y ch&#x1ecd;n)"/>
       </Properties>
@@ -276,7 +281,7 @@
     <Component class="javax.swing.JLabel" name="jLabel9">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="text" type="java.lang.String" value="SMTP"/>
@@ -285,7 +290,7 @@
     <Component class="javax.swing.JComboBox" name="smtpServer">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="3">
@@ -302,7 +307,7 @@
     <Component class="javax.swing.JButton" name="ConfirmBtn">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="OK"/>
       </Properties>
@@ -313,7 +318,7 @@
     <Component class="javax.swing.JButton" name="CancelBtn">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="H&#x1ee7;y B&#x1ecf;"/>
       </Properties>
@@ -324,7 +329,7 @@
     <Component class="javax.swing.JPasswordField" name="passwordEmail">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
       </Properties>
     </Component>
@@ -387,7 +392,7 @@
     <Component class="javax.swing.JLabel" name="jLabel10">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="text" type="java.lang.String" value="IMAP"/>
@@ -396,7 +401,7 @@
     <Component class="javax.swing.JComboBox" name="imapServer">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Display" size="18" style="0"/>
+          <Font name="SF Pro Display" size="16" style="0"/>
         </Property>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="3">

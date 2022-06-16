@@ -76,25 +76,25 @@ public class addAccount extends javax.swing.JFrame {
         setTitle("Thêm tài khoản");
         setResizable(false);
 
-        jLabel1.setFont(new java.awt.Font("SF Pro Display", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-user-64.png"))); // NOI18N
         jLabel1.setText("Thêm tài khoản");
 
-        jLabel3.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel3.setText("Dịch vụ");
 
-        Services.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        Services.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         Services.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "gmail", "outlook", "yahoo" }));
 
-        jLabel4.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel4.setText("Email");
 
-        emailAccount.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        emailAccount.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
 
-        jLabel5.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel5.setText("Mật khẩu");
 
@@ -108,18 +108,18 @@ public class addAccount extends javax.swing.JFrame {
             }
         });
 
-        jLabel6.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel6.setText("Tên Email");
 
-        username.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        username.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         username.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 usernameActionPerformed(evt);
             }
         });
 
-        jLabel7.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel7.setText("(Tùy chọn)");
 
         TwoFAHelper.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
@@ -131,14 +131,14 @@ public class addAccount extends javax.swing.JFrame {
             }
         });
 
-        jLabel9.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel9.setText("SMTP");
 
-        smtpServer.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        smtpServer.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         smtpServer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "smtp.gmail.com", "smtp.office365.com", "smtp.mail.yahoo.com" }));
 
-        ConfirmBtn.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        ConfirmBtn.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         ConfirmBtn.setText("OK");
         ConfirmBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -146,7 +146,7 @@ public class addAccount extends javax.swing.JFrame {
             }
         });
 
-        CancelBtn.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        CancelBtn.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         CancelBtn.setText("Hủy Bỏ");
         CancelBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -154,7 +154,7 @@ public class addAccount extends javax.swing.JFrame {
             }
         });
 
-        passwordEmail.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        passwordEmail.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
 
         passProblem.setFont(new java.awt.Font("SF Pro Display", 0, 20)); // NOI18N
         passProblem.setForeground(new java.awt.Color(255, 0, 0));
@@ -184,11 +184,11 @@ public class addAccount extends javax.swing.JFrame {
         servicesProblem.setToolTipText("");
         servicesProblem.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jLabel10.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel10.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel10.setText("IMAP");
 
-        imapServer.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        imapServer.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         imapServer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "imap.gmail.com", "outlook.office365.com", "imap.mail.yahoo.com" }));
 
         imapProblem.setFont(new java.awt.Font("SF Pro Display", 0, 20)); // NOI18N
@@ -249,10 +249,13 @@ public class addAccount extends javax.swing.JFrame {
                                                 .addComponent(passwordEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(18, 18, 18)
                                                 .addComponent(passProblem, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGap(78, 78, 78)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(showPasswordCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(78, 78, 78)
+                                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(74, 74, 74)
+                                                .addComponent(showPasswordCheck))))
                                     .addComponent(Services, javax.swing.GroupLayout.PREFERRED_SIZE, 425, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(emailAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 425, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -297,7 +300,7 @@ public class addAccount extends javax.swing.JFrame {
                     .addComponent(jLabel10)
                     .addComponent(imapServer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(imapProblem))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ConfirmBtn)
                     .addComponent(CancelBtn))

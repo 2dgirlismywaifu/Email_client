@@ -162,34 +162,34 @@ public class manageAccount extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        jLabel2.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel2.setText("Service");
 
-        imapServer.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        imapServer.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         imapServer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "imap.gmail.com", "outlook.office365.com", "imap.mail.yahoo.com" }));
         imapServer.setEnabled(false);
 
-        jLabel3.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel3.setText("IMAP Server");
 
-        Server.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        Server.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         Server.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "gmail", "outlook", "yahoo" }));
         Server.setEnabled(false);
 
-        jLabel4.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel4.setText("Email");
 
-        emailAccount.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        emailAccount.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         emailAccount.setEnabled(false);
 
-        jLabel6.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel6.setText("Tên tài khoản");
 
-        username.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        username.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         username.setEnabled(false);
         username.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -197,14 +197,14 @@ public class manageAccount extends javax.swing.JFrame {
             }
         });
 
-        jLabel7.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel7.setText("(Tùy chọn)");
 
-        jLabel9.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel9.setText("SMTP Server");
 
-        smtpServer.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        smtpServer.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         smtpServer.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "smtp.gmail.com", "smtp.office365.com", "smtp.mail.yahoo.com" }));
         smtpServer.setEnabled(false);
 
@@ -263,21 +263,21 @@ public class manageAccount extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText("ID");
 
-        idEmail.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        idEmail.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         idEmail.setEnabled(false);
 
-        jLabel5.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel5.setText("Mật khẩu");
 
         passEmail.setEditable(false);
-        passEmail.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        passEmail.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
 
-        editPass.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        editPass.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
         editPass.setText("Sửa mật khẩu");
         editPass.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         editPass.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -320,15 +320,15 @@ public class manageAccount extends javax.swing.JFrame {
                                 .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(passEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(editPass, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(idEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(emailAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addComponent(imapServer, javax.swing.GroupLayout.Alignment.LEADING, 0, 190, Short.MAX_VALUE)
-                                        .addComponent(Server, javax.swing.GroupLayout.Alignment.LEADING, 0, 190, Short.MAX_VALUE)))
+                                        .addComponent(Server, javax.swing.GroupLayout.Alignment.LEADING, 0, 190, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(passEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(editPass)))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -391,7 +391,7 @@ public class manageAccount extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addAccount)
                     .addComponent(deleteAccount))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         pack();
