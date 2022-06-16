@@ -424,7 +424,6 @@ public class HomePage extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        mailList.setColumnSelectionAllowed(true);
         mailList.getTableHeader().setReorderingAllowed(false);
         mailList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -432,7 +431,6 @@ public class HomePage extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(mailList);
-        mailList.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         MailSearchInput.setFont(new java.awt.Font("SF Pro Display", 0, 14)); // NOI18N
         MailSearchInput.setToolTipText("Nhập thư cần tìm");
@@ -756,11 +754,11 @@ public class HomePage extends javax.swing.JFrame {
     private void mailListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mailListMouseClicked
         // TODO add your handling code here:
         //đọc nội dung thư       
-        DefaultTableModel model = (DefaultTableModel) mailList.getModel();
-        fromTXT.setText(model.getValueAt(mailList.getSelectedRow(),0).toString());
-        dateTXT.setText(model.getValueAt(mailList.getSelectedRow(),2).toString());
+        DefaultTableModel getmodel = (DefaultTableModel) mailList.getModel();
+        fromTXT.setText(getmodel.getValueAt(mailList.getSelectedRow(),0).toString());
+        dateTXT.setText(getmodel.getValueAt(mailList.getSelectedRow(),2).toString());
         try {
-            subjectTXT.setText(model.getValueAt(mailList.getSelectedRow(),1).toString());
+            subjectTXT.setText(getmodel.getValueAt(mailList.getSelectedRow(),1).toString());
         } catch (NullPointerException ex) {
             subjectTXT.setText("Mail không có tiêu đề");
         }        
@@ -770,9 +768,9 @@ public class HomePage extends javax.swing.JFrame {
     private void refreshAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshAccountActionPerformed
         // TODO add your handling code here:
         String firstItem = "Chọn tài khoản";        
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
-        model.addElement(firstItem);
-        emailList.setModel(model);      
+        DefaultComboBoxModel getmodel = new DefaultComboBoxModel();
+        getmodel.addElement(firstItem);
+        emailList.setModel(getmodel);      
         Thread loadeEmail = new Thread() {
             @Override
             public void run() {             
@@ -861,7 +859,7 @@ public class HomePage extends javax.swing.JFrame {
                 loadingMesseage.setVisible(false);
                 } catch (SQLException | MessagingException | IOException ex) {
                     Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);              
-                } 
+                }
             }
         };
                 contentMail.start();
