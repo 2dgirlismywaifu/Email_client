@@ -321,7 +321,7 @@ public class SendEmail extends javax.swing.JFrame {
                         ps.setString(1, fromUser);
                         rs = ps.executeQuery();
                         while (rs.next()) {
-                            gAction.SendAction(rs.getString("email"), rs.getString("password"), 
+                            gAction.SendAction(fromUser, rs.getString("password"), 
                                     rs.getString("smtp"), rs.getString("portSSL"),
                                     toUser, subject, cc, bcc, filepath, content);
                             sendMesseage.setVisible(false);

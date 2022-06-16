@@ -9,7 +9,7 @@ public class globalAction {
     
     PropertiesAPI propertiesAPI = new PropertiesAPI();
     
-    public Session Login(String username, String pass, String smtp, String portSSL) {
+    public Session Login(String username, String password, String smtp, String portSSL) {
         Properties props = new Properties();
         props.put(propertiesAPI.getSmtpAuth(), "true");
         props.put(propertiesAPI.getSmtpHost(), smtp);
@@ -17,14 +17,14 @@ public class globalAction {
         props.put(propertiesAPI.getSmtpSocketClass(), "javax.net.ssl.SSLSocketFactory");
         props.put(propertiesAPI.getSmtpPort(), portSSL);
         props.put(propertiesAPI.getSmtpTLS(), "true"); //enable STARTTLS
-        props.put(propertiesAPI.getDebug(), "true");
-        PasswordAuthentication Auth = new PasswordAuthentication(username, pass);
-        Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return Auth;
-            }
-        });
+        props.put(propertiesAPI.getDebug(), "true");       
+        Session session = Session.getInstance(props,
+                 new javax.mail.Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                       return new PasswordAuthentication(username, password);
+                    }
+                 });
         return session;
     }
 
@@ -39,13 +39,13 @@ public class globalAction {
     }
 
     public void SendAction(String username, String pass, String smtp, String portSSL, 
-            String touser, String subject, String cc, String bcc, String attachment,String mailField) {        
+        String touser, String subject, String cc, String bcc, String attachment,String mailField) {        
         String[] listTo = getListEmail(touser.trim());
         String[] listCc = getListEmail(cc.trim());
         String[] listBcc = getListEmail(bcc.trim());                     
         Session sess = Login(username, pass, smtp, portSSL);
         SendMail sender = new SendMail(sess);
         System.out.println(attachment);
-        sender.sendEmail(listTo, listCc, listBcc, mailField, attachment, subject);
+        sender.sendEmail(listTo, listCc, listBcc, mailField, attachment, subject, username);
     }    
 }

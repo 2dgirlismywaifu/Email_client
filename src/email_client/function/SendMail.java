@@ -31,12 +31,13 @@ public class SendMail {
         this.sess = sess;
     }
 
-    public void sendEmail(String[] listTo, String[] listCC, String[] listBcc, String content, String FileName, String subject) {
+    public void sendEmail(String[] listTo, String[] listCC, String[] listBcc, String content, String FileName, String subject, String from) {
         InternetAddress[] listEmailTo = convertInnetAddress(listTo);
         InternetAddress[] listEmailCC = convertInnetAddress(listCC);
         InternetAddress[] listEmailBcc = convertInnetAddress(listBcc);
         MimeMessage mimeMss = new MimeMessage(sess);
         setSubject(mimeMss, subject);
+        setFrom(mimeMss, from);
         setEmailRecipients(mimeMss, listEmailTo, Message.RecipientType.TO);
         setEmailRecipients(mimeMss, listEmailCC, Message.RecipientType.CC);
         setEmailRecipients(mimeMss, listEmailBcc, Message.RecipientType.BCC);
@@ -74,6 +75,13 @@ public class SendMail {
     private void setSubject(MimeMessage mess, String subject) {
         try {
             mess.setSubject(subject);
+        } catch (MessagingException e) {
+        }
+    }
+    
+     private void setFrom(MimeMessage mess, String from) {
+        try {
+            mess.setFrom(from);
         } catch (MessagingException e) {
         }
     }
