@@ -130,7 +130,7 @@ public class anotherAboutTeam extends javax.swing.JFrame {
 
         jLabel9.setFont(new java.awt.Font("Dialog", 0, 20)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setText("Thông tin các thành viên nhóm");
+        jLabel9.setText("Nhóm 7: Email Client Manager - Quản lý Email người dùng");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
