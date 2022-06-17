@@ -2,7 +2,7 @@
 - Đây là project bài tập kết thúc môn Lập trình mạng
 - Báo cáo word và powerpoint lưu vào thư mục documents
 - IDE: Apache Netbeans (mới nhất) chỉ cần ít nhất trong phiên bản 12 cũng được
-- JDK: JDK 14 trở lên
+- JDK: Tối thiểu JDK 14, khuyến cáo: JDK 17 trở lên
 - Vui lòng để lại comment trong dòng code để các thành viên hiểu function của code
 # Mục tiêu
 - Chú ý: các mục tiêu các thành viên có thể add thêm
@@ -33,6 +33,7 @@
 3. Fetch nhanh hay chậm tuỳ thuộc Internet nhanh hay chậm
 4. Không còn hỗ trợ pop3. Sử dụng IMAP thay thế
 5. Một số mail không thể load được nội dụng. Đây là vấn đề thuộc JavaMail và chúng ta không thể làm được gì cả.
+6. Do thay đổi về security các dịch vụ Email (Gmail, Outlook, Yahoo...), tất cả các tài khoản thêm vào nên sử dụng xác thực hai bước và tạo mật khẩu ứng dụng.
 # macOS Support
 - Các dòng properties hỗ trợ cho macOS
 1. System.setProperty( "apple.laf.useScreenMenuBar", "true" ); //menubar lên Screen Menu Bar
