@@ -106,7 +106,7 @@ public class anotherAboutTeam extends javax.swing.JFrame {
         jLabel5.setText("Ngô Thị Hiền");
 
         jLabel6.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel6.setText("Email: example@domain.com");
+        jLabel6.setText("Email: ngohien0810@gmail.com");
 
         thirdGithub.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         thirdGithub.setText("github");
@@ -122,7 +122,7 @@ public class anotherAboutTeam extends javax.swing.JFrame {
         jLabel7.setText("Lê Tiến Đạtl");
 
         jLabel8.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel8.setText("Email: example@domain.com");
+        jLabel8.setText("Email: ledat199x97@gmail.com");
 
         fourthGithub.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         fourthGithub.setText("github");
@@ -239,29 +239,25 @@ public class anotherAboutTeam extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel11)
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel4)
-                                .addGap(15, 15, 15)
-                                .addComponent(secondGithub))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel13)
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel8)
-                                .addGap(15, 15, 15)
-                                .addComponent(fourthGithub)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(imageAvatar1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(imageAvatar4, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(30, Short.MAX_VALUE))))
+                        .addComponent(jLabel3)
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel11)
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel4)
+                        .addGap(15, 15, 15)
+                        .addComponent(secondGithub))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel13)
+                        .addGap(15, 15, 15)
+                        .addComponent(jLabel8)
+                        .addGap(15, 15, 15)
+                        .addComponent(fourthGithub))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(imageAvatar1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(imageAvatar4, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pack();
