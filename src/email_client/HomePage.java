@@ -8,6 +8,7 @@ import email_client.callFrame.frameManageAccount;
 import email_client.callFrame.frameAboutSoftware;
 import email_client.callFrame.frameAboutTeam;
 import email_client.callFrame.frameAddAccount;
+import email_client.callFrame.frameOSInformation;
 import email_client.callFrame.frameSendEmail;
 import email_client.dialogMess.DownloadMailMesseage;
 import email_client.global.LookandFeel;
@@ -242,6 +243,7 @@ public class HomePage extends javax.swing.JFrame {
         Help = new javax.swing.JMenu();
         aboutSoftware = new javax.swing.JMenuItem();
         aboutTeam = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Email Client Manage");
@@ -546,6 +548,15 @@ public class HomePage extends javax.swing.JFrame {
         });
         Help.add(aboutTeam);
 
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-operating-system-30.png"))); // NOI18N
+        jMenuItem1.setText("Operating System");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        Help.add(jMenuItem1);
+
         jMenuBar1.add(Help);
 
         setJMenuBar(jMenuBar1);
@@ -823,6 +834,11 @@ public class HomePage extends javax.swing.JFrame {
             }
                
     }//GEN-LAST:event_plainTextBtnActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        frameOSInformation.callframe();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //tất cả các quá trình fetch đều dùng thread
     //load nội dung thư (chú ý: đây là testing với folder INBOX)
@@ -846,7 +862,16 @@ public class HomePage extends javax.swing.JFrame {
                 getContent.readEmail(rowSelected, imap, storeType, user, password, mailMessage);
                 loadingMesseage.setVisible(false);
                 } catch (SQLException | MessagingException | IOException ex) {
-                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);              
+                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                    int reply = JOptionPane.showConfirmDialog(null, "Tải thất bại!\n"
+                            + "Bạn có muốn tải dạng Plain Text?", "Thông báo", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        showPlainText(rowSelected);
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(null, "Bạn vẫn có thể tải dạng plain text bằng cách nhấn nút\n"
+                                + "Plain Text trên màn hình", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
             }
         };
@@ -1116,6 +1141,7 @@ public class HomePage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
