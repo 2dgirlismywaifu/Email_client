@@ -63,20 +63,27 @@ public class anotherAboutTeam extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Thông tin nhóm");
+        setBackground(new java.awt.Color(255, 204, 255));
         setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         imageAvatar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/picture_profile/90584137.jpg"))); // NOI18N
+        getContentPane().add(imageAvatar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 276, 128, 128));
 
         imageAvatar2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/picture_profile/59259855.jpg"))); // NOI18N
+        getContentPane().add(imageAvatar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 95, 128, 128));
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel1.setText("Ngô Thành Long");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(173, 86, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel2.setText("Email: ngothanhlong19943@gmail.com");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(176, 154, 260, -1));
 
         firstGithub.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         firstGithub.setText("github");
@@ -85,12 +92,15 @@ public class anotherAboutTeam extends javax.swing.JFrame {
                 firstGithubMouseClicked(evt);
             }
         });
+        getContentPane().add(firstGithub, new org.netbeans.lib.awtextra.AbsoluteConstraints(176, 188, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel3.setText("Nguyễn Ngọc Hoàng Hà");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(173, 276, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel4.setText("Email: hoangha2000@gmail.com");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(173, 344, 260, -1));
 
         secondGithub.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         secondGithub.setText("github");
@@ -99,14 +109,18 @@ public class anotherAboutTeam extends javax.swing.JFrame {
                 secondGithubMouseClicked(evt);
             }
         });
+        getContentPane().add(secondGithub, new org.netbeans.lib.awtextra.AbsoluteConstraints(173, 378, -1, -1));
 
         imageAvatar3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/picture_profile/47359493.jpg"))); // NOI18N
+        getContentPane().add(imageAvatar3, new org.netbeans.lib.awtextra.AbsoluteConstraints(457, 86, 128, 128));
 
         jLabel5.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel5.setText("Ngô Thị Hiền");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 86, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel6.setText("Email: example@domain.com");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(603, 154, 260, -1));
 
         thirdGithub.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         thirdGithub.setText("github");
@@ -115,14 +129,18 @@ public class anotherAboutTeam extends javax.swing.JFrame {
                 thirdGithubMouseClicked(evt);
             }
         });
+        getContentPane().add(thirdGithub, new org.netbeans.lib.awtextra.AbsoluteConstraints(603, 188, -1, -1));
 
         imageAvatar4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/picture_profile/70122193.jpg"))); // NOI18N
+        getContentPane().add(imageAvatar4, new org.netbeans.lib.awtextra.AbsoluteConstraints(457, 276, 128, 128));
 
         jLabel7.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel7.setText("Lê Tiến Đạtl");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 276, -1, -1));
 
         jLabel8.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel8.setText("Email: example@domain.com");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(603, 344, 260, -1));
 
         fourthGithub.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         fourthGithub.setText("github");
@@ -131,138 +149,32 @@ public class anotherAboutTeam extends javax.swing.JFrame {
                 fourthGithubMouseClicked(evt);
             }
         });
+        getContentPane().add(fourthGithub, new org.netbeans.lib.awtextra.AbsoluteConstraints(603, 378, -1, -1));
 
         jLabel9.setFont(new java.awt.Font("Dialog", 0, 20)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel9.setText("Nhóm 7: Email Client Manager - Quản lý Email người dùng");
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 853, -1));
 
         jLabel10.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel10.setText("@2dgirlismywaifu");
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(173, 120, -1, -1));
 
         jLabel11.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel11.setText("@PhoebeHa0320");
+        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(173, 310, -1, -1));
 
         jLabel12.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel12.setText("@ngohien0810");
+        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 120, -1, -1));
 
         jLabel13.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel13.setText("@ledat220497");
+        getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 310, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(imageAvatar2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(146, 146, 146)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(firstGithub)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(imageAvatar1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(15, 15, 15)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(secondGithub)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel11)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(143, 143, 143)
-                                .addComponent(jLabel10)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(imageAvatar3, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel5))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(146, 146, 146)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(thirdGithub)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(imageAvatar4, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(15, 15, 15)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel7)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(3, 3, 3)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(fourthGithub)))
-                                    .addComponent(jLabel13)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(143, 143, 143)
-                                .addComponent(jLabel12)))
-                        .addGap(30, 30, 30))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jLabel9)
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(imageAvatar2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(53, 53, 53))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel12)
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel6)
-                                .addGap(15, 15, 15)
-                                .addComponent(thirdGithub))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel10)
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel2)
-                                .addGap(15, 15, 15)
-                                .addComponent(firstGithub))
-                            .addComponent(imageAvatar3, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel11)
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel4)
-                                .addGap(15, 15, 15)
-                                .addComponent(secondGithub))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel13)
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel8)
-                                .addGap(15, 15, 15)
-                                .addComponent(fourthGithub)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(imageAvatar1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(imageAvatar4, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(30, Short.MAX_VALUE))))
-        );
+        jLabel14.setBackground(new java.awt.Color(234, 247, 247));
+        jLabel14.setOpaque(true);
+        getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 4, 890, 420));
 
         pack();
         setLocationRelativeTo(null);
@@ -324,6 +236,7 @@ public class anotherAboutTeam extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
