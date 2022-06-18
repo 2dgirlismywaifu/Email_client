@@ -3,7 +3,7 @@ package email_client;
 import email_client.dialogMess.ExplainBcc;
 import email_client.dialogMess.ExplainCC;
 import email_client.dialogMess.SendMesseage;
-import email_client.function.GlobalAction;
+import email_client.function.GeneralAction;
 import email_client.global.IconImageUtilities;
 import email_client.global.LookandFeel;
 import email_client.global.RegexEmail;
@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
 public class SendEmail extends javax.swing.JFrame {
     
     SendMesseage sendMesseage = new SendMesseage(this, true);
-    GlobalAction gAction = new GlobalAction();
+    GeneralAction gAction = new GeneralAction();
     Connection connection = sqlitehelper.getConnection();
     PreparedStatement ps;
     ResultSet rs;

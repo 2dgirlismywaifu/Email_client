@@ -4,7 +4,7 @@ import email_client.global.getSessionSMTP;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 
-public class GlobalAction {
+public class GeneralAction {
     getSessionSMTP sessionSMTP = new getSessionSMTP();
     
     private String[] getListEmail(String str) {
