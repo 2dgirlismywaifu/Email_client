@@ -1,13 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package email_client;
 
 import email_client.dialogMess.ExplainBcc;
 import email_client.dialogMess.ExplainCC;
 import email_client.dialogMess.SendMesseage;
-import email_client.function.globalAction;
+import email_client.function.GlobalAction;
 import email_client.global.IconImageUtilities;
 import email_client.global.LookandFeel;
 import email_client.global.RegexEmail;
@@ -20,21 +16,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author notmiyouji
- */
 public class SendEmail extends javax.swing.JFrame {
     
     SendMesseage sendMesseage = new SendMesseage(this, true);
-    globalAction gAction = new globalAction();
+    GlobalAction gAction = new GlobalAction();
     Connection connection = sqlitehelper.getConnection();
     PreparedStatement ps;
     ResultSet rs;
     String fromUser, toUser, cc, bcc, subject, content, filepath;
+    
     //toUser: gửi tới địa chỉ email
     //subject: tiêu đề thư
     //content: nội dung thư
@@ -42,20 +36,21 @@ public class SendEmail extends javax.swing.JFrame {
     /**
      * Creates new form NewJFrame
      */
-    public SendEmail() {
+    public SendEmail() {       
         initComponents();
         //icon mặc định của phần mềm
         IconImageUtilities.setIconImage(this);
+        mailField.setContentType("text/html");
     }
     
-//    private void EnableFunction() {
-//        sendBtn.setEnabled(true);
-//        toField.setEnabled(true);
-//        ccField.setEnabled(true);
-//        BccField.setEnabled(true);
-//        subjectField.setEnabled(true);
-//        attachmentBtn.setEnabled(true);
-//    }
+    private void EnableFunction() {
+        sendBtn.setEnabled(true);
+        toField.setEnabled(true);
+        ccField.setEnabled(true);
+        BccField.setEnabled(true);
+        subjectField.setEnabled(true);
+        attachmentBtn.setEnabled(true);
+    }
     
     private void DisableFunction() {
         sendBtn.setEnabled(false);
@@ -65,6 +60,15 @@ public class SendEmail extends javax.swing.JFrame {
         subjectField.setEnabled(false);
         attachmentBtn.setEnabled(false);
     }
+    
+    public void clearInput() {
+        toField.setText("");
+        ccField.setText("");
+        BccField.setText("");
+        subjectField.setText("");
+        mailField.setText("");
+    }
+     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -82,8 +86,6 @@ public class SendEmail extends javax.swing.JFrame {
         BccField = new javax.swing.JTextField();
         subjectField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        mailField = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
         attachmentBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -91,6 +93,8 @@ public class SendEmail extends javax.swing.JFrame {
         toField = new javax.swing.JTextField();
         emailFrom = new javax.swing.JLabel();
         pathAttachment = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        mailField = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Soạn thư");
@@ -139,11 +143,6 @@ public class SendEmail extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Chủ đề");
 
-        mailField.setColumns(20);
-        mailField.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
-        mailField.setRows(5);
-        jScrollPane1.setViewportView(mailField);
-
         attachmentBtn.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         attachmentBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8-attachment-32.png"))); // NOI18N
         attachmentBtn.setText("Đính kèm");
@@ -189,18 +188,21 @@ public class SendEmail extends javax.swing.JFrame {
 
         pathAttachment.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
 
+        mailField.setFont(new java.awt.Font("Dialog", 0, 16)); // NOI18N
+        jScrollPane2.setViewportView(mailField);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(pathAttachment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(sendBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -215,8 +217,8 @@ public class SendEmail extends javax.swing.JFrame {
                                 .addGap(17, 17, 17)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(ccField)
-                                    .addComponent(BccField, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
-                                    .addComponent(subjectField, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
+                                    .addComponent(BccField, javax.swing.GroupLayout.DEFAULT_SIZE, 783, Short.MAX_VALUE)
+                                    .addComponent(subjectField, javax.swing.GroupLayout.DEFAULT_SIZE, 783, Short.MAX_VALUE)
                                     .addComponent(toField)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
@@ -257,7 +259,7 @@ public class SendEmail extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(pathAttachment, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -304,12 +306,16 @@ public class SendEmail extends javax.swing.JFrame {
         content = mailField.getText(); //nội dung thư
         filepath = pathAttachment.getText(); //file đính kèm
         if (checkInput(toUser) == true) {
-            SendEmail(fromUser, toUser, cc, bcc, subject, content, filepath);         
+            String getTitle = this.getTitle();
+            SendEmail(fromUser, toUser, cc, bcc, subject, content, filepath, 
+                    getTitle);                  
         }      
               
     }//GEN-LAST:event_sendBtnActionPerformed
 
-    private void SendEmail(String fromUser, String toUser, String cc, String bcc, String subject, String content, String filepath) {
+    private void SendEmail(String fromUser, String toUser, String cc, String bcc, String subject, 
+            String content, String filepath, String getTitle) 
+    {
         sendMesseage.setModalityType(Dialog.ModalityType.MODELESS);
         sendMesseage.setVisible(true);
         DisableFunction();
@@ -321,9 +327,22 @@ public class SendEmail extends javax.swing.JFrame {
                         ps.setString(1, fromUser);
                         rs = ps.executeQuery();
                         while (rs.next()) {
-                            gAction.SendAction(fromUser, rs.getString("password"), 
+                            switch (getTitle) 
+                            {
+                                case "Soạn thư" -> {gAction.SendAction(fromUser, rs.getString("password"), 
                                     rs.getString("smtp"), rs.getString("portSSL"),
                                     toUser, subject, cc, bcc, filepath, content);
+                                }
+                                case "Chuyển tiếp thư" -> {gAction.FowardAction(fromUser, rs.getString("password"), 
+                                    rs.getString("smtp"), rs.getString("portSSL"),
+                                    toUser, subject, cc, bcc, filepath, content);
+                                }
+                                case "Trả lời thư" -> {gAction.ReplyAction(fromUser, rs.getString("password"), 
+                                    rs.getString("smtp"), rs.getString("portSSL"),
+                                    toUser, subject, cc, bcc, filepath, content);                                   
+                                }
+                            }
+                            EnableFunction();
                             sendMesseage.setVisible(false);
                             int reply = JOptionPane.showOptionDialog(null, "Gửi thư thành công!", "Thông báo", 
                                     JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
@@ -331,9 +350,12 @@ public class SendEmail extends javax.swing.JFrame {
                                 dispose();
                             }
                         }
+                        
                     } catch (SQLException ex) {
                         Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
                         sendMesseage.setVisible(false);
+                    } catch (MessagingException ex) {
+                        Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             };
@@ -380,11 +402,11 @@ public class SendEmail extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea mailField;
+    private javax.swing.JScrollPane jScrollPane2;
+    public javax.swing.JEditorPane mailField;
     private javax.swing.JLabel pathAttachment;
     private javax.swing.JButton sendBtn;
-    private javax.swing.JTextField subjectField;
-    private javax.swing.JTextField toField;
+    public javax.swing.JTextField subjectField;
+    public javax.swing.JTextField toField;
     // End of variables declaration//GEN-END:variables
 }
