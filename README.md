@@ -44,3 +44,6 @@
 5. frame.getRootPane().putClientProperty( "apple.awt.windowTitleVisible", false ); //ẩn tên phần mềm trên titlebar
 6. frame.getRootPane().putClientProperty( "apple.awt.fullscreenable", true ); //fullscreen mode
 7. Thông tin thêm tại: https://www.formdev.com/flatlaf/macos/#window_settings
+# Giai đoạn cuối. Kiểm thử phần mềm
+- Source đã hoàn thành
+- Tiến hành việc kiểm thử
