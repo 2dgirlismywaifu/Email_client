@@ -2,7 +2,7 @@
 - Đây là project bài tập kết thúc môn Lập trình mạng
 - Báo cáo word và powerpoint lưu vào thư mục documents
 - IDE: Apache Netbeans (mới nhất) chỉ cần ít nhất trong phiên bản 12 cũng được
-- JDK: Tối thiểu JDK 14, khuyến cáo: JDK 17 trở lên
+- JDK: khuyến cáo: JDK 17 trở lên do source đã đẩy lên JDK 17 LTS
 - Vui lòng để lại comment trong dòng code để các thành viên hiểu function của code
 # Mục tiêu
 - Chú ý: các mục tiêu các thành viên có thể add thêm
