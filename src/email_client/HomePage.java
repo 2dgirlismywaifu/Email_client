@@ -9,6 +9,7 @@ import email_client.dialogMess.DownloadMailMesseage;
 import email_client.global.LookandFeel;
 import email_client.global.IconImageUtilities;
 import email_client.dialogMess.NetworkNotify;
+import email_client.dialogMess.loadContentFailed;
 import email_client.function.DeleteMail;
 import email_client.global.folderMailName;
 import email_client.global.macOS.mainForm;
@@ -41,7 +42,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class HomePage extends javax.swing.JFrame {
-    
+    //<editor-fold defaultstate="collapsed" desc="Global Function">
     DownloadMailMesseage downloadDialog = new DownloadMailMesseage(this, true);
     mainForm main = new mainForm();
     folderMailName foldername = new folderMailName();
@@ -77,6 +78,8 @@ public class HomePage extends javax.swing.JFrame {
     FetchContentPlainText contentPlainText = new FetchContentPlainText();
     DeleteMail delete = new DeleteMail();
     SearchMail searchMail = new SearchMail();
+    loadContentFailed contentFailed = new loadContentFailed();
+    //</editor-fold>
     /**
      * Creates new form HomePage
      */
@@ -134,6 +137,7 @@ public class HomePage extends javax.swing.JFrame {
         replyMail.setEnabled(true);
         forwardMail.setEnabled(true);
         plainTextBtn.setEnabled(true);
+        mailMessage.setEnabled(true);
     }
     
     private void disableFunction() {
@@ -146,6 +150,7 @@ public class HomePage extends javax.swing.JFrame {
         replyMail.setEnabled(false);
         forwardMail.setEnabled(false);
         plainTextBtn.setEnabled(false);
+        mailMessage.setEnabled(false);
     }
     
     private void loadEmailList() {
@@ -221,7 +226,7 @@ public class HomePage extends javax.swing.JFrame {
         aboutTeam = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Email Client Manage");
+        setTitle("Email Client Manager");
         setIconImage(getIconImage());
 
         emailList.setFont(new java.awt.Font("SF Pro Display", 0, 15)); // NOI18N
@@ -941,6 +946,7 @@ public class HomePage extends javax.swing.JFrame {
     private void loadSearchContent(int rowSelected) {
         mailMessage.setText("");
         disableFunction();
+        mailList.setEnabled(false);
         loadingMesseage.setVisible(true);
         loadingMesseage.setText("Đang tải nội dung ...");
         Thread contentSearch = new Thread() {
@@ -965,21 +971,21 @@ public class HomePage extends javax.swing.JFrame {
                     mailList.setModel(model);
                     model.setRowCount(0);                  
                     loadingMesseage.setVisible(false);
-                    enableFunction();
+                    enableFunction();                  
+                    mailList.setEnabled(true);
                 } catch (SQLException | MessagingException | IOException  ex) {
                     Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-                    enableFunction();                   
+                    enableFunction();
+                    mailList.setEnabled(true);
                 }
                 catch (ClassCastException ex) {
                     enableFunction();
-                    int reply = JOptionPane.showConfirmDialog(null, "Tải thất bại!\n"
-                            + "Bạn có muốn tải dạng Plain Text?", "Thông báo", JOptionPane.YES_NO_OPTION);
-                    if (reply == JOptionPane.YES_OPTION) {
+                    mailList.setEnabled(true);
+                    if(contentFailed.callNotify(rowSelected) == true) {
                         showPlainText(rowSelected);
                     }
                     else {
-                        JOptionPane.showMessageDialog(null, "Bạn vẫn có thể tải dạng plain text bằng cách nhấn nút\n"
-                                + "Plain Text trên màn hình", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                        loadingMesseage.setText("");
                     }
                 } 
             }
@@ -989,6 +995,7 @@ public class HomePage extends javax.swing.JFrame {
     private void loadContent(int rowSelected) {
         mailMessage.setText("");
         disableFunction();
+        mailList.setEnabled(false);
         loadingMesseage.setVisible(true);
         loadingMesseage.setText("Đang tải nội dung ...");
         Thread contentMail = new Thread() {
@@ -1006,21 +1013,21 @@ public class HomePage extends javax.swing.JFrame {
 
                 getContent.readEmail(rowSelected, imap, storeType, user, password, mailMessage);
                 loadingMesseage.setVisible(false);
+                mailList.setEnabled(true);
                 enableFunction();
                 } catch (SQLException | MessagingException | IOException ex) {
                     Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                    mailList.setEnabled(true);
                     enableFunction();                   
                 }
                 catch (ClassCastException ex) {
                     enableFunction();
-                    int reply = JOptionPane.showConfirmDialog(null, "Tải thất bại!\n"
-                            + "Bạn có muốn tải dạng Plain Text?", "Thông báo", JOptionPane.YES_NO_OPTION);
-                    if (reply == JOptionPane.YES_OPTION) {
+                    mailList.setEnabled(true);
+                    if(contentFailed.callNotify(rowSelected) == true) {
                         showPlainText(rowSelected);
                     }
                     else {
-                        JOptionPane.showMessageDialog(null, "Bạn vẫn có thể tải dạng plain text bằng cách nhấn nút\n"
-                                + "Plain Text trên màn hình", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                        loadingMesseage.setText("");
                     }
                 }
             }
@@ -1028,8 +1035,10 @@ public class HomePage extends javax.swing.JFrame {
         contentMail.start();
     }
     
-    private void showPlainText(int rowSelected) {
+    public void showPlainText(int rowSelected) {
         mailMessage.setText("");
+        disableFunction();
+        mailList.setEnabled(false);
         loadingMesseage.setVisible(true);
         loadingMesseage.setText("Đang tải dạng plain text ...");
         Thread plaintextMail = new Thread() {
@@ -1043,8 +1052,9 @@ public class HomePage extends javax.swing.JFrame {
                 imap = rs.getString("imap");
                 storeType = folderMailName.getText();
                 user = rs.getString("email");
-                password = rs.getString("password");
-                
+                password = rs.getString("password");                
+                mailList.setEnabled(true);
+                enableFunction();
                 contentPlainText.plainTextShow(rowSelected, imap, storeType, user, password, mailMessage);
                 loadingMesseage.setVisible(false);
                 } catch (SQLException | MessagingException | IOException ex) {
@@ -1297,7 +1307,7 @@ public class HomePage extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JLabel loadingMesseage;
+    public javax.swing.JLabel loadingMesseage;
     public javax.swing.JTable mailList;
     private javax.swing.JEditorPane mailMessage;
     private javax.swing.JButton plainTextBtn;

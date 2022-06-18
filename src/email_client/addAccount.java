@@ -20,6 +20,7 @@ import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
 
 public class addAccount extends javax.swing.JFrame {
+    //<editor-fold defaultstate="collapsed" desc="Global Function">
     CheckAccountMesseage dialogChecking = new CheckAccountMesseage(this, true);
     CheckAccount checkAcc  =  new CheckAccount();
     PortServices getServices = new PortServices();
@@ -29,6 +30,7 @@ public class addAccount extends javax.swing.JFrame {
     String type, service, smtp, imap, email, pass, name, portTLS, portSSL, portIMAP;
     //portTLS, portSSL: outgoing messeage = STMP Server
     //portIMAP: incoming messeage = IMAP
+    //</editor-fold>
     /** Creates new form addAccount */
     public addAccount() {
         initComponents();
@@ -369,8 +371,6 @@ public class addAccount extends javax.swing.JFrame {
         }
                             
     }
-    
-    
     
     private void ConfirmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmBtnActionPerformed
         // TODO add your handling code here:

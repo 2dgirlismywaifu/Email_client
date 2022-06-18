@@ -19,14 +19,14 @@ import javax.swing.table.DefaultTableModel;
 
 
 public class OutlookSent {
-    
+    //<editor-fold defaultstate="collapsed" desc="Global Function">
     folderMailName foldername = new folderMailName();
     mailboxEmpty empty = new mailboxEmpty();
     getSessionIMAPS getSession = new getSessionIMAPS();
     public final DefaultTableModel tableModel = new DefaultTableModel();
     MailListModel mailListModel;
     List<MailList> Data = new  LinkedList<>();
-    
+    //</editor-fold>
     public MailListModel startFetch(String imap, String storeType, String user, String password) 
             throws NoSuchProviderException, MessagingException {
         

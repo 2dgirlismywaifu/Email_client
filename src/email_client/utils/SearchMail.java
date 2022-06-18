@@ -25,7 +25,7 @@ import javax.swing.JEditorPane;
 import javax.swing.table.DefaultTableModel;
 
 public class SearchMail {
-   
+    //<editor-fold defaultstate="collapsed" desc="Global Function">
     mailboxEmpty empty = new mailboxEmpty();
     getSessionIMAPS getSession = new getSessionIMAPS();
     public final DefaultTableModel tableModel = new DefaultTableModel();        
@@ -34,6 +34,7 @@ public class SearchMail {
     
     Store store;
     Folder emailFolder;
+    //</editor-fold>
     
     public Message[] getmessages (String imap, String storeType, String user, String password, 
             String MailSearchInput, String selection, String folder) throws MessagingException {

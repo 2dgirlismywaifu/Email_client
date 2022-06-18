@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class manageAccount extends javax.swing.JFrame {
+    //<editor-fold defaultstate="collapsed" desc="Global Function">
     Connection connection = sqlitehelper.getConnection();
     CheckAccount checkAcc = new CheckAccount();
     PortServices getServices = new PortServices();
@@ -32,7 +33,7 @@ public class manageAccount extends javax.swing.JFrame {
     String id, service, type, smtp, imap, email, pass, name, portTLS, portSSL, portIMAP;
     //portTLS, portSSL: outgoing messeage = STMP Server
     //portIMAP: incoming messeage = IMAP
-    
+    //</editor-fold>
     
     /** Creates new form addAccount */
     public manageAccount() {

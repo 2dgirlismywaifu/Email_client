@@ -21,14 +21,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 public class SendEmail extends javax.swing.JFrame {
-    
+    //<editor-fold defaultstate="collapsed" desc="Global Function">
     SendMesseage sendMesseage = new SendMesseage(this, true);
     GeneralAction gAction = new GeneralAction();
     Connection connection = sqlitehelper.getConnection();
     PreparedStatement ps;
     ResultSet rs;
     String fromUser, toUser, cc, bcc, subject, content, filepath;
-    
+    //</editor-fold>
     //toUser: gửi tới địa chỉ email
     //subject: tiêu đề thư
     //content: nội dung thư
