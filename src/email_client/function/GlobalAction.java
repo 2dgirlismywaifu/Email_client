@@ -1,33 +1,12 @@
 package email_client.function;
 
-import email_client.global.PropertiesAPI;
-import java.util.Properties;
-import javax.mail.PasswordAuthentication;
+import email_client.global.getSessionSMTP;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 
-public class globalAction {
+public class GlobalAction {
+    getSessionSMTP sessionSMTP = new getSessionSMTP();
     
-    PropertiesAPI propertiesAPI = new PropertiesAPI();
-    
-    public Session Login(String username, String password, String smtp, String portSSL) {
-        Properties props = new Properties();
-        props.put(propertiesAPI.getSmtpAuth(), "true");
-        props.put(propertiesAPI.getSmtpHost(), smtp);
-        props.put(propertiesAPI.getSmtpSocketPort(), portSSL);
-        props.put(propertiesAPI.getSmtpSocketClass(), "javax.net.ssl.SSLSocketFactory");
-        props.put(propertiesAPI.getSmtpPort(), portSSL);
-        props.put(propertiesAPI.getSmtpTLS(), "true"); //enable STARTTLS
-        props.put(propertiesAPI.getDebug(), "true");       
-        Session session = Session.getInstance(props,
-                 new javax.mail.Authenticator() {
-                    @Override
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                       return new PasswordAuthentication(username, password);
-                    }
-                 });
-        return session;
-    }
-
     private String[] getListEmail(String str) {
         if (str.equals("")) {
             return null;
@@ -43,9 +22,35 @@ public class globalAction {
         String[] listTo = getListEmail(touser.trim());
         String[] listCc = getListEmail(cc.trim());
         String[] listBcc = getListEmail(bcc.trim());                     
-        Session sess = Login(username, pass, smtp, portSSL);
+        Session sess = sessionSMTP.getSession(username, pass, smtp, portSSL);
         SendMail sender = new SendMail(sess);
         System.out.println(attachment);
         sender.sendEmail(listTo, listCc, listBcc, mailField, attachment, subject, username);
-    }    
+    }
+    
+    public void FowardAction(String username, String pass, String smtp, String portSSL, 
+        String touser, String subject, String cc, String bcc, String attachment,
+        String mailField) 
+            throws MessagingException {        
+        String[] listTo = getListEmail(touser.trim());
+        String[] listCc = getListEmail(cc.trim());
+        String[] listBcc = getListEmail(bcc.trim());                     
+        Session sess = sessionSMTP.getSession(username, pass, smtp, portSSL);
+        ForwardMail foward = new ForwardMail(sess);
+        System.out.println(attachment);
+        foward.forwardEmail(listTo, listCc, listBcc, mailField, attachment, subject, username);
+    }
+    
+    public void ReplyAction(String username, String pass, String smtp, String portSSL, 
+        String touser, String subject, String cc, String bcc, String attachment, 
+        String mailField) throws MessagingException {        
+        String[] listTo = getListEmail(touser.trim());
+        String[] listCc = getListEmail(cc.trim());
+        String[] listBcc = getListEmail(bcc.trim());                     
+        Session sess = sessionSMTP.getSession(username, pass, smtp, portSSL);
+        ReplyMail reply = new ReplyMail(sess);
+        System.out.println(attachment);
+        reply.ReplyEmail(listTo, listCc, listBcc, mailField, attachment, subject, username);
+    }
+    
 }
