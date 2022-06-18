@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package email_client;
 
 import email_client.global.GithubProfile;
@@ -13,10 +9,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-/**
- *
- * @author notmiyouji
- */
 public class anotherAboutTeam extends javax.swing.JFrame {
     
     GithubProfile profileLink = new GithubProfile();
