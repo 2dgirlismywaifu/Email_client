@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-
 package email_client;
 
 import email_client.callFrame.frameAddAccount;
@@ -26,10 +21,6 @@ import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author notmiyouji
- */
 public class manageAccount extends javax.swing.JFrame {
     Connection connection = sqlitehelper.getConnection();
     CheckAccount checkAcc = new CheckAccount();

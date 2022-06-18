@@ -1,4 +1,3 @@
-
 package email_client;
 
 import email_client.global.CheckAccount;
@@ -19,7 +18,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
-
 
 public class addAccount extends javax.swing.JFrame {
     CheckAccountMesseage dialogChecking = new CheckAccountMesseage(this, true);
