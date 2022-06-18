@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package email_client.global;
 
 import java.awt.AlphaComposite;
@@ -18,10 +14,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
-/**
- *
- * @author notmiyouji
- */
 public class ImageAvatar extends JComponent{
     public Icon getIcon() {
         return icon;
@@ -105,6 +97,5 @@ public class ImageAvatar extends JComponent{
 
     private Image toImage(Icon icon) {
         return ((ImageIcon) icon).getImage();
-    }
-    
+    }  
 }

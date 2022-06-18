@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package email_client.global;
 
-/**
- *
- * @author notmiyouji
- */
 public class GithubProfile {
     public final String twodgirlsismywaifu = "https://github.com/2dgirlismywaifu";
     public final String PhoebeHa0320 = "https://github.com/PhoebeHa0320";

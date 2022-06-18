@@ -1,4 +1,3 @@
-
 package email_client.function;
 
 import java.io.File;
@@ -20,12 +19,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author notmiyouji
- */
-public class SendMail {
-    Session sess;
+public class SendMail {Session sess;
 
     public SendMail(Session sess) {
         this.sess = sess;
@@ -36,7 +30,7 @@ public class SendMail {
         InternetAddress[] listEmailCC = convertInnetAddress(listCC);
         InternetAddress[] listEmailBcc = convertInnetAddress(listBcc);
         MimeMessage mimeMss = new MimeMessage(sess);
-        setSubject(mimeMss, subject);
+        setSubject(mimeMss, "Reply" + subject);
         setFrom(mimeMss, from);
         setEmailRecipients(mimeMss, listEmailTo, Message.RecipientType.TO);
         setEmailRecipients(mimeMss, listEmailCC, Message.RecipientType.CC);
@@ -47,9 +41,9 @@ public class SendMail {
         sendMess(mimeMss);
         
     }
-
     private void attackEmail(MimeMessage mime, String filePath, String content) {
-        try {
+        try 
+        {
             // tạo một đối tượng BodyPart để ghi nội dung vào body của Email
             BodyPart bodyPart = new MimeBodyPart();
             bodyPart.setText(content);
@@ -64,12 +58,10 @@ public class SendMail {
                 bodyPart2.setFileName(new File(filePath).getName());
                 mtp.addBodyPart(bodyPart2);
             }
-
             mime.setContent(mtp);
         } catch (MessagingException ex) {
             Logger.getLogger(SendMail.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     private void setSubject(MimeMessage mess, String subject) {
@@ -118,5 +110,5 @@ public class SendMail {
             mimeMss.setRecipients(type, listAdd);
         } catch (MessagingException e) {
         }
-    }
+    }   
 }
