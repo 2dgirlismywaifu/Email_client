@@ -75,6 +75,11 @@ public class addAccount extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Thêm tài khoản");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -113,11 +118,6 @@ public class addAccount extends javax.swing.JFrame {
         jLabel6.setText("Tên Email");
 
         username.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
-        username.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                usernameActionPerformed(evt);
-            }
-        });
 
         jLabel7.setFont(new java.awt.Font("SF Pro Display", 0, 16)); // NOI18N
         jLabel7.setText("(Tùy chọn)");
@@ -460,9 +460,10 @@ public class addAccount extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_showPasswordCheckActionPerformed
 
-    private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_usernameActionPerformed
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:     
+        frameManageAccount.callframe();
+    }//GEN-LAST:event_formWindowClosed
 
     /**
      * @param args the command line arguments
