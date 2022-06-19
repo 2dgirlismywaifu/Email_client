@@ -30,7 +30,7 @@ public class SendMail {Session sess;
         InternetAddress[] listEmailCC = convertInnetAddress(listCC);
         InternetAddress[] listEmailBcc = convertInnetAddress(listBcc);
         MimeMessage mimeMss = new MimeMessage(sess);
-        setSubject(mimeMss, "Reply" + subject);
+        setSubject(mimeMss, subject);
         setFrom(mimeMss, from);
         setEmailRecipients(mimeMss, listEmailTo, Message.RecipientType.TO);
         setEmailRecipients(mimeMss, listEmailCC, Message.RecipientType.CC);

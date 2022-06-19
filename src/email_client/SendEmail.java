@@ -39,8 +39,7 @@ public class SendEmail extends javax.swing.JFrame {
     public SendEmail() {       
         initComponents();
         //icon mặc định của phần mềm
-        IconImageUtilities.setIconImage(this);
-        mailField.setContentType("text/html");
+        IconImageUtilities.setIconImage(this);      
     }
     
     private void EnableFunction() {
@@ -67,6 +66,7 @@ public class SendEmail extends javax.swing.JFrame {
         BccField.setText("");
         subjectField.setText("");
         mailField.setText("");
+        pathAttachment.setText("");
     }
      
     /**

@@ -4,12 +4,8 @@ import com.sun.mail.util.BASE64DecoderStream;
 import email_client.global.getSessionIMAPS;
 import email_client.global.mailboxEmpty;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.Address;
 import javax.mail.FetchProfile;
 import javax.mail.Folder;
@@ -58,18 +54,16 @@ public class SearchMail {
                                 }
                             }   
                         }
-                        case "Theo ngày gửi" -> {
-                            if (message.getSentDate().after(new SimpleDateFormat("dd/MM/yyyy").parse(MailSearchInput))) {
-                                return true;
-                            }
-                        }
+//                        case "Theo ngày gửi" -> {
+//                            if (message.getSentDate().after(new SimpleDateFormat("dd/MM/yyyy").parse(MailSearchInput))) {
+//                                return true;
+//                            }
+//                        }
                     }
                     
                     
                 } catch (MessagingException ex) {
-                } catch (ParseException ex) {
-                    Logger.getLogger(SearchMail.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                } 
                 return false;
             }
         };

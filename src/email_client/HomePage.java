@@ -97,10 +97,10 @@ public class HomePage extends javax.swing.JFrame {
         //macOS ONLY
         main.desktopMac();
         //////////////////////////////////////////////////////////////////
-        //Người dùng mới
         firstTime();
+        
     }
-    
+    //<editor-fold defaultstate="collapsed" desc="Danh cho nguoi dung lan dau">
     private void firstTime() { //người dùng mới
         Thread newuser = new Thread() {
             @Override
@@ -126,6 +126,7 @@ public class HomePage extends javax.swing.JFrame {
         newuser.start();
         
     }
+    //</editor-fold>
     
     private void enableFunction() {
         composeMail.setEnabled(true);

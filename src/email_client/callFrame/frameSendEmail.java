@@ -35,9 +35,12 @@ public class frameSendEmail {
             frame.setTitle("Chuyển tiếp thư");
             frame.emailFrom.setText(email);
             frame.subjectField.setText(subject);
-            fullcontent = "====================Forward Message====================<br>" +
-                    "Ngày nhận: " + date + "<br>" +
-                    "Nội dung thư chuyển đi: " + "<br>" + content;
+            frame.subjectField.setEditable(false);
+            fullcontent = "\n\n\n\n\n====================Chuyển tiếp thư gốc====================\n" +
+                    "Người gửi:" + fromUser + "\n" +
+                    "Người nhận: " + email + "\n" + 
+                    "Ngày nhận: " + date + "\n" +
+                    "Nội dung thư chuyển đi: " + "\n" + content;
             frame.mailField.setText(fullcontent);
         });
     }
@@ -55,9 +58,12 @@ public class frameSendEmail {
             frame.emailFrom.setText(email);
             frame.toField.setText(fromUser);
             frame.subjectField.setText(subject);
-            fullcontent = "====================Reply Message==================== <br>" +
-                    "Ngày nhận: " + date + "<br>" +
-                    "Nội dung thư trả lời: " + "<br>" + content;
+            frame.subjectField.setEditable(false);
+            fullcontent = "\n\n\n\n\n====================Trả lời thư gốc====================\n" +
+                    "Người gửi:" + fromUser + "\n" +
+                    "Người nhận: " + email + "\n" + 
+                    "Ngày nhận: " + date + "\n" +
+                    "Nội dung thư trả lời: " + "\n" + content;
             frame.mailField.setText(fullcontent);
         });
     }
