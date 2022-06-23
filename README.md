@@ -30,7 +30,7 @@
 2. RawSanji: https://github.com/RawSanj/java-mail-clients
 # Xin chú ý: các thành viên cần để ý
 1. Anti-virus có thể ngăn kết nối SSL HandShake. Nếu anti-virus quét các gói tin SSL, vui lòng vô hiệu hoá.
-2. Tài khoản có xác thực hai bước cần sử dụng mật khẩu ứng dụng
+2. Tài khoản phải bật xác thực hai bước và cần sử dụng mật khẩu ứng dụng
 3. Fetch nhanh hay chậm tuỳ thuộc Internet nhanh hay chậm
 4. Không còn hỗ trợ pop3. Sử dụng IMAP thay thế
 5. Một số mail không thể load được nội dụng. Đây là vấn đề thuộc JavaMail và chúng ta không thể làm được gì cả.
