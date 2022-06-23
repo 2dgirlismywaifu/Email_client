@@ -28,7 +28,6 @@
 # Thông tin và các nguồn github tham khảo
 1. Tech-geek29: https://github.com/tech-geek29/java-email-client
 2. RawSanji: https://github.com/RawSanj/java-mail-clients
-3. Đấng sharecode (10k rẻ vl): https://gvbax-my.sharepoint.com/:u:/g/personal/user1839_offices365_co/EbfGwRhacgBDmdrzwYBIvBsBecSA99ZYLoV8RxNC75dwmQ?e=ZLR7Cb
 # Xin chú ý: các thành viên cần để ý
 1. Anti-virus có thể ngăn kết nối SSL HandShake. Nếu anti-virus quét các gói tin SSL, vui lòng vô hiệu hoá.
 2. Tài khoản có xác thực hai bước cần sử dụng mật khẩu ứng dụng
