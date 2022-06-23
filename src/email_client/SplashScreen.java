@@ -10,7 +10,7 @@ public class SplashScreen extends javax.swing.JFrame {
     public SplashScreen() {
         initComponents();
         IconImageUtilities.setIconImage(this);
-        loadDatabase.loaddatabase();
+        
     }
 
     /** This method is called from within the constructor to
@@ -107,12 +107,6 @@ public class SplashScreen extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    public void startDatabase() {
-        loadDatabase.loaddatabase();
-    }
-    
-    
     public static void main() {
         LookandFeel.setTheme();       
         SplashScreen sp = new SplashScreen();
@@ -122,6 +116,9 @@ public class SplashScreen extends javax.swing.JFrame {
                     Thread.sleep(10);
                     sp.status.setText(i+"%");               
                     sp.progressbar.setValue(i);
+                    if (i == 10) {
+                        LoadDatabase.loaddatabase();
+                    }
                     if (i == 100) {
                         sp.dispose();
                         HomePage.main();

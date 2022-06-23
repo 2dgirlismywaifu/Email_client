@@ -13,7 +13,8 @@ import email_client.dialogMess.loadContentFailed;
 import email_client.function.DeleteMail;
 import email_client.global.folderMailName;
 import email_client.global.macOS.mainForm;
-import email_client.sqlitehelper.sqlitehelper;
+import email_client.sqlitehelper.LoadListData;
+import email_client.sqlitehelper.SQLiteHelper;
 import email_client.utils.gmail.GmailSent;
 import email_client.utils.gmail.GmailSpam;
 import email_client.utils.gmail.GmailTrash;
@@ -47,7 +48,8 @@ public class HomePage extends javax.swing.JFrame {
     mainForm main = new mainForm();
     folderMailName foldername = new folderMailName();
     frameSendEmail sendGUI = new frameSendEmail();    
-    Connection connection = sqlitehelper.getConnection();
+    Connection connection = SQLiteHelper.getConnection();
+    LoadListData loadListData = new LoadListData();
     DefaultTableModel model ;
     PreparedStatement ps;
     ResultSet rs;     
@@ -88,7 +90,7 @@ public class HomePage extends javax.swing.JFrame {
         //icon mặc định của phần mềm
         IconImageUtilities.setIconImage(this);       
         //load danh sách email
-        loadEmailList();
+        loadListData.loadEmailList(emailList);
         //mặc định tạm tắt chức năng trừ thêm tài khoản, thông tin về phần mềm
         disableFunction();
         loadingMesseage.setVisible(false);
@@ -153,20 +155,7 @@ public class HomePage extends javax.swing.JFrame {
         plainTextBtn.setEnabled(false);
         mailMessage.setEnabled(false);
     }
-    
-    private void loadEmailList() {
-        try {          
-            ps = connection.prepareStatement("SELECT email FROM email");
-            rs = ps.executeQuery();
-            while (rs.next()) {
-               String email = rs.getString("email");
-               emailList.addItem(email);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
+      
     public boolean isEmpty() {
         if (mailList != null && mailList.getModel() != null) {
             return mailList.getModel().getRowCount()<=0;
@@ -785,7 +774,7 @@ public class HomePage extends javax.swing.JFrame {
         Thread loadeEmail = new Thread() {
             @Override
             public void run() {             
-                loadEmailList();
+                loadListData.loadEmailList(emailList);
             }
         };
         loadeEmail.start();
@@ -842,10 +831,9 @@ public class HomePage extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Chưa có thư nào được chọn!", "Thông báo", JOptionPane.ERROR_MESSAGE);
         }
         else
-            {
-               showPlainText(mailList.getSelectedRow()); 
-            }
-               
+        {
+           showPlainText(mailList.getSelectedRow()); 
+        }             
     }//GEN-LAST:event_plainTextBtnActionPerformed
 
     private void forwardMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forwardMailActionPerformed
@@ -896,7 +884,7 @@ public class HomePage extends javax.swing.JFrame {
                 }
             }
         };
-                contentMail.start();
+        contentMail.start();
     }//GEN-LAST:event_deleteMailActionPerformed
 
     private void MailSearchInputKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_MailSearchInputKeyPressed

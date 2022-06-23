@@ -7,7 +7,7 @@ import email_client.function.GeneralAction;
 import email_client.global.IconImageUtilities;
 import email_client.global.LookandFeel;
 import email_client.global.RegexEmail;
-import email_client.sqlitehelper.sqlitehelper;
+import email_client.sqlitehelper.SQLiteHelper;
 import java.awt.Dialog;
 import java.io.File;
 import java.sql.Connection;
@@ -24,7 +24,7 @@ public class SendEmail extends javax.swing.JFrame {
     //<editor-fold defaultstate="collapsed" desc="Global Function">
     SendMesseage sendMesseage = new SendMesseage(this, true);
     GeneralAction gAction = new GeneralAction();
-    Connection connection = sqlitehelper.getConnection();
+    Connection connection = SQLiteHelper.getConnection();
     PreparedStatement ps;
     ResultSet rs;
     String fromUser, toUser, cc, bcc, subject, content, filepath;

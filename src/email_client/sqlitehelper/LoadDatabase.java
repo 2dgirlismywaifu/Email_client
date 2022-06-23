@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 
-public class LoadDatabase {
-    Connection connection = sqlitehelper.getConnection();
-    public void loaddatabase() {
+public class LoadDatabase {  
+    public static void loaddatabase() {
+        Connection connection = SQLiteHelper.getConnection();
         //bỏ pop3, sử dụng loại imap
         try {
             Statement statement = connection.createStatement();

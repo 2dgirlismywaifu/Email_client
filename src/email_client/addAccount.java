@@ -9,11 +9,8 @@ import email_client.global.PortServices;
 import email_client.global.IconImageUtilities;
 import email_client.global.RegexEmail;
 import email_client.global.LookandFeel;
-import email_client.sqlitehelper.sqlitehelper;
+import email_client.sqlitehelper.InsertData;
 import java.awt.Dialog;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
@@ -24,8 +21,7 @@ public class addAccount extends javax.swing.JFrame {
     CheckAccountMesseage dialogChecking = new CheckAccountMesseage(this, true);
     CheckAccount checkAcc  =  new CheckAccount();
     PortServices getServices = new PortServices();
-    Connection connection = sqlitehelper.getConnection();
-    PreparedStatement ps;   
+    InsertData insertData = new InsertData();
     //Khai báo mặc định các biến dùng chung
     String type, service, smtp, imap, email, pass, name, portTLS, portSSL, portIMAP;
     //portTLS, portSSL: outgoing messeage = STMP Server
@@ -342,36 +338,6 @@ public class addAccount extends javax.swing.JFrame {
         CancelBtn.setEnabled(false);
     }
     
-    private void inputData(String type, String service,  String smtp, String imap, String email, String pass, String name, String portTLS, String portSSL, String portIMAP) {
-        try {
-            ps = connection.prepareStatement("INSERT INTO email(name, email, password, type, server, smtp, imap, portTLS, portSSL, portIMAP) values(?,?,?,?,?,?,?,?,?,?) ");
-            //vì tên cho tài khoản email là không bắt buộc
-            if (name.equals("")) {
-                ps.setString(1, "NOT Available");
-            }
-            else {
-            ps.setString(1, name);
-            }
-            ps.setString(2, email);
-            ps.setString(3, pass);
-            ps.setString(4, type);
-            ps.setString(5, service);
-            ps.setString(6, smtp);
-            ps.setString(7, imap);
-            ps.setString(8, portTLS);
-            ps.setString(9, portSSL);
-            ps.setString(10, portIMAP);
-            ps.executeUpdate();
-            JOptionPane.showMessageDialog(this,"Thêm tài khoản thành công","Thêm tài khoản",JOptionPane.INFORMATION_MESSAGE);
-            
-            connection.close();
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(addAccount.class.getName()).log(Level.SEVERE, null, ex);
-        }
-                            
-    }
-    
     private void ConfirmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmBtnActionPerformed
         // TODO add your handling code here:
         //passworldfield luôn ở dạng array
@@ -411,7 +377,7 @@ public class addAccount extends javax.swing.JFrame {
                     try {                    
                         checkAcc.checkLogin(imap, type, email, pass);
                         dialogChecking.setVisible(false);
-                        inputData(type, service, smtp, imap, email, pass, name, portTLS, portSSL, portIMAP);
+                        insertData.insertAccount(type, service, smtp, imap, email, pass, name, portTLS, portSSL, portIMAP);
                         dispose();
                         frameManageAccount.callframe();
                         } catch (MessagingException ex) {

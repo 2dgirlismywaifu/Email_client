@@ -7,15 +7,13 @@ import email_client.global.CheckAccount;
 import email_client.global.PortServices;
 import email_client.global.IconImageUtilities;
 import email_client.global.LookandFeel;
-import email_client.sqlitehelper.sqlitehelper;
+import email_client.sqlitehelper.DeleteData;
+import email_client.sqlitehelper.LoadListData;
+import email_client.sqlitehelper.SelectDataTable;
+import email_client.sqlitehelper.UpdateData;
 import java.awt.Dialog;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.util.Vector;
 import java.sql.SQLException;
 import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
@@ -23,13 +21,14 @@ import javax.swing.table.DefaultTableModel;
 
 public class manageAccount extends javax.swing.JFrame {
     //<editor-fold defaultstate="collapsed" desc="Global Function">
-    Connection connection = sqlitehelper.getConnection();
     CheckAccount checkAcc = new CheckAccount();
     PortServices getServices = new PortServices();
+    LoadListData loadListData =  new LoadListData();
+    UpdateData updateData = new UpdateData();
+    DeleteData deleteData = new DeleteData();
+    SelectDataTable selectDataTable = new SelectDataTable();
     CheckAccountMesseage dialogChecking = new CheckAccountMesseage(this, true);
     DefaultTableModel tableModel;
-    PreparedStatement ps; 
-    ResultSet rs;
     String id, service, type, smtp, imap, email, pass, name, portTLS, portSSL, portIMAP;
     //portTLS, portSSL: outgoing messeage = STMP Server
     //portIMAP: incoming messeage = IMAP
@@ -40,38 +39,9 @@ public class manageAccount extends javax.swing.JFrame {
         initComponents();
         //icon mặc định của phần mềm
         IconImageUtilities.setIconImage(this);
-        loadTable();
-        
+        loadListData.manageAccountTable(tableAccount);
     }
     
-    private void loadTable() {
-        int countColumn;
-            
-        try {
-            ps = connection.prepareStatement("SELECT * FROM email");
-            rs = ps.executeQuery();
-            
-            ResultSetMetaData rad = rs.getMetaData();
-            countColumn = rad.getColumnCount();
-            
-            tableModel = (DefaultTableModel)tableAccount.getModel();
-            tableModel.setRowCount(0);
-            
-            while (rs.next()) {
-                Vector v2 = new Vector();
-                for (int i = 1; i <= countColumn; i++) {
-                    v2.add(rs.getString("email"));
-                    v2.add(rs.getString("name"));                                                    
-                }
-                tableModel.addRow(v2);
-            }
-             tableModel.fireTableDataChanged();
-        } catch (SQLException ex) {
-            Logger.getLogger(manageAccount.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
-
     private void reEnableInput() {
         emailAccount.setEnabled(true);
         username.setEnabled(true);
@@ -89,34 +59,6 @@ public class manageAccount extends javax.swing.JFrame {
         smtpServer.setEnabled(false);
         ConfirmBtn.setEnabled(false);
     }
-    
-    private void updateData(String id, String type, String service,  String smtp, String imap, String email, String password, String name, String portTLS, String portSSL, String portIMAP) throws SQLException {
-        
-            ps = connection.prepareStatement("UPDATE email SET name = ?, email = ?, password = ?, type = ?, "
-                    + "server = ?, smtp = ?, imap = ? , portTLS = ?, portSSL = ?, portIMAP = ? WHERE  ID = ? ");
-            //vì tên cho tài khoản email là không bắt buộc
-            if (name.equals("")) {
-                ps.setString(1, "NOT Available");
-            }
-            else {
-            ps.setString(1, name);
-            }
-            ps.setString(2, email);
-            ps.setString(3, password);
-            ps.setString(4, type);
-            ps.setString(5, service);
-            ps.setString(6, smtp);
-            ps.setString(7, imap);
-            ps.setString(8, portTLS);
-            ps.setString(9, portSSL);
-            ps.setString(10, portIMAP);
-            ps.setString(11, id);
-            ps.executeUpdate();
-            JOptionPane.showMessageDialog(this,"Cập nhật tài khoản thành công","Thêm tài khoản",JOptionPane.INFORMATION_MESSAGE);
-                             
-    }
-    
-    
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -422,8 +364,8 @@ public class manageAccount extends javax.swing.JFrame {
                    try {            
                     checkAcc.checkLogin(imap, type, email, pass);              
                     dialogChecking.setVisible(false);
-                    updateData(id, type, service, smtp, imap, email, pass, name, portTLS, portSSL, portIMAP);
-                    loadTable();                 
+                    updateData.updateAccount(id, type, service, smtp, imap, email, pass, name, portTLS, portSSL, portIMAP);
+                    loadListData.manageAccountTable(tableAccount);                 
                     reEnableInput();
                     } catch (MessagingException | SQLException ex  ) {
                         Logger.getLogger(manageAccount.class.getName()).log(Level.SEVERE, null, ex);
@@ -458,24 +400,7 @@ public class manageAccount extends javax.swing.JFrame {
         //lấy thông tin loại dịch vụ, loại (pop3 hay imap) và smtp server
         email = emailAccount.getText();
         name = username.getText();
-        
-        try {
-            ps = connection.prepareStatement("SELECT id, imap, server, password, smtp FROM email WHERE email = ? and name = ?");
-            ps.setString(1, email);
-            ps.setString(2, name);
-            rs = ps.executeQuery();
-            
-            while (rs.next()) {
-                idEmail.setText(rs.getString("id"));
-                imapServer.setSelectedItem(rs.getString("imap"));
-                Server.setSelectedItem(rs.getString("server"));
-                passEmail.setText(rs.getString("password"));
-                smtpServer.setSelectedItem(rs.getString("smtp"));             
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(manageAccount.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        selectDataTable.selectAccount(email, name, idEmail, imapServer, Server, passEmail, smtpServer);     
     }//GEN-LAST:event_tableAccountMouseClicked
 
     private void deleteAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAccountActionPerformed
@@ -483,23 +408,8 @@ public class manageAccount extends javax.swing.JFrame {
         //xóa tài khoản khỏi lưu trữ cục bộ       
         email = emailAccount.getText(); //có thể bỏ qua, không cần nhập     
         name = username.getText();
-        
-        try {
-            ps = connection.prepareStatement("DELETE FROM email where email = ? and name = ?");
-            ps.setString(1, email);
-            ps.setString(2, name);
-            ps.executeUpdate();
-            
-            JOptionPane.showMessageDialog(this, "Đã xóa tài khoản","Thông báo",JOptionPane.INFORMATION_MESSAGE);
-            emailAccount.setText("");
-            username.setText("");
-            disableInput();
-            //load lại bảng
-            loadTable();
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(manageAccount.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        deleteData.DeleteAccount(email, name, emailAccount, username, tableAccount);
+        disableInput();     
     }//GEN-LAST:event_deleteAccountActionPerformed
 
     private void editPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPassActionPerformed
@@ -509,6 +419,7 @@ public class manageAccount extends javax.swing.JFrame {
         } else {
             passEmail.setEditable(false);
         }
+              
     }//GEN-LAST:event_editPassActionPerformed
 
     private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
