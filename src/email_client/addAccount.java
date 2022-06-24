@@ -1,14 +1,8 @@
 package email_client;
 
-import email_client.global.CheckAccount;
 import email_client.callFrame.frameManageAccount;
-import email_client.dialogMess.AccountFailed;
-import email_client.dialogMess.CheckAccountMesseage;
-import email_client.dialogMess.TwoFANotify;
-import email_client.global.PortServices;
-import email_client.global.IconImageUtilities;
-import email_client.global.RegexEmail;
-import email_client.global.LookandFeel;
+import email_client.dialogMess.*;
+import email_client.global.*;
 import email_client.sqlitehelper.InsertData;
 import java.awt.Dialog;
 import java.util.logging.Level;
@@ -22,6 +16,8 @@ public class addAccount extends javax.swing.JFrame {
     CheckAccount checkAcc  =  new CheckAccount();
     PortServices getServices = new PortServices();
     InsertData insertData = new InsertData();
+    EnableFunction enableFunction = new EnableFunction();
+    DisableFunction disableFunction = new DisableFunction();
     //Khai báo mặc định các biến dùng chung
     String type, service, smtp, imap, email, pass, name, portTLS, portSSL, portIMAP;
     //portTLS, portSSL: outgoing messeage = STMP Server
@@ -316,28 +312,6 @@ public class addAccount extends javax.swing.JFrame {
         imapProblem.setVisible(true);
     }
     ///////////////////////////////////////////////////////////
-    private void enableInput() {    
-        Services.setEnabled(true);
-        emailAccount.setEnabled(true);
-        username.setEnabled(true);
-        passwordEmail.setEnabled(true);
-        smtpServer.setEnabled(true);
-        imapServer.setEnabled(true);
-        ConfirmBtn.setEnabled(true);
-        CancelBtn.setEnabled(true);
-    }
-    
-    private void disableInput() {    
-        Services.setEnabled(false);
-        emailAccount.setEnabled(false);
-        username.setEnabled(false);
-        passwordEmail.setEnabled(false);
-        smtpServer.setEnabled(false);
-        imapServer.setEnabled(false);
-        ConfirmBtn.setEnabled(false);
-        CancelBtn.setEnabled(false);
-    }
-    
     private void ConfirmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmBtnActionPerformed
         // TODO add your handling code here:
         //passworldfield luôn ở dạng array
@@ -370,7 +344,7 @@ public class addAccount extends javax.swing.JFrame {
             dialogChecking.setModalityType(Dialog.ModalityType.MODELESS);
             dialogChecking.setVisible(true);
             hideProblem();
-            disableInput();
+            disableFunction.disableAddAccountFunction(Services, emailAccount, username, passwordEmail, smtpServer, imapServer, ConfirmBtn, CancelBtn);
             Thread addAccount = new Thread() { //thread thêm tài khoản
                 @Override
                 public void run() {
@@ -384,7 +358,7 @@ public class addAccount extends javax.swing.JFrame {
                         Logger.getLogger(addAccount.class.getName()).log(Level.SEVERE, null, ex);
                         dialogChecking.setVisible(false);
                         AccountFailed.NotifyMesseage();                      
-                        enableInput();
+                        enableFunction.enableAddAccountFunction(Services, emailAccount, username, passwordEmail, smtpServer, imapServer, ConfirmBtn, CancelBtn);
                         showProblem();
                         emailProblem.setToolTipText("Vui lòng kiểm tài khoản email");
                         passProblem.setToolTipText("Mật khẩu sai hoặc tài khoản dùng xác thực hai bước");

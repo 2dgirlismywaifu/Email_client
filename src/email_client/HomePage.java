@@ -1,42 +1,17 @@
 package email_client;
 
-import email_client.callFrame.frameManageAccount;
-import email_client.callFrame.frameAboutSoftware;
-import email_client.callFrame.frameAboutTeam;
-import email_client.callFrame.frameAddAccount;
-import email_client.callFrame.frameSendEmail;
-import email_client.dialogMess.DownloadMailMesseage;
-import email_client.global.LookandFeel;
-import email_client.global.IconImageUtilities;
-import email_client.dialogMess.NetworkNotify;
-import email_client.dialogMess.loadContentFailed;
-import email_client.function.DeleteMail;
-import email_client.global.folderMailName;
+import email_client.callFrame.*;
+import email_client.dialogMess.*;
+import email_client.global.*;
 import email_client.global.macOS.mainForm;
-import email_client.sqlitehelper.LoadListData;
-import email_client.sqlitehelper.SQLiteHelper;
-import email_client.utils.gmail.GmailSent;
-import email_client.utils.gmail.GmailSpam;
-import email_client.utils.gmail.GmailTrash;
-import email_client.utils.FetchContentMail;
-import email_client.utils.FetchInbox;
-import email_client.utils.FetchContentPlainText;
-import email_client.utils.SearchMail;
-import email_client.utils.outlook.OutlookSent;
-import email_client.utils.outlook.OutlookSpam;
-import email_client.utils.outlook.OutlookTrash;
-import email_client.utils.yahoo.YahooSent;
-import email_client.utils.yahoo.YahooSpam;
-import email_client.utils.yahoo.YahooTrash;
+import email_client.sqlitehelper.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.awt.Dialog;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -44,15 +19,17 @@ import javax.swing.table.DefaultTableModel;
 
 public class HomePage extends javax.swing.JFrame {
     //<editor-fold defaultstate="collapsed" desc="Global Function">
+    //log4j
+    private final static Logger logger = LogManager.getLogger(HomePage.class);
+    ///////////////////////////////////
     DownloadMailMesseage downloadDialog = new DownloadMailMesseage(this, true);
     mainForm main = new mainForm();
     folderMailName foldername = new folderMailName();
-    frameSendEmail sendGUI = new frameSendEmail();    
-    Connection connection = SQLiteHelper.getConnection();
+    frameSendEmail sendGUI = new frameSendEmail();
     LoadListData loadListData = new LoadListData();
-    DefaultTableModel model ;
-    PreparedStatement ps;
-    ResultSet rs;     
+    ChangeToNameEmail changeToNameEmail = new ChangeToNameEmail();
+    FirstTimeUsing firstTimeUsing = new FirstTimeUsing();
+    DefaultTableModel model ;       
     String imap, storeType, user, fromUser, password, server, date, subject, mailContent, foldermailname, mailsearchInput;
     int rowSelected;
     //imap chính là server kết nối của dịch vụ email
@@ -60,27 +37,13 @@ public class HomePage extends javax.swing.JFrame {
     //user: chính là email
     //pass: khỏi cần giải thích :)
     //mailfoldername: đây là một trick dành cho đọc nội dung mail
-    //////////////////////////////////////////////////////////////////////////////////////////////
-    //gọi utils fetch email   
-    FetchInbox fetchInbox = new FetchInbox();
-    //Tài khoản Gmail   
-    GmailSent sentGmail = new GmailSent();
-    GmailSpam spamGmail = new GmailSpam();
-    GmailTrash trashGmail = new GmailTrash();
-    //Tài khoản Outlook, Office 365   
-    OutlookSent sentOutlook = new OutlookSent();
-    OutlookSpam spamOutlook = new OutlookSpam();
-    OutlookTrash trashOutlook = new OutlookTrash();
-    //Tài khoản Yahoo Mail   
-    YahooSent sentYahoo = new YahooSent();
-    YahooSpam spamYahoo = new YahooSpam();
-    YahooTrash trashYahoo = new YahooTrash();
-    
-    FetchContentMail getContent = new FetchContentMail();
-    FetchContentPlainText contentPlainText = new FetchContentPlainText();
-    DeleteMail delete = new DeleteMail();
-    SearchMail searchMail = new SearchMail();
+    //////////////////////////////////////////////////////////////////////////////////////////////      
     loadContentFailed contentFailed = new loadContentFailed();
+    //Enable, Disable Function
+    DisableFunction disableFunction = new DisableFunction();
+    EnableFunction enableFunction = new EnableFunction();
+    //Void cho các Thread inbox, sent, trash và spam
+    GlobalVoid globalVoid = new GlobalVoid(imap, storeType, user, password, server);
     //</editor-fold>
     /**
      * Creates new form HomePage
@@ -92,70 +55,17 @@ public class HomePage extends javax.swing.JFrame {
         //load danh sách email
         loadListData.loadEmailList(emailList);
         //mặc định tạm tắt chức năng trừ thêm tài khoản, thông tin về phần mềm
-        disableFunction();
+        disableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
         loadingMesseage.setVisible(false);
         searchStatus.setVisible(false);
         //////////////////////////////////////////////////////////
         //macOS ONLY
         main.desktopMac();
         //////////////////////////////////////////////////////////////////
-        firstTime();
+        firstTimeUsing.firstTime();
         
     }
-    //<editor-fold defaultstate="collapsed" desc="Danh cho nguoi dung lan dau">
-    private void firstTime() { //người dùng mới
-        Thread newuser = new Thread() {
-            @Override
-            public void run() {
-                try {          
-                    ps = connection.prepareStatement("SELECT COUNT(*) AS AMOUNT FROM email");
-                    rs = ps.executeQuery();
-                    while (rs.next()) {
-                        int amount = Integer.parseInt(rs.getString("AMOUNT"));
-                        if (amount == 0) {
-                            int reply = JOptionPane.showConfirmDialog(null, "Xin chào người dùng mới!\n"
-                            + "Có vẻ đây là lần đầu sử dụng của bạn, bạn có muốn thêm tài khoản không", "Thông báo", JOptionPane.YES_NO_OPTION);
-                            if (reply == JOptionPane.YES_OPTION ) {
-                                frameAddAccount.callframe();
-                            }
-                        }
-                    }
-                } catch (SQLException ex) {
-                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        };
-        newuser.start();
-        
-    }
-    //</editor-fold>
-    
-    private void enableFunction() {
-        composeMail.setEnabled(true);
-        inboxMail.setEnabled(true);    
-        sentMail.setEnabled(true);
-        spamMail.setEnabled(true);
-        trashMail.setEnabled(true);
-        deleteMail.setEnabled(true);
-        replyMail.setEnabled(true);
-        forwardMail.setEnabled(true);
-        plainTextBtn.setEnabled(true);
-        mailMessage.setEnabled(true);
-    }
-    
-    private void disableFunction() {
-        composeMail.setEnabled(false);
-        inboxMail.setEnabled(false);
-        sentMail.setEnabled(false);
-        spamMail.setEnabled(false);
-        trashMail.setEnabled(false);
-        deleteMail.setEnabled(false);
-        replyMail.setEnabled(false);
-        forwardMail.setEnabled(false);
-        plainTextBtn.setEnabled(false);
-        mailMessage.setEnabled(false);
-    }
-      
+       
     public boolean isEmpty() {
         if (mailList != null && mailList.getModel() != null) {
             return mailList.getModel().getRowCount()<=0;
@@ -788,24 +698,14 @@ public class HomePage extends javax.swing.JFrame {
             case "Chọn tài khoản" -> {
                 //nếu danh sách emailList ở chọn tài khoản
                 //vô hiệu hóa tất cả chức năng tại màn hình chính
-                disableFunction();
+                disableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
+                        deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
                 username.setText("Email Manager");
             }
             default -> {
-                enableFunction();
-                try {
-                    //trước tiên chúng ta sẽ đổi Email Client thành tên của tk email
-                    ps = connection.prepareStatement("SELECT name FROM email WHERE email = ?");
-                    ps.setString(1, emailList.getSelectedItem().toString());
-                    rs = ps.executeQuery();
-
-                    while (rs.next()) {
-                            username.setText(rs.getString("name"));
-                            }
-
-                } catch (SQLException ex) {
-                        Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
+                        deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
+                changeToNameEmail.nameEmail(username, stringSelected);
             }            
         }    
     }//GEN-LAST:event_emailListActionPerformed
@@ -867,20 +767,13 @@ public class HomePage extends javax.swing.JFrame {
         Thread contentMail = new Thread() {
             @Override
             public void run() {
-                try {
-                ps = connection.prepareStatement("SELECT email, password, imap, type FROM email WHERE email = ?");
-                ps.setString(1, emailList.getSelectedItem().toString());
-                rs = ps.executeQuery();
-
-                imap = rs.getString("imap");
-                storeType = folderMailName.getText();
-                user = rs.getString("email");
-                password = rs.getString("password");
+                try {               
+                storeType = folderMailName.getText();               
                 rowSelected = mailList.getSelectedRow();
-                delete.deleteEmail(rowSelected, imap, storeType, user, password, mailMessage);
+                globalVoid.deleteMail(imap, storeType, user, password, emailList, rowSelected, mailMessage);
                 loadingMesseage.setVisible(false);
                 } catch (SQLException | MessagingException | IOException ex) {
-                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);                 
+                    logger.error("Exceptions happen!", ex);
                 }
             }
         };
@@ -904,24 +797,11 @@ public class HomePage extends javax.swing.JFrame {
         Thread startSearch = new Thread() {
             @Override
             public void run() {
-                try {
-                    ps = connection.prepareStatement("SELECT email, password, imap, type FROM email WHERE email = ?");
-                    ps.setString(1, emailList.getSelectedItem().toString());
-                    rs = ps.executeQuery();
-
-                    imap = rs.getString("imap");
-                    storeType = rs.getString("type");
-                    user = rs.getString("email");
-                    password = rs.getString("password"); 
-                    
-                    mailList.setEnabled(true);
-                    model = searchMail.startFetch(imap, storeType, user, password, mailsearchInput, typeSearch, mailfolder);
-                    mailList.setModel(model);
-                    model.setRowCount(0);                  
-                    searchStatus.setText("Hoàn thành...");
-                    
+                try {                  
+                    globalVoid.searchMail(imap, storeType, user, password, emailList, model, mailsearchInput, 
+                            typeSearch, mailfolder, mailList, searchStatus);                   
                 } catch (SQLException | MessagingException ex) {
-                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.error("Exceptions happen!", ex);
                     mailList.setEnabled(true);
                     searchStatus.setText("Hoàn thành...");
                 }
@@ -934,41 +814,37 @@ public class HomePage extends javax.swing.JFrame {
     //load nội dung thư 
     private void loadSearchContent(int rowSelected) {
         mailMessage.setText("");
-        disableFunction();
+        disableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
+                deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
         mailList.setEnabled(false);
         loadingMesseage.setVisible(true);
         loadingMesseage.setText("Đang tải nội dung ...");
         Thread contentSearch = new Thread() {
             @Override
             public void run() {
-                try {
-                    ps = connection.prepareStatement("SELECT email, password, imap, type FROM email WHERE email = ?");
-                    ps.setString(1, emailList.getSelectedItem().toString());
-                    rs = ps.executeQuery();
-
-                    imap = rs.getString("imap");
-                    storeType = rs.getString("type");
-                    user = rs.getString("email");
-                    password = rs.getString("password"); 
+                try {                    
                     String typeSearch = searchSelection.getSelectedItem().toString();
                     mailsearchInput = MailSearchInput.getText();
                     foldermailname = folderMailName.getText();
                     
                     mailList.setEnabled(true);
-                    searchMail.fetchResultContent(imap, storeType, user, password, 
-                            mailsearchInput, typeSearch, foldermailname, rowSelected, mailMessage);
+                    globalVoid.loadSearchContent(imap, storeType, user, password, emailList, mailsearchInput, typeSearch, 
+                            foldermailname, rowSelected, mailMessage);
                     mailList.setModel(model);
                     model.setRowCount(0);                  
                     loadingMesseage.setVisible(false);
-                    enableFunction();                  
+                    enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, 
+                            trashMail, deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
                     mailList.setEnabled(true);
                 } catch (SQLException | MessagingException | IOException  ex) {
-                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-                    enableFunction();
+                    logger.error("Exceptions happen!", ex);
+                    enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
+                            deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
                     mailList.setEnabled(true);
                 }
                 catch (ClassCastException ex) {
-                    enableFunction();
+                    enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
+                            deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
                     mailList.setEnabled(true);
                     if(contentFailed.callNotify(rowSelected) == true) {
                         showPlainText(rowSelected);
@@ -983,7 +859,8 @@ public class HomePage extends javax.swing.JFrame {
     }
     private void loadContent(int rowSelected) {
         mailMessage.setText("");
-        disableFunction();
+        disableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
+                deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
         mailList.setEnabled(false);
         loadingMesseage.setVisible(true);
         loadingMesseage.setText("Đang tải nội dung ...");
@@ -991,26 +868,22 @@ public class HomePage extends javax.swing.JFrame {
             @Override
             public void run() {
                 try {
-                ps = connection.prepareStatement("SELECT email, password, imap, type FROM email WHERE email = ?");
-                ps.setString(1, emailList.getSelectedItem().toString());
-                rs = ps.executeQuery();
-
-                imap = rs.getString("imap");
                 storeType = folderMailName.getText();
-                user = rs.getString("email");
-                password = rs.getString("password");
-
-                getContent.readEmail(rowSelected, imap, storeType, user, password, mailMessage);
+                globalVoid.loadContentMail(imap, storeType, user, password, emailList, 
+                         folderMailName, rowSelected, mailMessage);
                 loadingMesseage.setVisible(false);
                 mailList.setEnabled(true);
-                enableFunction();
+                enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
+                        deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
                 } catch (SQLException | MessagingException | IOException ex) {
-                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.error("Exceptions happen!", ex);
                     mailList.setEnabled(true);
-                    enableFunction();                   
+                    enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
+                            deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
                 }
                 catch (ClassCastException ex) {
-                    enableFunction();
+                    enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
+                            deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
                     mailList.setEnabled(true);
                     if(contentFailed.callNotify(rowSelected) == true) {
                         showPlainText(rowSelected);
@@ -1026,30 +899,26 @@ public class HomePage extends javax.swing.JFrame {
     
     public void showPlainText(int rowSelected) {
         mailMessage.setText("");
-        disableFunction();
+        disableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
+                deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
         mailList.setEnabled(false);
         loadingMesseage.setVisible(true);
         loadingMesseage.setText("Đang tải dạng plain text ...");
         Thread plaintextMail = new Thread() {
             @Override
             public void run() {
-                try {
-                ps = connection.prepareStatement("SELECT email, password, imap, type FROM email WHERE email = ?");
-                ps.setString(1, emailList.getSelectedItem().toString());
-                rs = ps.executeQuery();
-
-                imap = rs.getString("imap");
-                storeType = folderMailName.getText();
-                user = rs.getString("email");
-                password = rs.getString("password");                
+                try {              
+                storeType = folderMailName.getText();                              
                 mailList.setEnabled(true);
-                enableFunction();
-                contentPlainText.plainTextShow(rowSelected, imap, storeType, user, password, mailMessage);
+                enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
+                        deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
+                globalVoid.loadPlainText(imap, storeType, user, password, emailList, model, mailList, 
+                        folderMailName, rowSelected, mailMessage);
                 loadingMesseage.setVisible(false);
                 } catch (SQLException | MessagingException | IOException ex) {
-                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.error("Exceptions happen!", ex);
                 } catch (Exception ex) {
-                    Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.error("Exceptions happen!", ex);
                 }
             }
         };
@@ -1059,196 +928,95 @@ public class HomePage extends javax.swing.JFrame {
     //với các hộp thư đến
     private void inboxMailAction()  {
         mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng       
-        disableFunction();
+        disableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, 
+                trashMail, deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
         downloadDialog.setModalityType(Dialog.ModalityType.MODELESS);
         downloadDialog.setVisible(true);
         //trick cho đọc nội dung mail
         folderMailName.setText(foldername.getInboxFolder());
         Thread inbox = new Thread() {
-               @Override
-                public void run() {                
-                        try {
-                        ps = connection.prepareStatement("SELECT email, password, imap, type FROM email WHERE email = ?");
-                        ps.setString(1, emailList.getSelectedItem().toString());
-                        rs = ps.executeQuery();
-
-                        imap = rs.getString("imap");
-                        storeType = rs.getString("type");
-                        user = rs.getString("email");
-                        password = rs.getString("password");                      
-                        model = fetchInbox.startFetch(imap, storeType, user, password);
-                        mailList.setModel(model);
-                        model.setRowCount(0);
-                        downloadDialog.setVisible(false);
-                        enableFunction();
-                        } catch (SQLException | MessagingException ex) {
-                            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-                            downloadDialog.setVisible(false);
-                            enableFunction();
-                        }
-                    }
-                };
-                inbox.start();
+           @Override
+            public void run() {                
+               try {
+                    globalVoid.getInbox(imap, storeType, user, password, emailList, model, mailList);
+                    downloadDialog.setVisible(false);
+                    enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, 
+                           trashMail, deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);                   
+               } catch (SQLException | MessagingException ex) {
+                    logger.error("Exceptions happen!", ex);
+                    downloadDialog.setVisible(false);
+                    enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, 
+                           trashMail, deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);                 
+               }               
+            }
+        };
+        inbox.start();
     }    
     //với các hộp thư đã gửi
     private void sentMailAction() {
         mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng       
-        disableFunction();
+        disableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
+                deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
         downloadDialog.setModalityType(Dialog.ModalityType.MODELESS);
         downloadDialog.setVisible(true);
         Thread sent = new Thread() {
-               @Override
-                public void run() {                
-                        try {
-                        ps = connection.prepareStatement("SELECT email, password, imap, type, server FROM email WHERE email = ?");
-                        ps.setString(1, emailList.getSelectedItem().toString());
-                        rs = ps.executeQuery();
-
-                       imap = rs.getString("imap");
-                       storeType = rs.getString("type");
-                       user = rs.getString("email");
-                       password = rs.getString("password");
-
-                       server = rs.getString("server");
-                        switch (server) {
-                            case "gmail" -> {
-                                    model = sentGmail.startFetch(imap, storeType, user, password);
-                                    mailList.setModel(model);
-                                    model.setRowCount(0);
-                                    folderMailName.setText(foldername.getSentGmail());
-                                    break;
-                            }
-                            case "outlook" -> {
-                                    model = sentOutlook.startFetch(imap, storeType, user, password);
-                                    mailList.setModel(model);
-                                    model.setRowCount(0);
-                                    folderMailName.setText(foldername.getSentOutlook());
-                                    break;
-                            }
-                            case "yahoo" -> {
-                                    model = sentYahoo.startFetch(imap, storeType, user, password);
-                                    mailList.setModel(model);
-                                    model.setRowCount(0);
-                                    folderMailName.setText(foldername.getSentYahoo());
-                                    break;
-                            }
-                            default -> {
-                                    break;
-                            }
-                        }                
-                        downloadDialog.setVisible(false);
-                        enableFunction();
-                        } catch (SQLException | MessagingException ex) {
-                            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-                            downloadDialog.setVisible(false);
-                            enableFunction();
-                        }
-                    }
-                };
-                sent.start();
+           @Override
+            public void run() {                
+               try {
+                    globalVoid.getSent(imap, storeType, user, password, emailList, model, mailList, folderMailName);
+                    downloadDialog.setVisible(false);
+                    enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, 
+                           trashMail, deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);                   
+               } catch (SQLException | MessagingException ex) {
+                   logger.error("Exceptions happen!", ex);
+               }
+            }
+        };
+        sent.start();
     }
     //với các hộp thư rác spam
     private void spamMailAction() {
         mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
-        disableFunction();
+        disableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
+                deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
         downloadDialog.setModalityType(Dialog.ModalityType.MODELESS);
         downloadDialog.setVisible(true);
         Thread spam = new Thread() {
-               @Override
-                public void run() {                
-                        try {
-                        ps = connection.prepareStatement("SELECT email, password, imap, type, server FROM email WHERE email = ?");
-                        ps.setString(1, emailList.getSelectedItem().toString());
-                        rs = ps.executeQuery();
-
-                       imap = rs.getString("imap");
-                       storeType = rs.getString("type");
-                       user = rs.getString("email");
-                       password = rs.getString("password");
-
-                       server = rs.getString("server");
-                        switch (server) {
-                            case "gmail" -> {
-                                    mailList.setModel(spamGmail.startFetch(imap, storeType, user, password));
-                                    folderMailName.setText(foldername.getSpamGmail());
-                                    break;
-                            }
-                            case "outlook" -> {
-                                    mailList.setModel(spamOutlook.startFetch(imap, storeType, user, password));
-                                    folderMailName.setText(foldername.getSpamOutlook());
-                                    break;
-                            }
-                            case "yahoo" -> {
-                                    spamYahoo.notifyMesseage();
-                                    break;
-                            }
-                            default -> {
-                                    break;
-                            }
-                        }                
-                        downloadDialog.setVisible(false);
-                        enableFunction();
-                        } catch (SQLException | MessagingException ex) {
-                            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-                            downloadDialog.setVisible(false);
-                            enableFunction();
-                        }
-                    }
-                };
-                spam.start();
-        
+            @Override
+            public void run() {                
+                try {
+                    globalVoid.getSpam(imap, storeType, user, password, emailList, model, mailList, folderMailName);
+                    downloadDialog.setVisible(false);
+                    enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, 
+                           trashMail, deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);                   
+                } catch (SQLException | MessagingException ex) {
+                   logger.error("Exceptions happen!", ex);
+                }      
+            }
+        };
+        spam.start();        
     }
     //với các thùng rác
     private void trashMailAction() {
         mailList.setModel(new DefaultTableModel(null, new String[]{"Người Gửi", "Tiêu Đề",  "Thời Gian" })); //xóa sạch thông tin bảng
-        disableFunction();
+        disableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
+                deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
         downloadDialog.setModalityType(Dialog.ModalityType.MODELESS);
         downloadDialog.setVisible(true);
         Thread spam = new Thread() {
-               @Override
-                public void run() {                
-                        try {
-                        ps = connection.prepareStatement("SELECT email, password, imap, type, server FROM email WHERE email = ?");
-                        ps.setString(1, emailList.getSelectedItem().toString());
-                        rs = ps.executeQuery();
-
-                       imap = rs.getString("imap");
-                       storeType = rs.getString("type");
-                       user = rs.getString("email");
-                       password = rs.getString("password");
-
-                       server = rs.getString("server");
-                        switch (server) {
-                            case "gmail" -> {
-                                    mailList.setModel(trashGmail.startFetch(imap, storeType, user, password));
-                                    folderMailName.setText(foldername.getTrashGmail());
-                                    break;
-                            }
-                            case "outlook" -> {
-                                    mailList.setModel(trashOutlook.startFetch(imap, storeType, user, password));
-                                    folderMailName.setText(foldername.getTrashOutlook());
-                                    break;
-                            }
-                            case "yahoo" -> {
-                                    mailList.setModel(trashYahoo.startFetch(imap, storeType, user, password));
-                                    folderMailName.setText(foldername.getTrashYahoo());
-                                    break;
-                            }
-                            default -> {
-                                    break;
-                            }
-                        }                
-                        downloadDialog.dispose();
-                        enableFunction();
-                        } catch (SQLException | MessagingException ex) {
-                            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-                            downloadDialog.setVisible(false);
-                            enableFunction();
-                        }
-                    }
-                };
-                spam.start();
-        
+            @Override
+            public void run() {                
+                try {
+                    globalVoid.getTrash(imap, storeType, user, password, emailList, model, mailList, folderMailName);
+                    downloadDialog.setVisible(false);
+                    enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, 
+                           trashMail, deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);                   
+                } catch (SQLException | MessagingException ex) {
+                   logger.error("Exceptions happen!", ex);
+                }    
+            }
+        };
+        spam.start();       
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  

@@ -1,20 +1,13 @@
 package email_client;
 
 import email_client.callFrame.frameAddAccount;
-import email_client.dialogMess.AccountFailed;
-import email_client.dialogMess.CheckAccountMesseage;
-import email_client.global.CheckAccount;
-import email_client.global.PortServices;
-import email_client.global.IconImageUtilities;
-import email_client.global.LookandFeel;
-import email_client.sqlitehelper.DeleteData;
-import email_client.sqlitehelper.LoadListData;
-import email_client.sqlitehelper.SelectDataTable;
-import email_client.sqlitehelper.UpdateData;
+import email_client.dialogMess.*;
+import email_client.global.*;
+import email_client.sqlitehelper.*;
 import java.awt.Dialog;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.sql.SQLException;
 import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -27,6 +20,8 @@ public class manageAccount extends javax.swing.JFrame {
     UpdateData updateData = new UpdateData();
     DeleteData deleteData = new DeleteData();
     SelectDataTable selectDataTable = new SelectDataTable();
+    EnableFunction enableFunction = new EnableFunction();
+    DisableFunction disableFunction = new DisableFunction();
     CheckAccountMesseage dialogChecking = new CheckAccountMesseage(this, true);
     DefaultTableModel tableModel;
     String id, service, type, smtp, imap, email, pass, name, portTLS, portSSL, portIMAP;
@@ -40,24 +35,6 @@ public class manageAccount extends javax.swing.JFrame {
         //icon mặc định của phần mềm
         IconImageUtilities.setIconImage(this);
         loadListData.manageAccountTable(tableAccount);
-    }
-    
-    private void reEnableInput() {
-        emailAccount.setEnabled(true);
-        username.setEnabled(true);
-        Server.setEnabled(true);
-        imapServer.setEnabled(true);
-        smtpServer.setEnabled(true);
-        ConfirmBtn.setEnabled(true);
-    }
-    
-    private void disableInput() {
-        emailAccount.setEnabled(false);
-        username.setEnabled(false);
-        Server.setEnabled(false);
-        imapServer.setEnabled(false);
-        smtpServer.setEnabled(false);
-        ConfirmBtn.setEnabled(false);
     }
     
     /** This method is called from within the constructor to
@@ -357,7 +334,7 @@ public class manageAccount extends javax.swing.JFrame {
         else {
             dialogChecking.setModalityType(Dialog.ModalityType.MODELESS);
             dialogChecking.setVisible(true);
-            disableInput();
+            disableFunction.disableManageAccount(emailAccount, username, Server, imapServer, smtpServer, ConfirmBtn);
             Thread updateAccount = new Thread () { //thread cập nhật tài khoản
                @Override
                public void run() {
@@ -366,13 +343,13 @@ public class manageAccount extends javax.swing.JFrame {
                     dialogChecking.setVisible(false);
                     updateData.updateAccount(id, type, service, smtp, imap, email, pass, name, portTLS, portSSL, portIMAP);
                     loadListData.manageAccountTable(tableAccount);                 
-                    reEnableInput();
+                    enableFunction.enableManageAccount(emailAccount, username, Server, imapServer, smtpServer, ConfirmBtn);
                     } catch (MessagingException | SQLException ex  ) {
                         Logger.getLogger(manageAccount.class.getName()).log(Level.SEVERE, null, ex);
                         AccountFailed.NotifyMesseage();
                         dialogChecking.setVisible(false);
                         //kích hoạt lại input
-                        reEnableInput();
+                        enableFunction.enableManageAccount(emailAccount, username, Server, imapServer, smtpServer, ConfirmBtn);
                     }
                } 
             };
@@ -391,7 +368,7 @@ public class manageAccount extends javax.swing.JFrame {
     private void tableAccountMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableAccountMouseClicked
         // TODO add your handling code here:
         //kích hoạt lại tất cả các input
-        reEnableInput();
+        enableFunction.enableManageAccount(emailAccount, username, Server, imapServer, smtpServer, ConfirmBtn);
         //từ dữ liệu đang có trả lại về input
         tableModel = (DefaultTableModel)tableAccount.getModel();
         int selectIndex = tableAccount.getSelectedRow();        
@@ -409,7 +386,7 @@ public class manageAccount extends javax.swing.JFrame {
         email = emailAccount.getText(); //có thể bỏ qua, không cần nhập     
         name = username.getText();
         deleteData.DeleteAccount(email, name, emailAccount, username, tableAccount);
-        disableInput();     
+        disableFunction.disableManageAccount(emailAccount, username, Server, imapServer, smtpServer, ConfirmBtn);
     }//GEN-LAST:event_deleteAccountActionPerformed
 
     private void editPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPassActionPerformed
