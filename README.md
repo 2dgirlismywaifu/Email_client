@@ -25,6 +25,7 @@
 2. javax.mail-1.6.2.jar
 3. sqlite-jdbc-3.36.0.3.jar
 4. flatlaf-2.3.jar (chính là giao diện đó)
+5. Log4J2 bản mới nhất (lưu lại các exception gây lỗi)
 # Thông tin và các nguồn github tham khảo
 1. Tech-geek29: https://github.com/tech-geek29/java-email-client
 2. RawSanji: https://github.com/RawSanj/java-mail-clients
