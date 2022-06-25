@@ -5,13 +5,14 @@ import email_client.dialogMess.*;
 import email_client.global.*;
 import email_client.sqlitehelper.InsertData;
 import java.awt.Dialog;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
+import org.apache.logging.log4j.*;
 
 public class addAccount extends javax.swing.JFrame {
     //<editor-fold defaultstate="collapsed" desc="Global Function">
+    //log4j2
+    private final static org.apache.logging.log4j.Logger logger = LogManager.getLogger(addAccount.class);
     CheckAccountMesseage dialogChecking = new CheckAccountMesseage(this, true);
     CheckAccount checkAcc  =  new CheckAccount();
     PortServices getServices = new PortServices();
@@ -355,18 +356,18 @@ public class addAccount extends javax.swing.JFrame {
                         dispose();
                         frameManageAccount.callframe();
                         } catch (MessagingException ex) {
-                        Logger.getLogger(addAccount.class.getName()).log(Level.SEVERE, null, ex);
-                        dialogChecking.setVisible(false);
-                        AccountFailed.NotifyMesseage();                      
-                        enableFunction.enableAddAccountFunction(Services, emailAccount, username, passwordEmail, smtpServer, imapServer, ConfirmBtn, CancelBtn);
-                        showProblem();
-                        emailProblem.setToolTipText("Vui lòng kiểm tài khoản email");
-                        passProblem.setToolTipText("Mật khẩu sai hoặc tài khoản dùng xác thực hai bước");
-                        smtpProblem.setToolTipText("Kiểm tra SMTP của tài khoản");
-                        servicesProblem.setToolTipText("Kiểm tra dịch vụ email của bạn");
-                        imapServer.setToolTipText("Kiểm tra IMAP của tài khoản");
+                            logger.error("Exceptions happen: " + ex, ex);
+                            dialogChecking.setVisible(false);
+                            AccountFailed.NotifyMesseage();                      
+                            enableFunction.enableAddAccountFunction(Services, emailAccount, username, passwordEmail, smtpServer, imapServer, ConfirmBtn, CancelBtn);
+                            showProblem();
+                            emailProblem.setToolTipText("Vui lòng kiểm tài khoản email");
+                            passProblem.setToolTipText("Mật khẩu sai hoặc tài khoản dùng xác thực hai bước");
+                            smtpProblem.setToolTipText("Kiểm tra SMTP của tài khoản");
+                            servicesProblem.setToolTipText("Kiểm tra dịch vụ email của bạn");
+                            imapServer.setToolTipText("Kiểm tra IMAP của tài khoản");
                     }
-                }
+                } 
             };
             addAccount.start();             
         }  

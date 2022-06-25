@@ -1,19 +1,10 @@
 package email_client.utils.yahoo;
 
-import email_client.global.folderMailName;
-import email_client.global.getSessionIMAPS;
-import email_client.global.mailboxEmpty;
-import email_client.utils.MailList;
-import email_client.utils.MailListModel;
+import email_client.global.*;
+import email_client.utils.*;
 import java.util.LinkedList;
 import java.util.List;
-import javax.mail.FetchProfile;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.Store;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.swing.table.DefaultTableModel;
 

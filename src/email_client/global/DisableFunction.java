@@ -42,4 +42,14 @@ public class DisableFunction {
         smtpServer.setEnabled(false);
         ConfirmBtn.setEnabled(false);
     }
+    //senEmail
+    public void DisableSendMail(JButton sendBtn, JTextField toField, JTextField ccField, JTextField BccField,
+            JTextField subjectField, JButton attachmentBtn) {
+        sendBtn.setEnabled(false);
+        toField.setEnabled(false);
+        ccField.setEnabled(false);
+        BccField.setEnabled(false);
+        subjectField.setEnabled(false);
+        attachmentBtn.setEnabled(false);
+    }
 }

@@ -7,10 +7,7 @@ import email_client.utils.yahoo.*;
 import email_client.utils.*;
 import email_client.function.*;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import javax.swing.*;
@@ -30,7 +27,39 @@ public class GlobalVoid {
     public String user;
     public String password;
     public String server;
-    ///////////////////////////////////////////
+    
+    public String getImap() {
+        return imap;
+    }
+    public void setImap(String imap) {
+        this.imap = imap;
+    }
+    public String getStoreType() {
+        return storeType;
+    }
+    public void setStoreType(String storeType) {
+        this.storeType = storeType;
+    }
+    public String getUser() {
+        return user;
+    }
+    public void setUser(String user) {
+        this.user = user;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public String getServer() {
+        return server;
+    }
+    public void setServer(String server) {
+        this.server = server;
+    }
+    
+///////////////////////////////////////////
     FetchInbox fetchInbox = new FetchInbox();
     FetchContentMail getContent = new FetchContentMail();
     FetchContentPlainText contentPlainText = new FetchContentPlainText();
@@ -57,36 +86,33 @@ public class GlobalVoid {
         this.password = password;
         this.server = server;
     }
-
-    //</editor-fold>
-    public GlobalVoid getInformation(String imap, String storeType, String user, String password, JComboBox emailList)
+  
+    public GlobalVoid getInformation(JComboBox emailList)
             throws SQLException, MessagingException {
         ps = connection.prepareStatement("SELECT email, password, imap, type, server FROM email WHERE email = ?");
         ps.setString(1, emailList.getSelectedItem().toString());
         rs = ps.executeQuery();
 
-        imap = rs.getString("imap");
-        storeType = rs.getString("type");
-        user = rs.getString("email");
-        password = rs.getString("password");
-        server = rs.getString("server");
+        this.imap = rs.getString("imap");
+        this.storeType = rs.getString("type");
+        this.user = rs.getString("email");
+        this.password = rs.getString("password");
+        this.server = rs.getString("server");
 
         return new GlobalVoid(imap, storeType, user, password, server);
     }
 
-    public void getInbox(String imap, String storeType, String user, String password, JComboBox emailList,
-            DefaultTableModel model, JTable mailList)
+    public void getInbox(JComboBox emailList, DefaultTableModel model, JTable mailList)
             throws SQLException, MessagingException {
-        GlobalVoid info = getInformation(imap, storeType, user, password, emailList);
+        GlobalVoid info = getInformation(emailList);
         model = fetchInbox.startFetch(info.imap, info.storeType, info.user, info.password);
         mailList.setModel(model);
         model.setRowCount(0);
     }
 
-    public void getSent(String imap, String storeType, String user, String password, JComboBox emailList,
-            DefaultTableModel model, JTable mailList, JLabel folderMailName)
+    public void getSent(JComboBox emailList, DefaultTableModel model, JTable mailList, JLabel folderMailName)
             throws SQLException, MessagingException {
-        GlobalVoid info = getInformation(imap, storeType, user, password, emailList);
+        GlobalVoid info = getInformation(emailList);
         switch (info.server) {
             case "gmail" -> {
                 model = sentGmail.startFetch(info.imap, info.storeType, info.user, info.password);
@@ -115,10 +141,9 @@ public class GlobalVoid {
         }
     }
 
-    public void getSpam(String imap, String storeType, String user, String password, JComboBox emailList,
-            DefaultTableModel model, JTable mailList, JLabel folderMailName)
+    public void getSpam(JComboBox emailList, DefaultTableModel model, JTable mailList, JLabel folderMailName)
             throws SQLException, MessagingException {
-        GlobalVoid info = getInformation(imap, storeType, user, password, emailList);
+        GlobalVoid info = getInformation(emailList);
         switch (info.server) {
             case "gmail" -> {
                 model = spamGmail.startFetch(info.imap, info.storeType, info.user, info.password);
@@ -143,10 +168,9 @@ public class GlobalVoid {
         }
     }
 
-    public void getTrash(String imap, String storeType, String user, String password, JComboBox emailList,
-            DefaultTableModel model, JTable mailList, JLabel folderMailName)
+    public void getTrash(JComboBox emailList, DefaultTableModel model, JTable mailList, JLabel folderMailName)
             throws SQLException, MessagingException {
-        GlobalVoid info = getInformation(imap, storeType, user, password, emailList);
+        GlobalVoid info = getInformation(emailList);
         switch (info.server) {
             case "gmail" -> {
                 model = trashGmail.startFetch(info.imap, info.storeType, info.user, info.password);
@@ -175,39 +199,37 @@ public class GlobalVoid {
         }
     }
 
-    public void loadContentMail(String imap, String storeType, String user, String password, JComboBox emailList,
-            JLabel folderMailName, int rowSelected, JEditorPane mailMessage)
+    public void loadContentMail(String storeType, JComboBox emailList, JLabel folderMailName, 
+            int rowSelected, JEditorPane mailMessage)
             throws SQLException, MessagingException, NoSuchProviderException, IOException {
-        GlobalVoid info = getInformation(imap, storeType, user, password, emailList);
+        GlobalVoid info = getInformation(emailList);
         getContent.readEmail(rowSelected, info.imap, storeType, info.user, info.password, mailMessage);
     }
 
-    public void loadPlainText(String imap, String storeType, String user, String password, JComboBox emailList,
-            DefaultTableModel model, JTable mailList, JLabel folderMailName, int rowSelected, JEditorPane mailMessage)
+    public void loadPlainText(String storeType, JComboBox emailList, DefaultTableModel model, 
+            JTable mailList, JLabel folderMailName, int rowSelected, JEditorPane mailMessage)
             throws SQLException, MessagingException, IOException, Exception {
-        GlobalVoid info = getInformation(imap, storeType, user, password, emailList);
+        GlobalVoid info = getInformation(emailList);
         contentPlainText.plainTextShow(rowSelected, info.imap, storeType, info.user, info.password, mailMessage);
     }
 
-    public void loadSearchContent(String imap, String storeType, String user, String password, JComboBox emailList,
-            String mailsearchInput, String typeSearch, String foldermailname, int rowSelected, JEditorPane mailMessage)
+    public void loadSearchContent(JComboBox emailList, String mailsearchInput, String typeSearch, 
+            String foldermailname, int rowSelected, JEditorPane mailMessage)
             throws SQLException, MessagingException, IOException {
-        GlobalVoid info = getInformation(imap, storeType, user, password, emailList);
+        GlobalVoid info = getInformation(emailList);
         searchMail.fetchResultContent(info.imap, info.storeType, info.user, info.password,
                 mailsearchInput, typeSearch, foldermailname, rowSelected, mailMessage);
     }
 
-    public void deleteMail(String imap, String storeType, String user, String password, JComboBox emailList,
-            int rowSelected, JEditorPane mailMessage)
+    public void deleteMail(String storeType, JComboBox emailList, int rowSelected, JEditorPane mailMessage)
             throws SQLException, MessagingException, IOException {
-        GlobalVoid info = getInformation(imap, storeType, user, password, emailList);
+        GlobalVoid info = getInformation(emailList);
         delete.deleteEmail(rowSelected, info.imap, storeType, info.user, info.password, mailMessage);
     }
 
-    public void searchMail(String imap, String storeType, String user, String password, JComboBox emailList,
-            DefaultTableModel model, String mailsearchInput, String typeSearch,
+    public void searchMail(JComboBox emailList, DefaultTableModel model, String mailsearchInput, String typeSearch,
             String mailfolder, JTable mailList, JLabel searchStatus) throws SQLException, MessagingException {
-        GlobalVoid info = getInformation(imap, storeType, user, password, emailList);
+        GlobalVoid info = getInformation(emailList);
         mailList.setEnabled(true);
         model = searchMail.startFetch(info.imap, info.storeType, info.user, info.password, mailsearchInput, typeSearch, mailfolder);
         mailList.setModel(model);

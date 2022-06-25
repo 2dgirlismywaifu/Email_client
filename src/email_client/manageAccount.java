@@ -6,14 +6,15 @@ import email_client.global.*;
 import email_client.sqlitehelper.*;
 import java.awt.Dialog;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.apache.logging.log4j.*;
+
 
 public class manageAccount extends javax.swing.JFrame {
     //<editor-fold defaultstate="collapsed" desc="Global Function">
+    private final static org.apache.logging.log4j.Logger logger = LogManager.getLogger(manageAccount.class);
     CheckAccount checkAcc = new CheckAccount();
     PortServices getServices = new PortServices();
     LoadListData loadListData =  new LoadListData();
@@ -345,7 +346,7 @@ public class manageAccount extends javax.swing.JFrame {
                     loadListData.manageAccountTable(tableAccount);                 
                     enableFunction.enableManageAccount(emailAccount, username, Server, imapServer, smtpServer, ConfirmBtn);
                     } catch (MessagingException | SQLException ex  ) {
-                        Logger.getLogger(manageAccount.class.getName()).log(Level.SEVERE, null, ex);
+                        logger.error("Exceptions happen: " + ex, ex);
                         AccountFailed.NotifyMesseage();
                         dialogChecking.setVisible(false);
                         //kích hoạt lại input

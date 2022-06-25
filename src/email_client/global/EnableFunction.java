@@ -42,4 +42,14 @@ public class EnableFunction {
         smtpServer.setEnabled(true);
         ConfirmBtn.setEnabled(true);
     }
+    //senEmail
+    public void EnableSendMail(JButton sendBtn, JTextField toField, JTextField ccField, JTextField BccField,
+            JTextField subjectField, JButton attachmentBtn) {
+        sendBtn.setEnabled(true);
+        toField.setEnabled(true);
+        ccField.setEnabled(true);
+        BccField.setEnabled(true);
+        subjectField.setEnabled(true);
+        attachmentBtn.setEnabled(true);
+    }
 }

@@ -11,7 +11,6 @@ import java.awt.Dialog;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.logging.Level;
 import javax.mail.MessagingException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -770,10 +769,10 @@ public class HomePage extends javax.swing.JFrame {
                 try {               
                 storeType = folderMailName.getText();               
                 rowSelected = mailList.getSelectedRow();
-                globalVoid.deleteMail(imap, storeType, user, password, emailList, rowSelected, mailMessage);
+                globalVoid.deleteMail(storeType, emailList, rowSelected, mailMessage);
                 loadingMesseage.setVisible(false);
                 } catch (SQLException | MessagingException | IOException ex) {
-                    logger.error("Exceptions happen!", ex);
+                    logger.error("Exceptions happen: " + ex, ex);
                 }
             }
         };
@@ -798,10 +797,10 @@ public class HomePage extends javax.swing.JFrame {
             @Override
             public void run() {
                 try {                  
-                    globalVoid.searchMail(imap, storeType, user, password, emailList, model, mailsearchInput, 
+                    globalVoid.searchMail(emailList, model, mailsearchInput, 
                             typeSearch, mailfolder, mailList, searchStatus);                   
                 } catch (SQLException | MessagingException ex) {
-                    logger.error("Exceptions happen!", ex);
+                    logger.error("Exceptions happen: " + ex, ex);
                     mailList.setEnabled(true);
                     searchStatus.setText("Hoàn thành...");
                 }
@@ -828,7 +827,7 @@ public class HomePage extends javax.swing.JFrame {
                     foldermailname = folderMailName.getText();
                     
                     mailList.setEnabled(true);
-                    globalVoid.loadSearchContent(imap, storeType, user, password, emailList, mailsearchInput, typeSearch, 
+                    globalVoid.loadSearchContent(emailList, mailsearchInput, typeSearch, 
                             foldermailname, rowSelected, mailMessage);
                     mailList.setModel(model);
                     model.setRowCount(0);                  
@@ -837,7 +836,7 @@ public class HomePage extends javax.swing.JFrame {
                             trashMail, deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
                     mailList.setEnabled(true);
                 } catch (SQLException | MessagingException | IOException  ex) {
-                    logger.error("Exceptions happen!", ex);
+                    logger.error("Exceptions happen: " + ex, ex);
                     enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
                             deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
                     mailList.setEnabled(true);
@@ -869,14 +868,13 @@ public class HomePage extends javax.swing.JFrame {
             public void run() {
                 try {
                 storeType = folderMailName.getText();
-                globalVoid.loadContentMail(imap, storeType, user, password, emailList, 
-                         folderMailName, rowSelected, mailMessage);
+                globalVoid.loadContentMail(storeType, emailList, folderMailName, rowSelected, mailMessage);
                 loadingMesseage.setVisible(false);
                 mailList.setEnabled(true);
                 enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
                         deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
                 } catch (SQLException | MessagingException | IOException ex) {
-                    logger.error("Exceptions happen!", ex);
+                    logger.error("Exceptions happen: " + ex, ex);
                     mailList.setEnabled(true);
                     enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
                             deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
@@ -912,13 +910,12 @@ public class HomePage extends javax.swing.JFrame {
                 mailList.setEnabled(true);
                 enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, trashMail, 
                         deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);
-                globalVoid.loadPlainText(imap, storeType, user, password, emailList, model, mailList, 
-                        folderMailName, rowSelected, mailMessage);
+                globalVoid.loadPlainText(storeType, emailList, model, mailList, folderMailName, rowSelected, mailMessage);
                 loadingMesseage.setVisible(false);
                 } catch (SQLException | MessagingException | IOException ex) {
-                    logger.error("Exceptions happen!", ex);
+                    logger.error("Exceptions happen: " + ex, ex);
                 } catch (Exception ex) {
-                    logger.error("Exceptions happen!", ex);
+                    logger.error("Exceptions happen: " + ex, ex);
                 }
             }
         };
@@ -938,12 +935,12 @@ public class HomePage extends javax.swing.JFrame {
            @Override
             public void run() {                
                try {
-                    globalVoid.getInbox(imap, storeType, user, password, emailList, model, mailList);
+                    globalVoid.getInbox(emailList, model, mailList);
                     downloadDialog.setVisible(false);
                     enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, 
                            trashMail, deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);                   
                } catch (SQLException | MessagingException ex) {
-                    logger.error("Exceptions happen!", ex);
+                    logger.error("Exceptions happen: " + ex, ex);
                     downloadDialog.setVisible(false);
                     enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, 
                            trashMail, deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);                 
@@ -963,12 +960,12 @@ public class HomePage extends javax.swing.JFrame {
            @Override
             public void run() {                
                try {
-                    globalVoid.getSent(imap, storeType, user, password, emailList, model, mailList, folderMailName);
+                    globalVoid.getSent(emailList, model, mailList, folderMailName);
                     downloadDialog.setVisible(false);
                     enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, 
                            trashMail, deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);                   
                } catch (SQLException | MessagingException ex) {
-                   logger.error("Exceptions happen!", ex);
+                   logger.error("Exceptions happen: " + ex, ex);
                }
             }
         };
@@ -985,12 +982,12 @@ public class HomePage extends javax.swing.JFrame {
             @Override
             public void run() {                
                 try {
-                    globalVoid.getSpam(imap, storeType, user, password, emailList, model, mailList, folderMailName);
+                    globalVoid.getSpam(emailList, model, mailList, folderMailName);
                     downloadDialog.setVisible(false);
                     enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, 
                            trashMail, deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);                   
                 } catch (SQLException | MessagingException ex) {
-                   logger.error("Exceptions happen!", ex);
+                   logger.error("Exceptions happen: " + ex, ex);
                 }      
             }
         };
@@ -1007,12 +1004,12 @@ public class HomePage extends javax.swing.JFrame {
             @Override
             public void run() {                
                 try {
-                    globalVoid.getTrash(imap, storeType, user, password, emailList, model, mailList, folderMailName);
+                    globalVoid.getTrash(emailList, model, mailList, folderMailName);
                     downloadDialog.setVisible(false);
                     enableFunction.HomePageFunction(composeMail, inboxMail, sentMail, spamMail, 
                            trashMail, deleteMail, replyMail, forwardMail, plainTextBtn, deleteMail);                   
                 } catch (SQLException | MessagingException ex) {
-                   logger.error("Exceptions happen!", ex);
+                   logger.error("Exceptions happen: " + ex, ex);
                 }    
             }
         };

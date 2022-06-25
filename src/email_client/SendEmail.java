@@ -1,29 +1,26 @@
 package email_client;
 
-import email_client.dialogMess.ExplainBcc;
-import email_client.dialogMess.ExplainCC;
-import email_client.dialogMess.SendMesseage;
 import email_client.function.GeneralAction;
-import email_client.global.IconImageUtilities;
-import email_client.global.LookandFeel;
-import email_client.global.RegexEmail;
+import email_client.global.*;
+import email_client.dialogMess.*;
 import email_client.sqlitehelper.SQLiteHelper;
 import java.awt.Dialog;
 import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.sql.*;
 import javax.mail.MessagingException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.apache.logging.log4j.*;
 
 public class SendEmail extends javax.swing.JFrame {
     //<editor-fold defaultstate="collapsed" desc="Global Function">
+    //log4j
+    private final static org.apache.logging.log4j.Logger logger = LogManager.getLogger(SendEmail.class);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
     SendMesseage sendMesseage = new SendMesseage(this, true);
     GeneralAction gAction = new GeneralAction();
+    EnableFunction enableFunction = new EnableFunction();
+    DisableFunction disableFunction = new DisableFunction();
     Connection connection = SQLiteHelper.getConnection();
     PreparedStatement ps;
     ResultSet rs;
@@ -40,24 +37,6 @@ public class SendEmail extends javax.swing.JFrame {
         initComponents();
         //icon mặc định của phần mềm
         IconImageUtilities.setIconImage(this);      
-    }
-    
-    private void EnableFunction() {
-        sendBtn.setEnabled(true);
-        toField.setEnabled(true);
-        ccField.setEnabled(true);
-        BccField.setEnabled(true);
-        subjectField.setEnabled(true);
-        attachmentBtn.setEnabled(true);
-    }
-    
-    private void DisableFunction() {
-        sendBtn.setEnabled(false);
-        toField.setEnabled(false);
-        ccField.setEnabled(false);
-        BccField.setEnabled(false);
-        subjectField.setEnabled(false);
-        attachmentBtn.setEnabled(false);
     }
     
     public void clearInput() {
@@ -318,7 +297,7 @@ public class SendEmail extends javax.swing.JFrame {
     {
         sendMesseage.setModalityType(Dialog.ModalityType.MODELESS);
         sendMesseage.setVisible(true);
-        DisableFunction();
+        disableFunction.DisableSendMail(sendBtn, toField, ccField, BccField, subjectField, attachmentBtn);
         Thread startSend = new Thread() {
                 @Override
                 public void run() {
@@ -342,7 +321,7 @@ public class SendEmail extends javax.swing.JFrame {
                                     toUser, subject, cc, bcc, filepath, content);                                   
                                 }
                             }
-                            EnableFunction();
+                            enableFunction.EnableSendMail(sendBtn, toField, ccField, BccField, subjectField, attachmentBtn);
                             sendMesseage.setVisible(false);
                             int reply = JOptionPane.showOptionDialog(null, "Gửi thư thành công!", "Thông báo", 
                                     JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
@@ -352,10 +331,10 @@ public class SendEmail extends javax.swing.JFrame {
                         }
                         
                     } catch (SQLException ex) {
-                        Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
+                        logger.error("Exceptions happen: " + ex, ex);
                         sendMesseage.setVisible(false);
                     } catch (MessagingException ex) {
-                        Logger.getLogger(SendEmail.class.getName()).log(Level.SEVERE, null, ex);
+                        logger.error("Exceptions happen: " + ex, ex);
                     }
                 }
             };

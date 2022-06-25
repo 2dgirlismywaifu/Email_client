@@ -9,14 +9,14 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class anotherAboutTeam extends javax.swing.JFrame {
+public class aboutTeam extends javax.swing.JFrame {
     
     GithubProfile profileLink = new GithubProfile();
     
     /**
      * Creates new form anotherAboutTeam
      */
-    public anotherAboutTeam() {
+    public aboutTeam() {
         initComponents();
         IconImageUtilities.setIconImage(this);
         firstGithub.setText("<html> <a href=\"\">"+ profileLink.getTwodgirlsismywaifu() +"</a></html>");
@@ -296,7 +296,7 @@ public class anotherAboutTeam extends javax.swing.JFrame {
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new anotherAboutTeam().setVisible(true);
+            new aboutTeam().setVisible(true);
         });
     }
 

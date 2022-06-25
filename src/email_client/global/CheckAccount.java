@@ -9,7 +9,7 @@ public class CheckAccount {
     
     getSessionIMAPS getSession = new getSessionIMAPS();
     
-    public  void checkLogin(String imap, String storeType, String user, String password) 
+    public void checkLogin(String imap, String storeType, String user, String password) 
             throws NoSuchProviderException, MessagingException {
         Session emailSession = getSession.getSession(imap, storeType, user, password);
         Store store = emailSession.getStore(storeType);
