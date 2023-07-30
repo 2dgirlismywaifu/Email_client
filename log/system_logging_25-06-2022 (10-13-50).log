@@ -1,8 +1,0 @@
-25-06-2022 10:13:50 [Thread-1] ERROR email_client.addAccount - Exceptions happen: javax.mail.AuthenticationFailedException: [AUTHENTICATIONFAILED] Invalid credentials (Failure) 
- javax.mail.AuthenticationFailedException: [AUTHENTICATIONFAILED] Invalid credentials (Failure)
-	at com.sun.mail.imap.IMAPStore.protocolConnect(IMAPStore.java:732)
-	at javax.mail.Service.connect(Service.java:388)
-	at javax.mail.Service.connect(Service.java:246)
-	at javax.mail.Service.connect(Service.java:195)
-	at email_client.global.CheckAccount.checkLogin(CheckAccount.java:16)
-	at email_client.addAccount$6.run(addAccount.java:353)

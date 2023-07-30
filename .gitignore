@@ -1,7 +1,8 @@
-/build/
-/dist/
-database/database.db
-*.db
-nbproject/private/private.properties
-nbproject/genfiles.properties
-nbproject/genfiles.properties
+
+target/
+
+
+
+log/
+
+.idea/
